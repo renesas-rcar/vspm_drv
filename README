@@ -1,0 +1,26 @@
+VSP Manager
+=====
+VSP Manager controls VSP2, FDP1 and FCP on R-Car H3/M3.
+
+Package:
+--------
+The VSP Manager has the following softwares.
+  * vspm_drv
+    - Controls the VSP2, FDP1 and FCP.
+    - Automatic assignment of free RPF channels.
+    - The VSP manager supports 2 modes.
+      (Mutual mode or occupy mode).
+    - Mutual mode supports queue buffer control.
+      The VSP manager has 32 queue buffers controlled by priority.
+      ItÅfs possible to buffer the entry jobs of 32.
+      Therefore maximum 32 applications can use at a time.
+    - Occupy mode supports low latency access.
+      User application can low latency access
+      because one application occupies one channel.
+
+If you use the VSP Manager from user space, it's required following.
+ * vspmif_drv
+    - Connects kernel and user space.
+ * vspmif_lib
+    - Interface for user space.
+
