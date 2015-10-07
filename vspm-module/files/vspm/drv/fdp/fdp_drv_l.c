@@ -993,6 +993,14 @@ static void fdp_ins_set_fcp_reg(
 	if (fcp != NULL) {
 		/* TL conversion control register */
 		if (fcp->tlen == FCP_TL_ENABLE) {
+			/* ECR1417 */
+			reg_data = fdp_read_reg(P_FCP, FD1_FCP_VCR);
+			if (reg_data == 0x00000101) {
+				/* DCMP reset */
+				fdp_write_reg(
+					FD1_FCP_RST_DCMP, P_FCP, FD1_FCP_RST);
+			}
+
 			reg_data =
 				FD1_FCP_TL_CTRL_TLEN |
 				(((unsigned int)fcp->pos_c) << 16) |

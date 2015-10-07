@@ -161,6 +161,7 @@
 #define FD1_MDET_OFFSET		(0x2000)
 
 /* FCP */
+#define FD1_FCP_VCR			(0x0000)
 #define FD1_FCP_RST			(0x0010)
 #define FD1_FCP_STA			(0x0018)
 #define FD1_FCP_TL_CTRL		(0x0070)
@@ -340,6 +341,7 @@
 #define FD1_IPC_LMEM_PNUM_FCP			(960)
 
 /* FCP register value */
+#define FD1_FCP_RST_DCMP				(0x00100000)
 #define FD1_FCP_RST_SOFTRST				(0x00000001)
 #define FD1_FCP_STA_ACT					(0x00000001)
 #define FD1_FCP_TL_CTRL_TLEN			(0x80000000)
