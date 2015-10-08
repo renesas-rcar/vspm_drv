@@ -498,7 +498,7 @@ Description:	Forced cancel a job.
 Returns:		R_VSPM_OK
 	return of vspm_ins_exec_cancel()
 ******************************************************************************/
-long vspm_ins_ctrl_forced_cancel(struct vspm_privdata *priv)
+long vspm_ins_ctrl_forced_cancel(struct vspm_api_param_forced_cancel *cancel)
 {
 	struct vspm_job_info *job_info;
 
@@ -507,7 +507,7 @@ long vspm_ins_ctrl_forced_cancel(struct vspm_privdata *priv)
 
 	job_info = &g_vspm_ctrl_info.job_manager.job_info[0];
 	for (i = 0; i < VSPM_MAX_ELEMENTS; i++) {
-		if ((job_info->entry.priv == priv) &&
+		if ((job_info->entry.priv == cancel->priv) &&
 				(job_info->status != VSPM_JOB_STATUS_EMPTY)) {
 
 			if (job_info->status == VSPM_JOB_STATUS_ENTRY) {

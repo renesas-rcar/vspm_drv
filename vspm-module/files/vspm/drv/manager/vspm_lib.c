@@ -154,11 +154,15 @@ Returns:		return of fw_send_function()
 ******************************************************************************/
 long vspm_lib_forced_cancel(struct vspm_privdata *priv)
 {
+	struct vspm_api_param_forced_cancel cancel;
+
+	cancel.priv = priv;
+
 	return fw_send_function(
 		TASK_VSPM,
 		FUNCTIONID_VSPM_BASE + FUNC_VSPM_FORCED_CANCEL,
-		sizeof(struct vspm_privdata),
-		priv);
+		sizeof(cancel),
+		&cancel);
 }
 
 

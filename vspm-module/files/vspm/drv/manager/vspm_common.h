@@ -158,7 +158,7 @@ long vspm_ins_ctrl_exec_entry(struct vspm_api_param_entry *entry);
 long vspm_ins_ctrl_on_complete(unsigned short module_id, long result);
 long vspm_ins_ctrl_get_status(unsigned long job_id);
 long vspm_ins_ctrl_queue_cancel(unsigned long job_id);
-long vspm_ins_ctrl_forced_cancel(struct vspm_privdata *priv);
+long vspm_ins_ctrl_forced_cancel(struct vspm_api_param_forced_cancel *cancel);
 long vspm_ins_ctrl_cancel_entry(struct vspm_privdata *priv);
 long vspm_ins_ctrl_mode_param_check(
 	unsigned int *use_bits, struct vspm_api_param_mode *mode);

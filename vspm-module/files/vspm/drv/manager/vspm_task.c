@@ -246,7 +246,8 @@ long vspm_inm_forced_cancel(void *mesp, void *para)
 {
 	RESERVED(mesp);
 
-	return vspm_ins_ctrl_forced_cancel((struct vspm_privdata *)para);
+	return vspm_ins_ctrl_forced_cancel(
+		(struct vspm_api_param_forced_cancel *)para);
 }
 
 

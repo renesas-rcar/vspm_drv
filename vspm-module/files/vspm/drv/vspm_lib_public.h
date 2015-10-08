@@ -78,6 +78,11 @@ struct vspm_api_param_mode {
 	struct vspm_init_t *param;
 };
 
+/* forced cancel parameter */
+struct vspm_api_param_forced_cancel {
+	struct vspm_privdata *priv;
+};
+
 /* complete processing parameter */
 struct vspm_api_param_on_complete {
 	unsigned short module_id;
