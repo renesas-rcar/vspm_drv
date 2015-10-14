@@ -96,7 +96,8 @@ struct fdp_obj_t {
 	/* platform information */
 	struct platform_device *pdev;
 	struct resource *irq;
-	struct clk *clk;
+	struct clk *fdp_clk;
+	struct clk *fcp_clk;
 	void __iomem *fdp_reg;
 	void __iomem *fcp_reg;
 };

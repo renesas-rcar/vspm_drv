@@ -702,7 +702,8 @@ struct vsp_ch_info {
 /* private data structure */
 struct vsp_prv_data {
 	struct platform_device *pdev;
-	struct clk *clk;
+	struct clk *vsp_clk;
+	struct clk *fcp_clk;
 	void __iomem *vsp_reg;
 	void __iomem *fcp_reg;
 	struct resource *irq;

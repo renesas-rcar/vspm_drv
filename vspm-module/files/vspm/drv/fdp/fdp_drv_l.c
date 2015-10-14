@@ -1517,26 +1517,41 @@ Returns:		0/E_FDP_NO_CLK
 long fdp_ins_enable_clock(struct fdp_obj_t *obj)
 {
 	struct platform_device *pdev = obj->pdev;
+	struct device *dev = &pdev->dev;
 
 	int ercd;
 
 	/* wake up device */
-	pm_suspend_ignore_children(&pdev->dev, true);
-	pm_runtime_enable(&pdev->dev);
+	pm_suspend_ignore_children(dev, true);
+	pm_runtime_enable(dev);
 
-	pm_runtime_get_sync(&pdev->dev);
+	pm_runtime_get_sync(dev);
 
 	/* get clock */
-	obj->clk = clk_get(&pdev->dev, NULL);
-	if (IS_ERR(obj->clk)) {
-		dev_err(&pdev->dev, "failed to get clock\n");
+	obj->fdp_clk = of_clk_get(dev->of_node, 0);
+	if (IS_ERR(obj->fdp_clk)) {
+		dev_err(dev, "failed to get FDP clock\n");
+		goto err_exit0;
+	}
+
+	obj->fcp_clk = of_clk_get(dev->of_node, 1);
+	if (IS_ERR(obj->fcp_clk)) {
+		dev_err(dev, "failed to get FCPF clock\n");
+		clk_put(obj->fdp_clk);
 		goto err_exit0;
 	}
 
 	/* enable clock */
-	ercd = clk_prepare_enable(obj->clk);
+	ercd = clk_prepare_enable(obj->fdp_clk);
 	if (ercd < 0) {
-		EPRINT("%s: failed to enable clock\n", __func__);
+		EPRINT("%s: failed to enable FDP clock\n", __func__);
+		goto err_exit1;
+	}
+
+	ercd = clk_prepare_enable(obj->fcp_clk);
+	if (ercd < 0) {
+		EPRINT("%s: failed to enable FCPF clock\n", __func__);
+		clk_disable_unprepare(obj->fdp_clk);
 		goto err_exit1;
 	}
 
@@ -1544,14 +1559,16 @@ long fdp_ins_enable_clock(struct fdp_obj_t *obj)
 
 err_exit1:
 	/* forced disable clock */
-	if (obj->clk)
-		clk_put(obj->clk);
-	obj->clk = 0;
+	clk_put(obj->fdp_clk);
+	obj->fdp_clk = NULL;
+
+	clk_put(obj->fcp_clk);
+	obj->fcp_clk = NULL;
 
 err_exit0:
 	/* mark device as idle */
-	pm_runtime_put_sync(&pdev->dev);
-	pm_runtime_disable(&pdev->dev);
+	pm_runtime_put_sync(dev);
+	pm_runtime_disable(dev);
 
 	return E_FDP_NO_CLK;
 }
@@ -1567,10 +1584,16 @@ long fdp_ins_disable_clock(struct fdp_obj_t *obj)
 	struct platform_device *pdev = obj->pdev;
 
 	/* disable clock */
-	if (obj->clk) {
-		clk_disable_unprepare(obj->clk);
-		clk_put(obj->clk);
-		obj->clk = 0;
+	if (obj->fdp_clk != NULL) {
+		clk_disable_unprepare(obj->fdp_clk);
+		clk_put(obj->fdp_clk);
+		obj->fdp_clk = NULL;
+	}
+
+	if (obj->fcp_clk != NULL) {
+		clk_disable_unprepare(obj->fcp_clk);
+		clk_put(obj->fcp_clk);
+		obj->fcp_clk = NULL;
 	}
 
 	/* mark deice as idle */

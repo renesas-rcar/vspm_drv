@@ -2255,32 +2255,47 @@ long vsp_ins_get_vsp_resource(struct vsp_prv_data *prv)
 
 /******************************************************************************
 Function:		vsp_ins_enable_clock
-Description:	Enable VSP clock supply.
+Description:	Enable VSP/FCP clock supply.
 Returns:		0/E_VSP_NO_CLK
 ******************************************************************************/
 long vsp_ins_enable_clock(struct vsp_prv_data *prv)
 {
 	struct platform_device *pdev = prv->pdev;
+	struct device *dev = &pdev->dev;
 
 	int ercd;
 
 	/* wake up device */
-	pm_suspend_ignore_children(&pdev->dev, true);
-	pm_runtime_enable(&pdev->dev);
+	pm_suspend_ignore_children(dev, true);
+	pm_runtime_enable(dev);
 
-	pm_runtime_get_sync(&pdev->dev);
+	pm_runtime_get_sync(dev);
 
 	/* get clock */
-	prv->clk = clk_get(&pdev->dev, NULL);
-	if (IS_ERR(prv->clk)) {
-		dev_err(&pdev->dev, "failed to get clock\n");
+	prv->vsp_clk = of_clk_get(dev->of_node, 0);
+	if (IS_ERR(prv->vsp_clk)) {
+		dev_err(dev, "failed to get VSP clock\n");
+		goto err_exit0;
+	}
+
+	prv->fcp_clk = of_clk_get(dev->of_node, 1);
+	if (IS_ERR(prv->fcp_clk)) {
+		dev_err(dev, "failed to get FCPV clock\n");
+		clk_put(prv->vsp_clk);
 		goto err_exit0;
 	}
 
 	/* enable clock */
-	ercd = clk_prepare_enable(prv->clk);
+	ercd = clk_prepare_enable(prv->vsp_clk);
 	if (ercd < 0) {
-		EPRINT("%s: failed to enable clock\n", __func__);
+		EPRINT("%s: failed to enable VSP clock\n", __func__);
+		goto err_exit1;
+	}
+
+	ercd = clk_prepare_enable(prv->fcp_clk);
+	if (ercd < 0) {
+		EPRINT("%s: failed to enable FCPV clock\n", __func__);
+		clk_disable_unprepare(prv->vsp_clk);
 		goto err_exit1;
 	}
 
@@ -2288,14 +2303,16 @@ long vsp_ins_enable_clock(struct vsp_prv_data *prv)
 
 err_exit1:
 	/* forced disable clock */
-	if (prv->clk)
-		clk_put(prv->clk);
-	prv->clk = 0;
+	clk_put(prv->vsp_clk);
+	prv->vsp_clk = NULL;
+
+	clk_put(prv->fcp_clk);
+	prv->fcp_clk = NULL;
 
 err_exit0:
 	/* mark device as idle */
-	pm_runtime_put_sync(&pdev->dev);
-	pm_runtime_disable(&pdev->dev);
+	pm_runtime_put_sync(dev);
+	pm_runtime_disable(dev);
 
 	return E_VSP_NO_CLK;
 }
@@ -2303,7 +2320,7 @@ err_exit0:
 
 /******************************************************************************
 Function:		vsp_ins_disable_clock
-Description:	Disable VSP clock supply.
+Description:	Disable VSP/FCP clock supply.
 Returns:		0
 ******************************************************************************/
 long vsp_ins_disable_clock(struct vsp_prv_data *prv)
@@ -2311,10 +2328,16 @@ long vsp_ins_disable_clock(struct vsp_prv_data *prv)
 	struct platform_device *pdev = prv->pdev;
 
 	/* disable clock */
-	if (prv->clk) {
-		clk_disable_unprepare(prv->clk);
-		clk_put(prv->clk);
-		prv->clk = 0;
+	if (prv->vsp_clk != NULL) {
+		clk_disable_unprepare(prv->vsp_clk);
+		clk_put(prv->vsp_clk);
+		prv->vsp_clk = NULL;
+	}
+
+	if (prv->fcp_clk != NULL) {
+		clk_disable_unprepare(prv->fcp_clk);
+		clk_put(prv->fcp_clk);
+		prv->fcp_clk = NULL;
 	}
 
 	/* mark device as idle */
