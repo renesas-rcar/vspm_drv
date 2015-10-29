@@ -489,19 +489,25 @@ static long fdp_ins_check_fcp_param(
 				return E_FDP_PARA_FCP_STRIDE;
 
 			/* check current address of reference */
-			if ((FDP_VP_TO_INT(fcp->ba_ref_cur_y) & 0x3fff) ||
+			if ((fcp->ba_ref_cur_y == NULL) ||
+				(fcp->ba_ref_cur_c == NULL) ||
+				(FDP_VP_TO_INT(fcp->ba_ref_cur_y) & 0x3fff) ||
 				(FDP_VP_TO_INT(fcp->ba_ref_cur_c) & 0x3fff))
 				return E_FDP_PARA_BA_REF;
 
 			if (obj->ctrl_chact & FD1_CTL_CHACT_PRE_READ) {
 				/* check previous address of reference */
-				if (FDP_VP_TO_INT(fcp->ba_ref_prev_y) & 0x3fff)
+				if ((fcp->ba_ref_prev_y == NULL) ||
+					(FDP_VP_TO_INT(fcp->ba_ref_prev_y)
+						& 0x3fff))
 					return E_FDP_PARA_BA_REF;
 			}
 
 			if (obj->ctrl_chact & FD1_CTL_CHACT_NEX_READ) {
 				/* check next address of reference */
-				if (FDP_VP_TO_INT(fcp->ba_ref_next_y) & 0x3fff)
+				if ((fcp->ba_ref_next_y == NULL) ||
+					(FDP_VP_TO_INT(fcp->ba_ref_next_y)
+						& 0x3fff))
 					return E_FDP_PARA_BA_REF;
 			}
 
