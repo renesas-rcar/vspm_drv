@@ -123,7 +123,7 @@ Returns:		R_VSPM_OK/R_VSPM_NG
 static long vspm_ins_assign_rpf(
 	unsigned char ch, struct vsp_start_t *start_param)
 {
-	struct vsp_src_t *src_par;
+	struct vsp_src_t **src_par;
 	struct vsp_status_t status;
 
 	unsigned int not_clut_bits;
@@ -147,7 +147,7 @@ static long vspm_ins_assign_rpf(
 	not_clut_bits = status.rpf_bits & ~(status.rpf_clut_bits);
 	clut_bits = status.rpf_bits & status.rpf_clut_bits;
 
-	src_par = start_param->src_par[0];
+	src_par = &start_param->src_par[0];
 	for (num = 0; num < start_param->rpf_num; num++) {
 		unsigned char use_rpf_flag = 1;
 		unsigned char use_rpf_clut_flag = 1;
@@ -157,9 +157,9 @@ static long vspm_ins_assign_rpf(
 			break;
 		}
 
-		if (src_par != NULL) {
-			if ((src_par->format == VSP_IN_RGB_CLUT_DATA) ||
-				(src_par->format == VSP_IN_YUV_CLUT_DATA)) {
+		if (*src_par != NULL) {
+			if (((*src_par)->format == VSP_IN_RGB_CLUT_DATA) ||
+				((*src_par)->format == VSP_IN_YUV_CLUT_DATA)) {
 				/* If using CLUT of RPF, */
 				/* RPF unsupported CLUT can not be used. */
 				use_rpf_flag = 0;
