@@ -1790,7 +1790,7 @@ static long vsp_ins_check_sru_param(
 	if (src_info->color == VSP_COLOR_HSV)
 		return E_VSP_PARA_SRU_INHSV;
 
-	/* check image size */
+	/* check input image size */
 	if (src_info->width < 4)
 		return E_VSP_PARA_SRU_WIDTH;
 
@@ -1816,6 +1816,10 @@ static long vsp_ins_check_sru_param(
 	} else {
 		return E_VSP_PARA_SRU_MODE;
 	}
+
+	/* check output image size */
+	if (src_info->height > 8190)
+		return E_VSP_PARA_SRU_HEIGHT;
 
 	/* check param */
 	if (sru_param->param & (~(VSP_SRU_RCR|VSP_SRU_GY|VSP_SRU_BCB)))
@@ -1870,7 +1874,7 @@ static long vsp_ins_check_uds_param(
 	if (src_info->width < 4)
 		return E_VSP_PARA_UDS_INWIDTH;
 
-	if ((src_info->height < 4) || (src_info->height > 8190))
+	if (src_info->height < 4)
 		return E_VSP_PARA_UDS_INHEIGHT;
 
 	/* check scaling factor parameter */
@@ -1922,6 +1926,10 @@ static long vsp_ins_check_uds_param(
 	} else {
 		return E_VSP_PARA_UDS_AMD;
 	}
+
+	/* check output image size */
+	if (src_info->height > 8190)
+		src_info->height = 8190;
 
 	/* set clipping size */
 	uds_info->val_clip = ((src_info->width << 16) | src_info->height);
