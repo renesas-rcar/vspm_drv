@@ -95,7 +95,7 @@
 
 /* define partition process */
 #define VSP_PART_SIZE			256
-#define VSP_PART_MARGIN			4
+#define VSP_PART_MARGIN			2
 
 /* define status read counter */
 #define VSP_STATUS_LOOP_CNT		(50)

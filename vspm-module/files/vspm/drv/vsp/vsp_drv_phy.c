@@ -1410,7 +1410,8 @@ static void vsp_ins_replace_part_uds_module(
 			uds_info->val_hphase = (4096 - (l_temp & 0xfff)) << 16;
 		else
 			uds_info->val_hphase = 0;
-		uds_info->val_hphase |= (r_temp % 4096);
+		if (r_temp & 0xfff)
+			uds_info->val_hphase |= (4096 - (r_temp & 0xfff));
 	} else {
 		l_temp *= 4096;
 		r_temp *= 4096;
@@ -1450,7 +1451,7 @@ static void vsp_ins_replace_part_rpf_module(
 
 	/* calculate source offset and width */
 	offset = VSP_ROUND_UP(*l_pos, 4096);
-	width = VSP_ROUND_DOWN(*r_pos, 4096) - offset;
+	width = VSP_ROUND_UP(*r_pos, 4096) - offset;
 
 	if ((ch_info->reserved_module & VSP_SRU_USE) &&
 		(part_info->sru_first_flag == 1)) {

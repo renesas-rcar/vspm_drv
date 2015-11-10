@@ -1800,19 +1800,29 @@ static long vsp_ins_check_sru_param(
 	/* judge SRU module first flag */
 	if (part_info->div_flag == 0)
 		part_info->sru_first_flag = 1;
+	else
+		part_info->margin += 2;
 
 	/* check mode */
 	if (sru_param->mode == VSP_SRU_MODE1) {
 		/* set partition flag */
 		part_info->div_flag = 1;
-		part_info->margin *= 2;
+
+		/* set margin size */
+		if (part_info->margin < 2)
+			part_info->margin = 2;
 	} else if (sru_param->mode == VSP_SRU_MODE2) {
 		src_info->width <<= 1;
 		src_info->height <<= 1;
 
 		/* set partition flag */
 		part_info->div_flag = 2;
-		part_info->margin *= 3;
+
+		/* set margin size */
+		if (part_info->margin < 4)
+			part_info->margin = 4;
+		else
+			part_info->margin <<= 1;
 	} else {
 		return E_VSP_PARA_SRU_MODE;
 	}
@@ -1884,17 +1894,14 @@ static long vsp_ins_check_uds_param(
 		/* set partition flag */
 		part_info->div_flag = 8;
 		part_info->margin <<= 4;
-		part_info->margin += 4;
 	} else if (uds_param->x_ratio < VSP_UDS_SCALE_4_1) {
 		/* set partition flag */
 		part_info->div_flag = 4;
 		part_info->margin <<= 3;
-		part_info->margin += 2;
 	} else if (uds_param->x_ratio < VSP_UDS_SCALE_2_1) {
 		/* set partition flag */
 		part_info->div_flag = 2;
 		part_info->margin <<= 2;
-		part_info->margin += 1;
 	} else if (uds_param->x_ratio < VSP_UDS_SCALE_1_1) {
 		/* set partition flag */
 		part_info->div_flag = 1;
@@ -2828,6 +2835,9 @@ static long vsp_ins_check_shp_param(
 		ch_info, shp_param->connect, shp_param->fxa);
 	if (shp_info->val_dpr == VSP_DPR_ROUTE_NOT_USE)
 		return E_VSP_PARA_SHP_CONNECT;
+
+	if (ch_info->part_info.margin < 4)
+		ch_info->part_info.margin = 4;
 
 	return 0;
 }
