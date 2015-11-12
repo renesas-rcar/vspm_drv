@@ -408,7 +408,7 @@ static long fdp_ins_check_refbuf_param(
 		/* check pointer */
 		buf = ref->prev_buf;
 		if (buf == NULL)
-			return E_FDP_PARA_BUFREFRD0;
+			return E_FDP_PARA_BUFREFRD2;
 
 		/* check luma address */
 		if (buf->addr == NULL)
@@ -420,7 +420,7 @@ static long fdp_ins_check_refbuf_param(
 		/* check pointer */
 		buf = ref->next_buf;
 		if (buf == NULL)
-			return E_FDP_PARA_BUFREFRD2;
+			return E_FDP_PARA_BUFREFRD0;
 
 		/* check luma address */
 		if (buf->addr == NULL)
@@ -590,15 +590,15 @@ static void fdp_ins_set_chact(
 		if (fproc_par->last_seq_indicator == 0) {
 			if (seq_par->telecine_mode == FDP_TC_FORCED_PULL_DOWN) {
 				if (seq_cnt == 0) {
-					/* add previous field read */
-					obj->ctrl_chact |=
-						FD1_CTL_CHACT_PRE_READ;
-					obj->ipc_mode |=
-						FD1_IPC_MODE_DIM_NEXT_FIELD;
-				} else {
 					/* add next field read */
 					obj->ctrl_chact |=
 						FD1_CTL_CHACT_NEX_READ;
+					obj->ipc_mode |=
+						FD1_IPC_MODE_DIM_NEXT_FIELD;
+				} else {
+					/* add previous field read */
+					obj->ctrl_chact |=
+						FD1_CTL_CHACT_PRE_READ;
 					obj->ipc_mode |=
 						FD1_IPC_MODE_DIM_PREVIOUS_FIELD;
 				}
