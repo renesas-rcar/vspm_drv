@@ -271,7 +271,7 @@ long vspm_ins_ctrl_set_mode(struct vspm_api_param_mode *mode)
 			memset(
 				&request->fdp_info,
 				0,
-				sizeof(struct vspm_request_res_info));
+				sizeof(struct vspm_fdp_proc_info));
 			if (param->par.fdp != NULL) {
 				request->fdp_info.stlmsk_addr[0] =
 					param->par.fdp->hard_addr[0];
