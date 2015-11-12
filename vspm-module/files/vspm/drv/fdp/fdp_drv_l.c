@@ -118,6 +118,14 @@ static long fdp_ins_check_seq_param(
 			FD1_CTL_OPMODE_NO_INTERRUPT;
 		obj->rpf_format =
 			FD1_RPF_FORMAT_CIPM_INT;
+
+		/* check current field parity parameter */
+		if (fproc_par->current_field == FDP_CF_TOP)
+			obj->rpf_format |= FD1_RPF_FORMAT_CF_TOP;
+		else if (fproc_par->current_field == FDP_CF_BOTTOM)
+			obj->rpf_format |= FD1_RPF_FORMAT_CF_BOTTOM;
+		else
+			return E_FDP_PARA_CF;
 		break;
 	default:
 		return E_FDP_PARA_SEQMODE;
@@ -702,14 +710,6 @@ static long fdp_ins_check_fproc_param(
 	if ((fproc_par->last_seq_indicator != 0) &&
 		(fproc_par->last_seq_indicator != 1))
 		return E_FDP_PARA_LASTSTART;
-
-	/* check current field parity parameter */
-	if (fproc_par->current_field == FDP_CF_TOP)
-		obj->rpf_format |= FD1_RPF_FORMAT_CF_TOP;
-	else if (fproc_par->current_field == FDP_CF_BOTTOM)
-		obj->rpf_format |= FD1_RPF_FORMAT_CF_BOTTOM;
-	else
-		return E_FDP_PARA_CF;
 
 	fdp_ins_set_chact(obj, fproc_par, seq_par, seq_cnt);
 
