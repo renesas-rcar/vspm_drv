@@ -341,6 +341,8 @@
 #define FD1_IPC_LMEM_PNUM_FCP			(960)
 
 /* FCP register value */
+#define FD1_FCP_RST_RIIF				(0x00400000)
+#define FD1_FCP_RST_RSIF				(0x00200000)
 #define FD1_FCP_RST_DCMP				(0x00100000)
 #define FD1_FCP_RST_SOFTRST				(0x00000001)
 #define FD1_FCP_STA_ACT					(0x00000001)
