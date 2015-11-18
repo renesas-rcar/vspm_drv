@@ -89,6 +89,8 @@ static long fdp_ins_check_seq_param(
 	struct fdp_fproc_t *fproc_par,
 	struct fdp_seq_t *seq_par)
 {
+	struct vspm_fdp_proc_info *proc_info = obj->proc_info;
+
 	/* sequence mode */
 	switch (seq_par->seq_mode) {
 	case FDP_SEQ_PROG:
@@ -104,6 +106,9 @@ static long fdp_ins_check_seq_param(
 			FD1_CTL_OPMODE_NO_INTERRUPT;
 		obj->rpf_format =
 			FD1_RPF_FORMAT_CIPM_PRG;
+
+		/* set still mask address index */
+		proc_info->stlmsk_idx = 0;
 		break;
 	case FDP_SEQ_INTER:
 	case FDP_SEQ_INTER_2D:
@@ -126,6 +131,9 @@ static long fdp_ins_check_seq_param(
 			obj->rpf_format |= FD1_RPF_FORMAT_CF_BOTTOM;
 		else
 			return E_FDP_PARA_CF;
+
+		/* set still mask address index */
+		proc_info->stlmsk_idx = fproc_par->current_field;
 		break;
 	default:
 		return E_FDP_PARA_SEQMODE;
@@ -777,18 +785,12 @@ static void fdp_ins_update_proc_info(
 	struct vspm_fdp_proc_info *proc_info = obj->proc_info;
 
 	if (fproc_par->seq_par != NULL) {
-		/* reset still mask address index */
-		proc_info->stlmsk_idx = 0;
-
 		/* copy current sequence parameter */
 		memcpy(
 			&proc_info->seq_par,
 			fproc_par->seq_par,
 			sizeof(struct fdp_seq_t));
 		proc_info->set_prev_flag = 1;
-	} else {
-		/* switching still mask address index */
-		proc_info->stlmsk_idx = 1 - proc_info->stlmsk_idx;
 	}
 
 	/* set picture ID */
