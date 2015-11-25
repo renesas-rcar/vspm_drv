@@ -88,10 +88,16 @@ struct fdp_obj_t {
 	unsigned int ctrl_mode;
 	unsigned int ctrl_chact;
 	unsigned int rpf_format;
+	unsigned int rpf0_addr_y;
+	unsigned int rpf2_addr_y;
 	unsigned int wpf_format;
 	unsigned int wpf_swap;
 	unsigned int ipc_mode;
 	unsigned int ipc_lmem;
+	unsigned int fcp_ref_addr_y0;
+	unsigned int fcp_ref_addr_y2;
+	unsigned int fcp_anc_addr_y0;
+	unsigned int fcp_anc_addr_y2;
 
 	/* platform information */
 	struct platform_device *pdev;

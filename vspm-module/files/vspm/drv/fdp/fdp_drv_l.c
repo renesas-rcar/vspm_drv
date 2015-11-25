@@ -206,12 +206,8 @@ Returns:		0/E_FDP_PARA_PICWIDTH/E_FDP_PARA_PICHEIGHT
 	E_FDP_PARA_PROGSEQ/E_FDP_PARA_REPEATTOP/E_FDP_PARA_PICSTRUCT
 ******************************************************************************/
 static long fdp_ins_check_pic_param_for_pulldown(
-	struct fdp_pic_t *in_pic,
-	struct fdp_seq_t *seq_par,
-	unsigned char *seq_cnt)
+	struct fdp_pic_t *in_pic, struct fdp_seq_t *seq_par)
 {
-	unsigned char rep_cnt = 0;
-
 	/* check horizontal size */
 	if (in_pic->width != seq_par->in_width)
 		return E_FDP_PARA_PICWIDTH;
@@ -239,13 +235,6 @@ static long fdp_ins_check_pic_param_for_pulldown(
 		default:
 			return E_FDP_PARA_PICSTRUCT;
 		}
-
-		if (in_pic->repeat_first_field == 1) {
-			if (in_pic->top_field_first == 0)
-				rep_cnt = 1;
-			else
-				rep_cnt = 2;
-		}
 	} else if (in_pic->progressive_sequence == 1) {
 		if (seq_par->seq_mode != FDP_SEQ_PROG)
 			return E_FDP_PARA_PROGSEQ;
@@ -265,11 +254,6 @@ static long fdp_ins_check_pic_param_for_pulldown(
 		default:
 			return E_FDP_PARA_PICSTRUCT;
 		}
-
-		if (in_pic->repeat_first_field == 0)
-			rep_cnt = 1;
-		else
-			rep_cnt = 2;
 	} else {
 		return E_FDP_PARA_PROGSEQ;
 	}
@@ -283,9 +267,6 @@ static long fdp_ins_check_pic_param_for_pulldown(
 	if ((in_pic->top_field_first != 0) &&
 		(in_pic->top_field_first != 1))
 			return E_FDP_PARA_REPEATTOP;
-
-	if (*seq_cnt > rep_cnt)
-		*seq_cnt = 0;
 
 	return 0;
 }
@@ -351,9 +332,8 @@ static long fdp_ins_check_dstbuf_param(
 Function:		fdp_ins_check_refbuf_param
 Description:	Check reference buffer parameter.
 Returns:		0/E_FDP_PARA_REFBUF
-	E_FDP_PARA_BUFREFRD0/E_FDP_PARA_BUFREFRD1/E_FDP_PARA_BUFREFRD2
-	E_FDP_PARA_SRC_ADDR/E_FDP_PARA_SRC_ADDR_C0/E_FDP_PARA_SRC_ADDR_C1
-	E_FDP_PARA_SRC_STRIDE/E_FDP_PARA_SRC_STRIDE_C
+	E_FDP_PARA_BUFREFRD1/E_FDP_PARA_SRC_ADDR/E_FDP_PARA_SRC_ADDR_C0
+	E_FDP_PARA_SRC_ADDR_C1/E_FDP_PARA_SRC_STRIDE/E_FDP_PARA_SRC_STRIDE_C
 ******************************************************************************/
 static long fdp_ins_check_refbuf_param(
 	struct fdp_obj_t *obj,
@@ -365,6 +345,9 @@ static long fdp_ins_check_refbuf_param(
 
 	unsigned short stride = seq_par->in_width << 1;
 	unsigned short stride_c = seq_par->in_width;
+
+	obj->rpf0_addr_y = 0;
+	obj->rpf2_addr_y = 0;
 
 	/* check reference pointer */
 	if (ref == NULL)
@@ -411,29 +394,13 @@ static long fdp_ins_check_refbuf_param(
 		break;
 	}
 
-	/* check previous field buffer */
-	if (obj->ctrl_chact & FD1_CTL_CHACT_PRE_READ) {
-		/* check pointer */
-		buf = ref->prev_buf;
-		if (buf == NULL)
-			return E_FDP_PARA_BUFREFRD2;
+	/* get previous address */
+	if (ref->prev_buf != NULL)
+		obj->rpf0_addr_y = FDP_VP_TO_INT(ref->prev_buf->addr);
 
-		/* check luma address */
-		if (buf->addr == NULL)
-			return E_FDP_PARA_SRC_ADDR;
-	}
-
-	/* check next field buffer */
-	if (obj->ctrl_chact & FD1_CTL_CHACT_NEX_READ) {
-		/* check pointer */
-		buf = ref->next_buf;
-		if (buf == NULL)
-			return E_FDP_PARA_BUFREFRD0;
-
-		/* check luma address */
-		if (buf->addr == NULL)
-			return E_FDP_PARA_SRC_ADDR;
-	}
+	/* get next address */
+	if (ref->next_buf != NULL)
+		obj->rpf2_addr_y = FDP_VP_TO_INT(ref->next_buf->addr);
 
 	return 0;
 }
@@ -453,6 +420,11 @@ static long fdp_ins_check_fcp_param(
 	struct fcp_info_t *fcp = fproc_par->fcp_par;
 	struct fdp_imgbuf_t *buf;
 	unsigned short fcp_stride;
+
+	obj->fcp_ref_addr_y0 = 0;
+	obj->fcp_ref_addr_y2 = 0;
+	obj->fcp_anc_addr_y0 = 0;
+	obj->fcp_anc_addr_y2 = 0;
 
 	if (fcp != NULL) {
 		/* check FCNL compress parameter */
@@ -511,21 +483,13 @@ static long fdp_ins_check_fcp_param(
 				(FDP_VP_TO_INT(fcp->ba_ref_cur_c) & 0x3fff))
 				return E_FDP_PARA_BA_REF;
 
-			if (obj->ctrl_chact & FD1_CTL_CHACT_PRE_READ) {
-				/* check previous address of reference */
-				if ((fcp->ba_ref_prev_y == NULL) ||
-					(FDP_VP_TO_INT(fcp->ba_ref_prev_y)
-						& 0x3fff))
-					return E_FDP_PARA_BA_REF;
-			}
+			/* get previous address of reference */
+			obj->fcp_ref_addr_y0 =
+				FDP_VP_TO_INT(fcp->ba_ref_prev_y);
 
-			if (obj->ctrl_chact & FD1_CTL_CHACT_NEX_READ) {
-				/* check next address of reference */
-				if ((fcp->ba_ref_next_y == NULL) ||
-					(FDP_VP_TO_INT(fcp->ba_ref_next_y)
-						& 0x3fff))
-					return E_FDP_PARA_BA_REF;
-			}
+			/* get next address of reference */
+			obj->fcp_ref_addr_y2 =
+				FDP_VP_TO_INT(fcp->ba_ref_next_y);
 
 			/* check source format */
 			if ((fproc_par->in_pic->chroma_format !=
@@ -557,23 +521,95 @@ static long fdp_ins_check_fcp_param(
 			(FDP_VP_TO_INT(fcp->ba_anc_cur_c) & 0x7f))
 			return E_FDP_PARA_BA_ANC;
 
-		if (obj->ctrl_chact & FD1_CTL_CHACT_PRE_READ) {
-			/* check previous address of ancillary */
-			if (FDP_VP_TO_INT(fcp->ba_anc_prev_y) & 0x7f)
-				return E_FDP_PARA_BA_ANC;
-		}
+		/* get previous address of ancillary */
+		obj->fcp_anc_addr_y0 =
+			FDP_VP_TO_INT(fcp->ba_anc_prev_y);
 
-		if (obj->ctrl_chact & FD1_CTL_CHACT_NEX_READ) {
-			/* check next address of ancillary */
-			if (FDP_VP_TO_INT(fcp->ba_anc_next_y) & 0x7f)
-				return E_FDP_PARA_BA_ANC;
-		}
+		/* get next address of ancillary */
+		obj->fcp_anc_addr_y2 =
+			FDP_VP_TO_INT(fcp->ba_anc_next_y);
 	} else {
 		/* disable FCNL compress */
 		obj->wpf_swap = FD1_WPF_SWAP_SSWAP | FD1_WPF_SWAP_OSWAP;
 
 		/* disable TL conversion */
 		obj->ipc_lmem = FD1_IPC_LMEM_PNUM;
+	}
+
+	return 0;
+}
+
+/******************************************************************************
+Function:		fdp_ins_check_aux_buffer_param
+Description:	Check auxiliary buffer parameter.
+Returns:		0/E_FDP_PARA_BUFREFRD0/E_FDP_PARA_BUFREFRD2
+	E_FDP_PARA_BA_REF/E_FDP_PARA_BA_ANC
+******************************************************************************/
+static long fdp_ins_check_aux_buffer_param(
+	struct fdp_obj_t *obj, struct fdp_seq_t *seq_par)
+{
+	if (seq_par->seq_mode == FDP_SEQ_INTER) {
+		if (seq_par->telecine_mode == FDP_TC_OFF) {
+			if ((obj->rpf0_addr_y == 0) ||
+				(obj->rpf2_addr_y == 0)) {
+				/* reject previous and next field buffer */
+				obj->ctrl_chact &=
+					~(FD1_CTL_CHACT_PRE_READ |
+					  FD1_CTL_CHACT_NEX_READ);
+
+				/* change fixed 2D de-interlacing */
+				obj->ipc_mode =
+					FD1_IPC_MODE_DLI |
+					FD1_IPC_MODE_DIM_FIXED_2D;
+			}
+		} else if (seq_par->telecine_mode == FDP_TC_FORCED_PULL_DOWN) {
+			if ((obj->rpf0_addr_y == 0) &&
+				(obj->rpf2_addr_y != 0)) {
+				/* copy address */
+				obj->rpf0_addr_y = obj->rpf2_addr_y;
+				obj->fcp_ref_addr_y0 = obj->fcp_ref_addr_y2;
+				obj->fcp_anc_addr_y0 = obj->fcp_anc_addr_y2;
+			} else if (
+				(obj->rpf0_addr_y != 0) &&
+				(obj->rpf2_addr_y == 0)) {
+				/* copy address */
+				obj->rpf2_addr_y = obj->rpf0_addr_y;
+				obj->fcp_ref_addr_y2 = obj->fcp_ref_addr_y0;
+				obj->fcp_anc_addr_y2 = obj->fcp_anc_addr_y0;
+			}
+		}
+
+		/* check previous field buffer */
+		if (obj->ctrl_chact & FD1_CTL_CHACT_PRE_READ) {
+			/* check source address */
+			if (obj->rpf0_addr_y == 0)
+				return E_FDP_PARA_BUFREFRD2;
+
+			/* check reference base address */
+			if ((obj->fcp_ref_addr_y0 == 0) ||
+				(obj->fcp_ref_addr_y0 & 0x3fff))
+				return E_FDP_PARA_BA_REF;
+
+			/* check ancillary address */
+			if (obj->fcp_anc_addr_y0 & 0x7f)
+				return E_FDP_PARA_BA_ANC;
+		}
+
+		/* check next field buffer */
+		if (obj->ctrl_chact & FD1_CTL_CHACT_NEX_READ) {
+			/* check source address */
+			if (obj->rpf2_addr_y == 0)
+				return E_FDP_PARA_BUFREFRD0;
+
+			/* check reference base address */
+			if ((obj->fcp_ref_addr_y2 == 0) ||
+				(obj->fcp_ref_addr_y2 & 0x3fff))
+				return E_FDP_PARA_BA_REF;
+
+			/* check ancillary address */
+			if (obj->fcp_anc_addr_y2 & 0x7f)
+				return E_FDP_PARA_BA_ANC;
+		}
 	}
 
 	return 0;
@@ -595,59 +631,48 @@ static void fdp_ins_set_chact(
 	obj->ipc_mode = FD1_IPC_MODE_DLI;
 
 	if (seq_par->seq_mode == FDP_SEQ_INTER) {
-		if (fproc_par->last_seq_indicator == 0) {
-			if (seq_par->telecine_mode == FDP_TC_FORCED_PULL_DOWN) {
-				if (seq_cnt == 0) {
-					/* add next field read */
-					obj->ctrl_chact |=
-						FD1_CTL_CHACT_NEX_READ;
-					obj->ipc_mode |=
-						FD1_IPC_MODE_DIM_NEXT_FIELD;
-				} else {
-					/* add previous field read */
-					obj->ctrl_chact |=
-						FD1_CTL_CHACT_PRE_READ;
-					obj->ipc_mode |=
-						FD1_IPC_MODE_DIM_PREVIOUS_FIELD;
-				}
-			} else if (seq_par->telecine_mode ==
-					FDP_TC_INTERPOLATED_LINE) {
+		if (seq_par->telecine_mode == FDP_TC_FORCED_PULL_DOWN) {
+			if (fproc_par->current_field == FDP_CF_TOP) {
+				/* add next field read */
+				obj->ctrl_chact |=
+					FD1_CTL_CHACT_NEX_READ;
+				obj->ipc_mode |=
+					FD1_IPC_MODE_DIM_NEXT_FIELD;
+			} else {	/* FDP_CF_BOTTOM */
+				/* add previous field read */
+				obj->ctrl_chact |=
+					FD1_CTL_CHACT_PRE_READ;
+				obj->ipc_mode |=
+					FD1_IPC_MODE_DIM_PREVIOUS_FIELD;
+			}
+		} else if (seq_par->telecine_mode ==
+				FDP_TC_INTERPOLATED_LINE) {
+			obj->ctrl_chact |=
+				FD1_CTL_CHACT_SMSK_WRITE |
+				FD1_CTL_CHACT_SMSK_READ |
+				FD1_CTL_CHACT_PRE_READ |
+				FD1_CTL_CHACT_NEX_READ;
+			obj->ipc_mode |= (unsigned int)
+				fproc_par->interpolated_line;
+		} else {	/* FDP_TC_OFF */
+			if ((seq_cnt == 0) || (seq_cnt == 1)) {
+				obj->ctrl_chact |=
+					FD1_CTL_CHACT_SMSK_WRITE |
+					FD1_CTL_CHACT_PRE_READ |
+					FD1_CTL_CHACT_NEX_READ;
+			} else {
 				obj->ctrl_chact |=
 					FD1_CTL_CHACT_SMSK_WRITE |
 					FD1_CTL_CHACT_SMSK_READ |
 					FD1_CTL_CHACT_PRE_READ |
 					FD1_CTL_CHACT_NEX_READ;
-				obj->ipc_mode |= (unsigned int)
-					fproc_par->interpolated_line;
-			} else {
-				if (seq_cnt == 0) {	/* 1st seq. */
-					obj->ctrl_chact |=
-						FD1_CTL_CHACT_SMSK_WRITE;
-					obj->ipc_mode |=
-						FD1_IPC_MODE_DIM_FIXED_2D;
-				} else if (seq_cnt == 1) {	/* 2nd seq. */
-					obj->ctrl_chact |=
-						FD1_CTL_CHACT_SMSK_WRITE |
-						FD1_CTL_CHACT_PRE_READ |
-						FD1_CTL_CHACT_NEX_READ;
-					obj->ipc_mode |=
-						FD1_IPC_MODE_DIM_ADAPTIVE_2D_3D;
-				} else {	/* other seq. */
-					obj->ctrl_chact |=
-						FD1_CTL_CHACT_SMSK_WRITE |
-						FD1_CTL_CHACT_SMSK_READ |
-						FD1_CTL_CHACT_PRE_READ |
-						FD1_CTL_CHACT_NEX_READ;
-					obj->ipc_mode |=
-						FD1_IPC_MODE_DIM_ADAPTIVE_2D_3D;
-				}
 			}
-		} else {
-			/* Fixed 2D mode */
-			obj->ipc_mode |= FD1_IPC_MODE_DIM_FIXED_2D;
+			/* Adaptive 2D/3D de-interlacing */
+			obj->ipc_mode |=
+				FD1_IPC_MODE_DIM_ADAPTIVE_2D_3D;
 		}
 	} else {	/* FDP_SEQ_PROG or FDP_SEQ_INTER_2D */
-		/* Fixed 2D mode */
+		/* Fixed 2D de-interlacing */
 		obj->ipc_mode |= FD1_IPC_MODE_DIM_FIXED_2D;
 	}
 }
@@ -664,6 +689,7 @@ Returns:		0/E_FDP_PARA_FPROCPAR/E_FDP_PARA_SEQPAR
 	return of fdp_ins_check_dstbuf_param()
 	return of fdp_ins_check_refbuf_param()
 	return of fdp_ins_check_fcp_param()
+	return of fdp_ins_check_aux_buffer_param()
 ******************************************************************************/
 static long fdp_ins_check_fproc_param(
 	struct fdp_obj_t *obj, struct fdp_fproc_t *fproc_par)
@@ -709,7 +735,7 @@ static long fdp_ins_check_fproc_param(
 
 	if (seq_par->telecine_mode == FDP_TC_FORCED_PULL_DOWN) {
 		ercd = fdp_ins_check_pic_param_for_pulldown(
-			fproc_par->in_pic, seq_par, &seq_cnt);
+			fproc_par->in_pic, seq_par);
 		if (ercd)
 			return ercd;
 	}
@@ -765,6 +791,11 @@ static long fdp_ins_check_fproc_param(
 
 	/* check frame compression parameter */
 	ercd = fdp_ins_check_fcp_param(obj, fproc_par);
+	if (ercd)
+		return ercd;
+
+	/* check auxiliary buffer address parameter */
+	ercd = fdp_ins_check_aux_buffer_param(obj, seq_par);
 	if (ercd)
 		return ercd;
 
@@ -854,9 +885,7 @@ static void fdp_ins_set_rpf_reg(struct fdp_obj_t *obj, struct fdp_refbuf_t *ref)
 	struct vspm_fdp_proc_info *proc_info = obj->proc_info;
 	struct fdp_seq_t *seq_par =
 		&proc_info->seq_par; /* use private parameter */
-	struct fdp_imgbuf_t *prev = ref->prev_buf;
 	struct fdp_imgbuf_t *cur = ref->cur_buf;
-	struct fdp_imgbuf_t *next = ref->next_buf;
 
 	unsigned int reg_data;
 
@@ -876,12 +905,7 @@ static void fdp_ins_set_rpf_reg(struct fdp_obj_t *obj, struct fdp_refbuf_t *ref)
 	fdp_write_reg(reg_data, P_FDP, FD1_RPF_PSTRIDE);
 
 	/* RPF0 source component-Y address register */
-	if (obj->ctrl_chact & FD1_CTL_CHACT_PRE_READ) {
-		fdp_write_reg(
-			FDP_VP_TO_INT(prev->addr), P_FDP, FD1_RPF0_ADDR_Y);
-	} else {
-		fdp_write_reg(0, P_FDP, FD1_RPF0_ADDR_Y);
-	}
+	fdp_write_reg(obj->rpf0_addr_y, P_FDP, FD1_RPF0_ADDR_Y);
 
 	/* RPF1 source component-Y address register */
 	fdp_write_reg(FDP_VP_TO_INT(cur->addr), P_FDP, FD1_RPF1_ADDR_Y);
@@ -893,12 +917,7 @@ static void fdp_ins_set_rpf_reg(struct fdp_obj_t *obj, struct fdp_refbuf_t *ref)
 	fdp_write_reg(FDP_VP_TO_INT(cur->addr_c1), P_FDP, FD1_RPF1_ADDR_C1);
 
 	/* RPF2 source component-Y address register */
-	if (obj->ctrl_chact & FD1_CTL_CHACT_NEX_READ) {
-		fdp_write_reg(
-			FDP_VP_TO_INT(next->addr), P_FDP, FD1_RPF2_ADDR_Y);
-	} else {
-		fdp_write_reg(0, P_FDP, FD1_RPF2_ADDR_Y);
-	}
+	fdp_write_reg(obj->rpf2_addr_y, P_FDP, FD1_RPF2_ADDR_Y);
 
 	/* still mask address register */
 	reg_data = FDP_VP_TO_INT(proc_info->stlmsk_addr[proc_info->stlmsk_idx]);
@@ -1027,7 +1046,7 @@ static void fdp_ins_set_fcp_reg(
 
 		/* Base address of reference information register */
 		fdp_write_reg(
-			FDP_VP_TO_INT(fcp->ba_ref_prev_y),
+			obj->fcp_ref_addr_y0,
 			P_FCP,
 			FD1_BA_REF_Y0);
 		fdp_write_reg(
@@ -1035,7 +1054,7 @@ static void fdp_ins_set_fcp_reg(
 			P_FCP,
 			FD1_BA_REF_Y1);
 		fdp_write_reg(
-			FDP_VP_TO_INT(fcp->ba_ref_next_y),
+			obj->fcp_ref_addr_y2,
 			P_FCP,
 			FD1_BA_REF_Y2);
 		fdp_write_reg(
@@ -1045,7 +1064,7 @@ static void fdp_ins_set_fcp_reg(
 
 		/* Base address of ancillary information register */
 		fdp_write_reg(
-			FDP_VP_TO_INT(fcp->ba_anc_prev_y),
+			obj->fcp_anc_addr_y0,
 			P_FCP,
 			FD1_BA_ANC_Y0);
 		fdp_write_reg(
@@ -1053,7 +1072,7 @@ static void fdp_ins_set_fcp_reg(
 			P_FCP,
 			FD1_BA_ANC_Y1);
 		fdp_write_reg(
-			FDP_VP_TO_INT(fcp->ba_anc_next_y),
+			obj->fcp_anc_addr_y2,
 			P_FCP,
 			FD1_BA_ANC_Y2);
 		fdp_write_reg(
