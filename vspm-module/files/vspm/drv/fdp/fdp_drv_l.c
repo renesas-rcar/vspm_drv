@@ -1231,6 +1231,11 @@ static void fdp_int_update_state(struct fdp_obj_t *obj)
 	unsigned int *sensor;
 	unsigned int i;
 
+	/* status update */
+	fdp_write_reg(0x1, P_FDP, FD1_CTL_REGEND);
+	fdp_write_reg(0x1, P_FDP, FD1_CTL_SGCMD);
+	fdp_write_reg(0x0, P_FDP, FD1_CTL_SGCMD);
+
 	/* read vcycle */
 	proc_info->status.vcycle =
 		fdp_read_reg(P_FDP, FD1_CTL_VCYCLE_STAT);
