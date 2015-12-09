@@ -546,8 +546,12 @@ Returns:		0/E_FDP_PARA_BUFREFRD0/E_FDP_PARA_BUFREFRD2
 	E_FDP_PARA_BA_REF/E_FDP_PARA_BA_ANC
 ******************************************************************************/
 static long fdp_ins_check_aux_buffer_param(
-	struct fdp_obj_t *obj, struct fdp_seq_t *seq_par)
+	struct fdp_obj_t *obj,
+	struct fdp_fproc_t *fproc_par,
+	struct fdp_seq_t *seq_par)
 {
+	struct fcp_info_t *fcp = fproc_par->fcp_par;
+
 	if (seq_par->seq_mode == FDP_SEQ_INTER) {
 		if (seq_par->telecine_mode == FDP_TC_OFF) {
 			if ((obj->rpf0_addr_y == 0) ||
@@ -585,14 +589,18 @@ static long fdp_ins_check_aux_buffer_param(
 			if (obj->rpf0_addr_y == 0)
 				return E_FDP_PARA_BUFREFRD2;
 
-			/* check reference base address */
-			if ((obj->fcp_ref_addr_y0 == 0) ||
-				(obj->fcp_ref_addr_y0 & 0x3fff))
-				return E_FDP_PARA_BA_REF;
+			if (fcp != NULL) {
+				if (fcp->tlen == FCP_TL_ENABLE) {
+					/* check reference base address */
+					if ((obj->fcp_ref_addr_y0 == 0) ||
+						(obj->fcp_ref_addr_y0 & 0x3fff))
+						return E_FDP_PARA_BA_REF;
+				}
 
-			/* check ancillary address */
-			if (obj->fcp_anc_addr_y0 & 0x7f)
-				return E_FDP_PARA_BA_ANC;
+				/* check ancillary address */
+				if (obj->fcp_anc_addr_y0 & 0x7f)
+					return E_FDP_PARA_BA_ANC;
+			}
 		}
 
 		/* check next field buffer */
@@ -601,14 +609,18 @@ static long fdp_ins_check_aux_buffer_param(
 			if (obj->rpf2_addr_y == 0)
 				return E_FDP_PARA_BUFREFRD0;
 
-			/* check reference base address */
-			if ((obj->fcp_ref_addr_y2 == 0) ||
-				(obj->fcp_ref_addr_y2 & 0x3fff))
-				return E_FDP_PARA_BA_REF;
+			if (fcp != NULL) {
+				if (fcp->tlen == FCP_TL_ENABLE) {
+					/* check reference base address */
+					if ((obj->fcp_ref_addr_y2 == 0) ||
+						(obj->fcp_ref_addr_y2 & 0x3fff))
+						return E_FDP_PARA_BA_REF;
+				}
 
-			/* check ancillary address */
-			if (obj->fcp_anc_addr_y2 & 0x7f)
-				return E_FDP_PARA_BA_ANC;
+				/* check ancillary address */
+				if (obj->fcp_anc_addr_y2 & 0x7f)
+					return E_FDP_PARA_BA_ANC;
+			}
 		}
 	}
 
@@ -795,7 +807,7 @@ static long fdp_ins_check_fproc_param(
 		return ercd;
 
 	/* check auxiliary buffer address parameter */
-	ercd = fdp_ins_check_aux_buffer_param(obj, seq_par);
+	ercd = fdp_ins_check_aux_buffer_param(obj, fproc_par, seq_par);
 	if (ercd)
 		return ercd;
 
