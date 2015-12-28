@@ -2094,7 +2094,7 @@ long vsp_ins_stop_processing(struct vsp_prv_data *prv)
 	volatile unsigned int dmy;
 
 	unsigned int status;
-	unsigned int loop_cnt = VSP_STATUS_LOOP_CNT;
+	unsigned int loop_cnt;
 
 	/* disable interrupt */
 	vsp_write_reg(0, prv->vsp_reg, VSP_WPF0_IRQ_ENB);
@@ -2106,7 +2106,36 @@ long vsp_ins_stop_processing(struct vsp_prv_data *prv)
 	dmy = vsp_read_reg(prv->vsp_reg, VSP_WPF0_IRQ_STA);
 	dmy = vsp_read_reg(prv->vsp_reg, VSP_WPF0_IRQ_STA);
 
-	/* read status register */
+	/* init loop counter */
+	loop_cnt = VSP_STATUS_LOOP_CNT;
+
+	/* read status register of FCP */
+	status = vsp_read_reg(prv->fcp_reg, VSP_FCP_STA);
+
+	if (status & VSP_FCP_STA_ACT) {
+		/* reset */
+		vsp_write_reg(VSP_FCP_RST_SOFTRST, prv->fcp_reg, VSP_FCP_RST);
+
+		/* waiting reset process */
+		do {
+			/* sleep */
+			msleep(VSP_STATUS_LOOP_TIME);
+
+			/* read status register of FCP */
+			status = vsp_read_reg(prv->fcp_reg, VSP_FCP_STA);
+		} while ((status & VSP_FCP_STA_ACT) &&
+			(--loop_cnt > 0));
+	}
+
+	if (loop_cnt == 0) {
+		APRINT("%s: happen to timeout after reset of FCP!!\n",
+			__func__);
+	}
+
+	/* init loop counter */
+	loop_cnt = VSP_STATUS_LOOP_CNT;
+
+	/* read status register of VSP */
 	status = vsp_read_reg(prv->vsp_reg, VSP_STATUS);
 
 	if (status & VSP_STATUS_WPF0) {
@@ -2116,9 +2145,9 @@ long vsp_ins_stop_processing(struct vsp_prv_data *prv)
 		/* waiting reset process */
 		do {
 			/* sleep */
-			msleep(20);		/* 20ms */
+			msleep(VSP_STATUS_LOOP_TIME);
 
-			/* read status register */
+			/* read status register of VSP */
 			status = vsp_read_reg(prv->vsp_reg, VSP_STATUS);
 		} while ((status & VSP_STATUS_WPF0) &&
 			(--loop_cnt > 0));
@@ -2133,7 +2162,8 @@ long vsp_ins_stop_processing(struct vsp_prv_data *prv)
 		vsp_ins_cb_function(prv, R_VSPM_CANCEL);
 		vsp_ins_cb_function(prv, R_VSPM_CANCEL);
 	} else {
-		APRINT("%s: happen to timeout after reset!!\n", __func__);
+		APRINT("%s: happen to timeout after reset of VSP!!\n",
+			__func__);
 		vsp_ins_cb_function(prv, R_VSPM_DRIVER_ERR);
 		vsp_ins_cb_function(prv, R_VSPM_DRIVER_ERR);
 	}
@@ -2149,32 +2179,8 @@ Returns:		void
 ******************************************************************************/
 static void vsp_ins_software_reset(struct vsp_prv_data *prv)
 {
-	unsigned int status;
-	unsigned int loop_cnt = VSP_STATUS_LOOP_CNT;
-
 	/* Forced stop the VSP processing */
 	(void)vsp_ins_stop_processing(prv);
-
-	/* reset the FCP */
-	status = vsp_read_reg(prv->fcp_reg, VSP_FCP_STA);
-
-	if (status & VSP_FCP_STA_ACT) {
-		/* reset */
-		vsp_write_reg(VSP_FCP_RST_SOFTRST, prv->fcp_reg, VSP_FCP_RST);
-
-		/* waiting reset process */
-		do {
-			/* sleep */
-			msleep(20);		/* 20ms */
-
-			/* read status register */
-			status = vsp_read_reg(prv->fcp_reg, VSP_FCP_STA);
-		} while ((status & VSP_FCP_STA_ACT) &&
-			(--loop_cnt > 0));
-	}
-
-	if (loop_cnt == 0)
-		APRINT("%s: happen to timeout after reset!!\n", __func__);
 }
 
 

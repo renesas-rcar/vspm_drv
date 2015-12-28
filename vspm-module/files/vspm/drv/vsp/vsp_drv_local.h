@@ -98,7 +98,8 @@
 #define VSP_PART_MARGIN			2
 
 /* define status read counter */
-#define VSP_STATUS_LOOP_CNT		(50)
+#define VSP_STATUS_LOOP_TIME	(2)
+#define VSP_STATUS_LOOP_CNT		(500)
 
 /* define module maximum */
 #define VSP_RPF_MAX				(5)
