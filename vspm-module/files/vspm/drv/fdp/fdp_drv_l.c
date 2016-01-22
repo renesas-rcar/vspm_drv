@@ -644,7 +644,8 @@ static void fdp_ins_set_chact(
 
 	if (seq_par->seq_mode == FDP_SEQ_INTER) {
 		if (seq_par->telecine_mode == FDP_TC_FORCED_PULL_DOWN) {
-			if (fproc_par->current_field == FDP_CF_TOP) {
+			if (fproc_par->current_field !=
+					fproc_par->in_pic->top_field_first) {
 				/* add next field read */
 				obj->ctrl_chact |=
 					FD1_CTL_CHACT_NEX_READ;
