@@ -151,9 +151,11 @@ static long fdp_ins_check_seq_param(
 	case FDP_TC_FORCED_PULL_DOWN:
 		break;
 	case FDP_TC_INTERPOLATED_LINE:
-		if ((fproc_par->interpolated_line != FDP_DIM_PREV) &&
-			(fproc_par->interpolated_line != FDP_DIM_NEXT)) {
-				return E_FDP_PARA_INTERPOLATED;
+		if (seq_par->seq_mode == FDP_SEQ_INTER) {
+			if ((fproc_par->interpolated_line != FDP_DIM_PREV) &&
+			    (fproc_par->interpolated_line != FDP_DIM_NEXT)) {
+					return E_FDP_PARA_INTERPOLATED;
+			}
 		}
 		break;
 	default:
@@ -660,13 +662,19 @@ static void fdp_ins_set_chact(
 			}
 		} else if (seq_par->telecine_mode ==
 				FDP_TC_INTERPOLATED_LINE) {
-			obj->ctrl_chact |=
-				FD1_CTL_CHACT_SMSK_WRITE |
-				FD1_CTL_CHACT_SMSK_READ |
-				FD1_CTL_CHACT_PRE_READ |
-				FD1_CTL_CHACT_NEX_READ;
-			obj->ipc_mode |= (unsigned int)
-				fproc_par->interpolated_line;
+			if (fproc_par->interpolated_line == FDP_DIM_NEXT) {
+				/* add next field read */
+				obj->ctrl_chact |=
+					FD1_CTL_CHACT_NEX_READ;
+				obj->ipc_mode |=
+					FD1_IPC_MODE_DIM_NEXT_FIELD;
+			} else {	/* FDP_DIM_PREV */
+				/* add previous field read */
+				obj->ctrl_chact |=
+					FD1_CTL_CHACT_PRE_READ;
+				obj->ipc_mode |=
+					FD1_IPC_MODE_DIM_PREVIOUS_FIELD;
+			}
 		} else {	/* FDP_TC_OFF */
 			if ((seq_cnt == 0) || (seq_cnt == 1)) {
 				obj->ctrl_chact |=
