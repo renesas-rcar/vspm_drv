@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015 Renesas Electronics Corporation
+ Copyright (C) 2015-2016 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -67,7 +67,8 @@
 #define P_FCP	(obj->fcp_reg)
 
 /* define status read counter */
-#define FDP_STATUS_LOOP_CNT		(50)
+#define FDP_STATUS_LOOP_TIME	(2)
+#define FDP_STATUS_LOOP_CNT		(500)
 
 /* General control registers */
 #define FD1_CTL_CMD			(0x0000)

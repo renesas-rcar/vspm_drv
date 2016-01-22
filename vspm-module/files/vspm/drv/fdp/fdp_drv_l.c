@@ -1111,6 +1111,12 @@ Returns:		void
 void fdp_ins_start_processing(
 	struct fdp_obj_t *obj, struct fdp_start_t *start_par)
 {
+	/* clear interrupt status */
+	fdp_write_reg(0, P_FDP, FD1_CTL_IRQSTA);
+
+	/* enable interrupt */
+	fdp_write_reg(FD1_CTL_IRQ_FRAME_END, P_FDP, FD1_CTL_IRQENB);
+
 	if (start_par->fdpgo == FDP_GO) {
 		/* start set register sequence */
 		fdp_rewrite_reg(
@@ -1160,54 +1166,22 @@ void fdp_ins_stop_processing(struct fdp_obj_t *obj)
 	volatile unsigned int dmy;
 
 	unsigned int status;
-	unsigned int loop_cnt = FDP_STATUS_LOOP_CNT;
+	unsigned int loop_cnt;
 
-	/* update status */
-	obj->status = FDP_STAT_READY;
+	/* disable interrupt */
+	fdp_write_reg(0, P_FDP, FD1_CTL_IRQENB);
 
-	/* disable callback function */
-	obj->cb_info.fdp_cb2 = NULL;
+	/* clear interrupt status */
+	fdp_write_reg(0, P_FDP, FD1_CTL_IRQSTA);
 
 	/* dummy read */
-	dmy = fdp_read_reg(P_FDP, FD1_CTL_STATUS);
-	dmy = fdp_read_reg(P_FDP, FD1_CTL_STATUS);
+	dmy = fdp_read_reg(P_FDP, FD1_CTL_IRQSTA);
+	dmy = fdp_read_reg(P_FDP, FD1_CTL_IRQSTA);
 
-	/* read status register */
-	status = fdp_read_reg(P_FDP, FD1_CTL_STATUS);
+	/* init loop counter */
+	loop_cnt = FDP_STATUS_LOOP_CNT;
 
-	/* read status register */
-	status = fdp_read_reg(P_FDP, FD1_CTL_STATUS);
-
-	if (status & FD1_CTL_STATUS_BSY) {
-		/* software reset */
-		fdp_write_reg(FD1_CTL_SRESET_SRST, P_FDP, FD1_CTL_SRESET);
-
-		/* waiting reset process */
-		do {
-			/* sleep */
-			msleep(20);		/* 20ms */
-
-			/* read status register */
-			status = fdp_read_reg(P_FDP, FD1_CTL_STATUS);
-		} while ((status & FD1_CTL_STATUS_BSY) &&
-			(--loop_cnt > 0));
-	}
-}
-
-/******************************************************************************
-Function:		fdp_ins_software_reset
-Description:	Software reset of FDP and FCP.
-Returns:		void
-******************************************************************************/
-static void fdp_ins_software_reset(struct fdp_obj_t *obj)
-{
-	unsigned int status;
-	unsigned int loop_cnt = FDP_STATUS_LOOP_CNT;
-
-	/* Forced stop the FDP processing */
-	fdp_ins_stop_processing(obj);
-
-	/* reset the FCP */
+	/* read status register of FCP */
 	status = fdp_read_reg(P_FCP, FD1_FCP_STA);
 
 	if (status & FD1_FCP_STA_ACT) {
@@ -1217,18 +1191,62 @@ static void fdp_ins_software_reset(struct fdp_obj_t *obj)
 		/* waiting reset process */
 		do {
 			/* sleep */
-			msleep(20);		/* 20ms */
+			msleep(FDP_STATUS_LOOP_TIME);
 
-			/* read status register */
+			/* read status register of FCP */
 			status = fdp_read_reg(P_FCP, FD1_FCP_STA);
 		} while ((status & FD1_FCP_STA_ACT) &&
 			(--loop_cnt > 0));
+
+		if (loop_cnt == 0) {
+			APRINT("%s: happen to timeout after reset of FCP!!\n",
+				__func__);
+		}
 	}
 
-	if (loop_cnt == 0)
-		APRINT("%s: happen to timeout after reset!!\n", __func__);
+	/* init loop counter */
+	loop_cnt = FDP_STATUS_LOOP_CNT;
+
+	/* read status register of FDP */
+	status = fdp_read_reg(P_FDP, FD1_CTL_STATUS);
+
+	if (status & FD1_CTL_STATUS_BSY) {
+		/* software reset */
+		fdp_write_reg(FD1_CTL_SRESET_SRST, P_FDP, FD1_CTL_SRESET);
+
+		/* waiting reset process */
+		do {
+			/* sleep */
+			msleep(FDP_STATUS_LOOP_TIME);
+
+			/* read status register of FDP */
+			status = fdp_read_reg(P_FDP, FD1_CTL_STATUS);
+		} while ((status & FD1_CTL_STATUS_BSY) &&
+			(--loop_cnt > 0));
+
+		if (loop_cnt == 0) {
+			APRINT("%s: happen to timeout after reset of FDP!!\n",
+				__func__);
+		}
+	}
+
+	/* disable callback function */
+	obj->cb_info.fdp_cb2 = NULL;
+
+	/* update status */
+	obj->status = FDP_STAT_READY;
 }
 
+/******************************************************************************
+Function:		fdp_ins_software_reset
+Description:	Software reset of FDP and FCP.
+Returns:		void
+******************************************************************************/
+static void fdp_ins_software_reset(struct fdp_obj_t *obj)
+{
+	/* Forced stop the FDP processing */
+	fdp_ins_stop_processing(obj);
+}
 
 
 /******************************************************************************
@@ -1301,12 +1319,6 @@ static void fdp_ins_init_cmn_reg(struct fdp_obj_t *obj)
 
 	/* clock control register */
 	fdp_write_reg(FD1_CTL_CLK_CTRL_CSTP_N, P_FDP, FD1_CTL_CLKCTRL);
-
-	/* clear interrupt status */
-	fdp_write_reg(0, P_FDP, FD1_CTL_IRQSTA);
-
-	/* enable interrupt */
-	fdp_write_reg(FD1_CTL_IRQ_FRAME_END, P_FDP, FD1_CTL_IRQENB);
 }
 
 /******************************************************************************
@@ -1497,11 +1509,12 @@ static irqreturn_t fdp_ins_ih(int irq, void *dev)
 
 	/* FDP end status */
 	if (status & FD1_CTL_IRQ_FRAME_END) {
-		fdp_rewrite_reg(
-			0x00000000,
-			~FD1_CTL_IRQ_FRAME_END,
-			P_FDP,
-			FD1_CTL_IRQSTA);
+		/* disable interrupt */
+		fdp_write_reg(0, P_FDP, FD1_CTL_IRQENB);
+
+		/* clear interrupt status */
+		fdp_write_reg(0, P_FDP, FD1_CTL_IRQSTA);
+
 		fdp_int_hdr(obj);
 	}
 
