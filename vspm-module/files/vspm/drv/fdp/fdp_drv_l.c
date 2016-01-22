@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015 Renesas Electronics Corporation
+ Copyright (C) 2015-2016 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -1232,11 +1232,11 @@ static void fdp_ins_software_reset(struct fdp_obj_t *obj)
 
 
 /******************************************************************************
-Function:		fdp_int_update_state
-Description:	Update state
+Function:		fdp_int_get_process_result
+Description:	Get processing result
 Returns:		void
 ******************************************************************************/
-static void fdp_int_update_state(struct fdp_obj_t *obj)
+static void fdp_int_get_process_result(struct fdp_obj_t *obj)
 {
 	struct vspm_fdp_proc_info *proc_info = obj->proc_info;
 
@@ -1256,8 +1256,6 @@ static void fdp_int_update_state(struct fdp_obj_t *obj)
 	sensor = &proc_info->status.sensor[0];
 	for (i = FD1_SNSOR_0; i <= FD1_SNSOR_17; i += 4)
 		*sensor++ = fdp_read_reg(P_FDP, i);
-
-	obj->status = FDP_STAT_READY;
 }
 
 
@@ -1273,14 +1271,17 @@ void fdp_int_hdr(struct fdp_obj_t *obj)
 		return;
 
 	if (obj->status == FDP_STAT_RUN) {
-		/* update state */
-		fdp_int_update_state(obj);
+		/* get processing result */
+		fdp_int_get_process_result(obj);
 
 		/* execute callback2 */
 		if (obj->cb_info.fdp_cb2 != NULL) {
 			obj->cb_info.fdp_cb2(
 				0, R_VSPM_OK, obj->cb_info.userdata2);
 		}
+
+		/* update status */
+		obj->status = FDP_STAT_READY;
 	}
 }
 
