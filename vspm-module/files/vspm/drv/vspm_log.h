@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015 Renesas Electronics Corporation
+ Copyright (C) 2015-2016 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -65,11 +65,11 @@
 #include <linux/sched.h>
 
 #define IPRINT(fmt, args...) \
-	printk(KERN_INFO "vspm:%d: " fmt, current->pid, ##args)
+	pr_info("vspm:%d: " fmt, current->pid, ##args)
 #define APRINT(fmt, args...) \
-	printk(KERN_ALERT "vspm:%d: " fmt, current->pid, ##args)
+	pr_alert("vspm:%d: " fmt, current->pid, ##args)
 #define EPRINT(fmt, args...) \
-	printk(KERN_ERR "vspm:%d: " fmt, current->pid, ##args)
+	pr_err("vspm:%d: " fmt, current->pid, ##args)
 
 #endif /* __VSPM_LOG_H__ */
 
