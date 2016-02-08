@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015 Renesas Electronics Corporation
+ Copyright (C) 2015-2016 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -488,17 +488,6 @@ static int __init vspm_module_init(void)
 {
 	struct vspm_drvdata *pdrv = 0;
 	int ercd = 0;
-
-/* DEBUG START */
-	{
-		/* power suppoly */
-		void __iomem *reg;
-		reg = ioremap_nocache(0xe6180000, 0x1000);
-		iowrite32(0x00000001, reg + 0x34c);
-		APRINT("PWRSR8=0x%08x\n", ioread32(reg + 0x340));
-		iounmap(reg);
-	}
-/* DEBUG END */
 
 	/* allocate vspm driver data area */
 	pdrv = kzalloc(sizeof(*pdrv), GFP_KERNEL);
