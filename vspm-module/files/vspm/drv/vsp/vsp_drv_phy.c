@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015 Renesas Electronics Corporation
+ Copyright (C) 2015-2016 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -67,7 +67,6 @@
 #include <linux/slab.h>
 #include <linux/delay.h>
 #include <linux/pm_runtime.h>
-#include <linux/clk.h>
 
 #include "vspm_public.h"
 #include "vspm_ip_ctrl.h"
@@ -2276,52 +2275,15 @@ long vsp_ins_enable_clock(struct vsp_prv_data *prv)
 	pm_suspend_ignore_children(dev, true);
 	pm_runtime_enable(dev);
 
-	pm_runtime_get_sync(dev);
-
-	/* get clock */
-	prv->vsp_clk = of_clk_get(dev->of_node, 0);
-	if (IS_ERR(prv->vsp_clk)) {
-		dev_err(dev, "failed to get VSP clock\n");
-		goto err_exit0;
-	}
-
-	prv->fcp_clk = of_clk_get(dev->of_node, 1);
-	if (IS_ERR(prv->fcp_clk)) {
-		dev_err(dev, "failed to get FCPV clock\n");
-		clk_put(prv->vsp_clk);
-		goto err_exit0;
-	}
-
-	/* enable clock */
-	ercd = clk_prepare_enable(prv->vsp_clk);
-	if (ercd < 0) {
-		EPRINT("%s: failed to enable VSP clock\n", __func__);
-		goto err_exit1;
-	}
-
-	ercd = clk_prepare_enable(prv->fcp_clk);
-	if (ercd < 0) {
-		EPRINT("%s: failed to enable FCPV clock\n", __func__);
-		clk_disable_unprepare(prv->vsp_clk);
-		goto err_exit1;
+	ercd = pm_runtime_get_sync(dev);
+	if (ercd != 0) {
+		EPRINT("%s: failed to pm_runtime_get_sync!! ercd=%d\n",
+			__func__, ercd);
+		pm_runtime_disable(dev);
+		return E_VSP_NO_CLK;
 	}
 
 	return 0;
-
-err_exit1:
-	/* forced disable clock */
-	clk_put(prv->vsp_clk);
-	prv->vsp_clk = NULL;
-
-	clk_put(prv->fcp_clk);
-	prv->fcp_clk = NULL;
-
-err_exit0:
-	/* mark device as idle */
-	pm_runtime_put_sync(dev);
-	pm_runtime_disable(dev);
-
-	return E_VSP_NO_CLK;
 }
 
 
@@ -2333,19 +2295,6 @@ Returns:		0
 long vsp_ins_disable_clock(struct vsp_prv_data *prv)
 {
 	struct platform_device *pdev = prv->pdev;
-
-	/* disable clock */
-	if (prv->vsp_clk != NULL) {
-		clk_disable_unprepare(prv->vsp_clk);
-		clk_put(prv->vsp_clk);
-		prv->vsp_clk = NULL;
-	}
-
-	if (prv->fcp_clk != NULL) {
-		clk_disable_unprepare(prv->fcp_clk);
-		clk_put(prv->fcp_clk);
-		prv->fcp_clk = NULL;
-	}
 
 	/* mark device as idle */
 	pm_runtime_put_sync(&pdev->dev);

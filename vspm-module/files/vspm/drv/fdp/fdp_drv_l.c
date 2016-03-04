@@ -65,7 +65,6 @@
 #include <linux/delay.h>
 #include <linux/interrupt.h>
 #include <linux/pm_runtime.h>
-#include <linux/clk.h>
 
 #include "vspm_public.h"
 #include "vspm_ip_ctrl.h"
@@ -1595,52 +1594,15 @@ long fdp_ins_enable_clock(struct fdp_obj_t *obj)
 	pm_suspend_ignore_children(dev, true);
 	pm_runtime_enable(dev);
 
-	pm_runtime_get_sync(dev);
-
-	/* get clock */
-	obj->fdp_clk = of_clk_get(dev->of_node, 0);
-	if (IS_ERR(obj->fdp_clk)) {
-		dev_err(dev, "failed to get FDP clock\n");
-		goto err_exit0;
-	}
-
-	obj->fcp_clk = of_clk_get(dev->of_node, 1);
-	if (IS_ERR(obj->fcp_clk)) {
-		dev_err(dev, "failed to get FCPF clock\n");
-		clk_put(obj->fdp_clk);
-		goto err_exit0;
-	}
-
-	/* enable clock */
-	ercd = clk_prepare_enable(obj->fdp_clk);
-	if (ercd < 0) {
-		EPRINT("%s: failed to enable FDP clock\n", __func__);
-		goto err_exit1;
-	}
-
-	ercd = clk_prepare_enable(obj->fcp_clk);
-	if (ercd < 0) {
-		EPRINT("%s: failed to enable FCPF clock\n", __func__);
-		clk_disable_unprepare(obj->fdp_clk);
-		goto err_exit1;
+	ercd = pm_runtime_get_sync(dev);
+	if (ercd != 0) {
+		EPRINT("%s: failed to pm_runtime_get_sync!! ercd=%d\n",
+			__func__, ercd);
+		pm_runtime_disable(dev);
+		return E_FDP_NO_CLK;
 	}
 
 	return 0;
-
-err_exit1:
-	/* forced disable clock */
-	clk_put(obj->fdp_clk);
-	obj->fdp_clk = NULL;
-
-	clk_put(obj->fcp_clk);
-	obj->fcp_clk = NULL;
-
-err_exit0:
-	/* mark device as idle */
-	pm_runtime_put_sync(dev);
-	pm_runtime_disable(dev);
-
-	return E_FDP_NO_CLK;
 }
 
 
@@ -1652,19 +1614,6 @@ Returns:		0
 long fdp_ins_disable_clock(struct fdp_obj_t *obj)
 {
 	struct platform_device *pdev = obj->pdev;
-
-	/* disable clock */
-	if (obj->fdp_clk != NULL) {
-		clk_disable_unprepare(obj->fdp_clk);
-		clk_put(obj->fdp_clk);
-		obj->fdp_clk = NULL;
-	}
-
-	if (obj->fcp_clk != NULL) {
-		clk_disable_unprepare(obj->fcp_clk);
-		clk_put(obj->fcp_clk);
-		obj->fcp_clk = NULL;
-	}
 
 	/* mark deice as idle */
 	pm_runtime_put_sync(&pdev->dev);
