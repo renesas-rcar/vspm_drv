@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015 Renesas Electronics Corporation
+ Copyright (C) 2015-2016 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -139,6 +139,7 @@ enum {
 	FDP_YUV422_YUY2,
 	FDP_YUV422_UYVY,
 };
+#define FDP_YUV420_YU12			FDP_YUV420_YV12
 
 /* Sequence mode parameter */
 enum {
