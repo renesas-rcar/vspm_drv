@@ -193,6 +193,9 @@ static long fdp_ins_check_pic_param(
 	case FDP_YUV422_YUY2:
 		obj->rpf_format |= FD1_RPF_FORMAT_YUV422_YUY2;
 		break;
+	case FDP_YUV422_UYVY:
+		obj->rpf_format |= FD1_RPF_FORMAT_YUV422_UYVY;
+		break;
 	default:
 		return E_FDP_PARA_CHROMA;
 	}
@@ -383,6 +386,7 @@ static long fdp_ins_check_refbuf_param(
 		stride >>= 1;
 	/* interleaved */
 	case FDP_YUV422_YUY2:
+	case FDP_YUV422_UYVY:
 		/* check luma address */
 		if (buf->addr == NULL)
 			return E_FDP_PARA_SRC_ADDR;
