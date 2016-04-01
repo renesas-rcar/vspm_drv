@@ -2311,6 +2311,9 @@ Returns:		0
 ******************************************************************************/
 long vsp_ins_init_vsp_reg(struct vsp_prv_data *prv)
 {
+	/* initialize dynamic clock stop setting */
+	vsp_write_reg(0x00000808, prv->vsp_reg, VSP_CLK_DCSWT);
+
 	/* initialize DL control register */
 	vsp_write_reg(
 		VSP_DL_CTRL_WAIT |

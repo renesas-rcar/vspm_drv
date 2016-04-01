@@ -196,6 +196,8 @@
 /* define register offset */
 #define VSP_WPF0_CMD			(0x0000)
 
+#define VSP_CLK_DCSWT			(0x0018)
+
 #define VSP_SRESET				(0x0028)
 #define VSP_STATUS				(0x0038)
 
