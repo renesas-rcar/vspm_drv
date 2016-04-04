@@ -263,11 +263,11 @@ Returns:		void
 ******************************************************************************/
 static void vsp_ins_set_dl_for_rpf(
 	struct vsp_dl_head_info *head,
-	struct vsp_prv_data *prv,
+	struct vsp_ch_info *ch_info,
 	unsigned char rpf_ch,
 	struct vsp_src_t *param)
 {
-	struct vsp_rpf_info *rpf_info = &prv->rpf_info[rpf_ch];
+	struct vsp_rpf_info *rpf_info = &ch_info->rpf_info[rpf_ch];
 
 	unsigned int reg_offset;
 	unsigned int reg_temp;
@@ -366,10 +366,10 @@ Returns:		void
 ******************************************************************************/
 static void vsp_ins_set_dl_for_wpf(
 	struct vsp_dl_head_info *head,
-	struct vsp_prv_data *prv,
+	struct vsp_ch_info *ch_info,
 	struct vsp_dst_t *param)
 {
-	struct vsp_ch_info *ch_info = &prv->ch_info[prv->widx];
+	struct vsp_wpf_info *wpf_info = &ch_info->wpf_info;
 
 	unsigned int reg_offset;
 	unsigned int reg_temp;
@@ -384,14 +384,14 @@ static void vsp_ins_set_dl_for_wpf(
 	reg_offset = VSP_WPF0_OFFSET;
 
 	/* source RPF register */
-	VSP_DL_WRITE(VSP_WPF_SRCRPFL, ch_info->val_srcrpf);
+	VSP_DL_WRITE(VSP_WPF_SRCRPFL, wpf_info->val_srcrpf);
 
 	/* input size clipping register */
-	VSP_DL_WRITE(VSP_WPF_HSZCLIP, ch_info->val_hszclip);
-	VSP_DL_WRITE(VSP_WPF_VSZCLIP, ch_info->val_vszclip);
+	VSP_DL_WRITE(VSP_WPF_HSZCLIP, wpf_info->val_hszclip);
+	VSP_DL_WRITE(VSP_WPF_VSZCLIP, wpf_info->val_vszclip);
 
 	/* output format register */
-	VSP_DL_WRITE(VSP_WPF_OUTFMT, ch_info->val_outfmt);
+	VSP_DL_WRITE(VSP_WPF_OUTFMT, wpf_info->val_outfmt);
 
 	/* data swapping register */
 	VSP_DL_WRITE(VSP_WPF_DSWAP, param->swap);
@@ -413,9 +413,9 @@ static void vsp_ins_set_dl_for_wpf(
 	VSP_DL_WRITE(VSP_WPF_DSTM_STRIDE_C, param->stride_c);
 
 	/* address register */
-	VSP_DL_WRITE(VSP_WPF_DSTM_ADDR_Y, ch_info->val_addr_y);
-	VSP_DL_WRITE(VSP_WPF_DSTM_ADDR_C0, ch_info->val_addr_c0);
-	VSP_DL_WRITE(VSP_WPF_DSTM_ADDR_C1, ch_info->val_addr_c1);
+	VSP_DL_WRITE(VSP_WPF_DSTM_ADDR_Y, wpf_info->val_addr_y);
+	VSP_DL_WRITE(VSP_WPF_DSTM_ADDR_C0, wpf_info->val_addr_c0);
+	VSP_DL_WRITE(VSP_WPF_DSTM_ADDR_C1, wpf_info->val_addr_c1);
 
 	/* set routing register offset */
 	reg_offset = VSP_DPR_WPF0_FPORCH;
@@ -922,72 +922,71 @@ Returns:		void
 ******************************************************************************/
 static void vsp_ins_set_dl_for_module(
 	struct vsp_dl_head_info *head,
-	struct vsp_prv_data *prv,
+	struct vsp_ch_info *ch_info,
 	struct vsp_ctrl_t *ctrl_param)
 {
-	struct vsp_ch_info *ch_info = &prv->ch_info[prv->widx];
 	unsigned long module = ch_info->reserved_module;
 
 	/* set super-resolution parameter */
 	if (module & VSP_SRU_USE) {
 		vsp_ins_set_dl_for_sru(
-			head, &prv->sru_info, ctrl_param->sru);
+			head, &ch_info->sru_info, ctrl_param->sru);
 	}
 
 	/* set up down scaler parameter */
 	if (module & VSP_UDS_USE) {
 		vsp_ins_set_dl_for_uds(
-			head, &prv->uds_info, ctrl_param->uds);
+			head, &ch_info->uds_info, ctrl_param->uds);
 	}
 
 	/* set look up table parameter */
 	if (module & VSP_LUT_USE) {
 		vsp_ins_set_dl_for_lut(
-			head, &prv->lut_info, ctrl_param->lut);
+			head, &ch_info->lut_info, ctrl_param->lut);
 	}
 
 	/* set CLU parameter */
 	if (module & VSP_CLU_USE) {
 		vsp_ins_set_dl_for_clu(
-			head, &prv->clu_info, ctrl_param->clu);
+			head, &ch_info->clu_info, ctrl_param->clu);
 	}
 
 	/* set hue saturation value transform parameter */
 	if (module & VSP_HST_USE)
-		vsp_ins_set_dl_for_hst(head, &prv->hst_info);
+		vsp_ins_set_dl_for_hst(head, &ch_info->hst_info);
 
 	/* set hue saturation value inverse transform parameter */
 	if (module & VSP_HSI_USE)
-		vsp_ins_set_dl_for_hsi(head, &prv->hsi_info);
+		vsp_ins_set_dl_for_hsi(head, &ch_info->hsi_info);
 
 	/* set blend ROP parameter */
 	if (module & VSP_BRU_USE) {
 		vsp_ins_set_dl_for_bru(
-			head, &prv->bru_info, ctrl_param->bru);
+			head, &ch_info->bru_info, ctrl_param->bru);
 	}
 
 	/* set histogram generator-one dimension parameter */
 	if (module & VSP_HGO_USE) {
 		vsp_ins_set_dl_for_hgo(
-			head, &prv->hgo_info, ctrl_param->hgo);
+			head, &ch_info->hgo_info, ctrl_param->hgo);
 	}
 
 	/* set histogram generator-two dimension parameter */
 	if (module & VSP_HGT_USE) {
 		vsp_ins_set_dl_for_hgt(
-			head, &prv->hgt_info, ctrl_param->hgt);
+			head, &ch_info->hgt_info, ctrl_param->hgt);
 	}
 
 	/* set sharpness parameter */
 	if (module & VSP_SHP_USE) {
 		vsp_ins_set_dl_for_shp(
-			head, &prv->shp_info, ctrl_param->shp);
+			head, &ch_info->shp_info, ctrl_param->shp);
 	}
 
 	/* set dynamic range compression parameter */
 	if (module & VSP_DRC_USE) {
 		vsp_ins_set_dl_for_drc(
-			head, &prv->drc_info, ctrl_param->drc);
+			head, &ch_info->drc_info, ctrl_param->drc);
 	}
 }
 
@@ -1000,6 +999,8 @@ Returns:		void
 static void vsp_ins_set_part_full(
 	struct vsp_prv_data *prv, struct vsp_start_t *st_par)
 {
+	struct vsp_ch_info *ch_info = &prv->ch_info[prv->widx];
+
 	struct vsp_dl_head_info *head =
 		(struct vsp_dl_head_info *)(st_par->dl_par.virt_addr);
 
@@ -1022,16 +1023,16 @@ static void vsp_ins_set_part_full(
 		rpf_ch = (unsigned char)(rpf_order & 0xf);
 
 		vsp_ins_set_dl_for_rpf(
-			head, prv, rpf_ch, st_par->src_par[rpf_lp]);
+			head, ch_info, rpf_ch, st_par->src_par[rpf_lp]);
 
 		rpf_order >>= 4;
 	}
 
 	/* processing module */
-	vsp_ins_set_dl_for_module(head, prv, st_par->ctrl_par);
+	vsp_ins_set_dl_for_module(head, ch_info, st_par->ctrl_par);
 
 	/* output module */
-	vsp_ins_set_dl_for_wpf(head, prv, st_par->dst_par);
+	vsp_ins_set_dl_for_wpf(head, ch_info, st_par->dst_par);
 
 	/* finalize DL header */
 	head->next_head_addr = head->body_info[0].addr + VSP_DL_BODY_SIZE;
@@ -1046,11 +1047,11 @@ Returns:		void
 ******************************************************************************/
 static void vsp_ins_set_part_diff(
 	struct vsp_dl_head_info *pre_head,
-	struct vsp_prv_data *prv,
+	struct vsp_ch_info *ch_info,
 	struct vsp_start_t *st_par)
 {
-	struct vsp_ch_info *ch_info = &prv->ch_info[prv->widx];
 	struct vsp_rpf_info *rpf_info;
+	struct vsp_wpf_info *wpf_info;
 	unsigned char rpf_ch;
 	unsigned int reg_offset;
 
@@ -1073,7 +1074,7 @@ static void vsp_ins_set_part_diff(
 
 	/* set RPF parameter */
 	rpf_ch = ch_info->src_info[0].rpf_ch;
-	rpf_info = &prv->rpf_info[rpf_ch];
+	rpf_info = &ch_info->rpf_info[rpf_ch];
 	reg_offset =
 		(unsigned int)vsp_tbl_rpf_reg_offset[rpf_ch][VSP_REG_CTRL];
 
@@ -1090,38 +1091,40 @@ static void vsp_ins_set_part_diff(
 	VSP_DL_WRITE(VSP_RPF_SRCM_ADDR_AI, rpf_info->val_addr_ai);
 
 	/* set WPF parameter */
+	wpf_info = &ch_info->wpf_info;
 	reg_offset = VSP_WPF0_OFFSET;
 
 	/* input size clipping register */
-	VSP_DL_WRITE(VSP_WPF_HSZCLIP, ch_info->val_hszclip);
+	VSP_DL_WRITE(VSP_WPF_HSZCLIP, wpf_info->val_hszclip);
 
 	/* address register */
-	VSP_DL_WRITE(VSP_WPF_DSTM_ADDR_Y, ch_info->val_addr_y);
-	VSP_DL_WRITE(VSP_WPF_DSTM_ADDR_C0, ch_info->val_addr_c0);
-	VSP_DL_WRITE(VSP_WPF_DSTM_ADDR_C1, ch_info->val_addr_c1);
+	VSP_DL_WRITE(VSP_WPF_DSTM_ADDR_Y, wpf_info->val_addr_y);
+	VSP_DL_WRITE(VSP_WPF_DSTM_ADDR_C0, wpf_info->val_addr_c0);
+	VSP_DL_WRITE(VSP_WPF_DSTM_ADDR_C1, wpf_info->val_addr_c1);
 
 	/* set UDS parameter */
 	if (ch_info->reserved_module & VSP_UDS_USE) {
 		/* scaling filter horizontal phase register */
-		dlwrite32(&body, VSP_UDS_HPHASE, prv->uds_info.val_hphase);
+		dlwrite32(&body, VSP_UDS_HPHASE, ch_info->uds_info.val_hphase);
 
 		/* horizontal input clipping register */
-		dlwrite32(&body, VSP_UDS_HSZCLIP, prv->uds_info.val_hszclip);
+		dlwrite32(
+			&body, VSP_UDS_HSZCLIP, ch_info->uds_info.val_hszclip);
 
 		/* output size clipping register */
-		dlwrite32(&body, VSP_UDS_CLIP_SIZE, prv->uds_info.val_clip);
+		dlwrite32(&body, VSP_UDS_CLIP_SIZE, ch_info->uds_info.val_clip);
 	}
 
 	/* set HGO parameter */
 	if (ch_info->reserved_module & VSP_HGO_USE) {
 		/* detection window offset register */
-		dlwrite32(&body, VSP_HGO_OFFSET, prv->hgo_info.val_offset);
+		dlwrite32(&body, VSP_HGO_OFFSET, ch_info->hgo_info.val_offset);
 
 		/* detection window size register */
-		dlwrite32(&body, VSP_HGO_SIZE, prv->hgo_info.val_size);
+		dlwrite32(&body, VSP_HGO_SIZE, ch_info->hgo_info.val_size);
 
 		/* smppt register */
-		dlwrite32(&body, VSP_DPR_HGO_SMPPT, prv->hgo_info.val_dpr);
+		dlwrite32(&body, VSP_DPR_HGO_SMPPT, ch_info->hgo_info.val_dpr);
 
 		/* reset */
 		dlwrite32(&body, VSP_HGO_REGRST, VSP_HGO_REGRST_RCPART);
@@ -1130,13 +1133,13 @@ static void vsp_ins_set_part_diff(
 	/* set HGT parameter */
 	if (ch_info->reserved_module & VSP_HGT_USE) {
 		/* detection window offset register */
-		dlwrite32(&body, VSP_HGT_OFFSET, prv->hgt_info.val_offset);
+		dlwrite32(&body, VSP_HGT_OFFSET, ch_info->hgt_info.val_offset);
 
 		/* detection window size register */
-		dlwrite32(&body, VSP_HGT_SIZE, prv->hgt_info.val_size);
+		dlwrite32(&body, VSP_HGT_SIZE, ch_info->hgt_info.val_size);
 
 		/* smppt register */
-		dlwrite32(&body, VSP_DPR_HGT_SMPPT, prv->hgt_info.val_dpr);
+		dlwrite32(&body, VSP_DPR_HGT_SMPPT, ch_info->hgt_info.val_dpr);
 
 		/* reset */
 		dlwrite32(&body, VSP_HGT_REGRST, VSP_HGT_REGRST_RCPART);
@@ -1301,6 +1304,7 @@ static void vsp_ins_replace_part_dst_addr(
 	unsigned short width)
 {
 	struct vsp_part_info *part_info = &ch_info->part_info;
+	struct vsp_wpf_info *wpf_info = &ch_info->wpf_info;
 
 	unsigned long temp_y;
 	unsigned long temp_c;
@@ -1332,18 +1336,18 @@ static void vsp_ins_replace_part_dst_addr(
 		(dst_par->rotation == VSP_ROT_90) ||
 		(dst_par->rotation == VSP_ROT_90_H_FLIP)) {
 		/* increment */
-		ch_info->val_addr_y += temp_y;
-		if (ch_info->val_addr_c0 != 0)
-			ch_info->val_addr_c0 += temp_c;
-		if (ch_info->val_addr_c1 != 0)
-			ch_info->val_addr_c1 += temp_c;
+		wpf_info->val_addr_y += temp_y;
+		if (wpf_info->val_addr_c0 != 0)
+			wpf_info->val_addr_c0 += temp_c;
+		if (wpf_info->val_addr_c1 != 0)
+			wpf_info->val_addr_c1 += temp_c;
 	} else {
 		/* decrement */
-		ch_info->val_addr_y -= temp_y;
-		if (ch_info->val_addr_c0 != 0)
-			ch_info->val_addr_c0 -= temp_c;
-		if (ch_info->val_addr_c1 != 0)
-			ch_info->val_addr_c1 -= temp_c;
+		wpf_info->val_addr_y -= temp_y;
+		if (wpf_info->val_addr_c0 != 0)
+			wpf_info->val_addr_c0 -= temp_c;
+		if (wpf_info->val_addr_c1 != 0)
+			wpf_info->val_addr_c1 -= temp_c;
 	}
 }
 
@@ -1354,15 +1358,14 @@ Description:	Replace UDS module of partition.
 Returns:		void
 ******************************************************************************/
 static void vsp_ins_replace_part_uds_module(
-	struct vsp_prv_data *prv,
+	struct vsp_ch_info *ch_info,
 	struct vsp_start_t *st_par,
 	unsigned int *l_pos,
 	unsigned int *r_pos)
 {
-	struct vsp_ch_info *ch_info = &prv->ch_info[prv->widx];
 	struct vsp_part_info *part_info = &ch_info->part_info;
 
-	struct vsp_uds_info *uds_info = &prv->uds_info;
+	struct vsp_uds_info *uds_info = &ch_info->uds_info;
 
 	struct vsp_sru_t *sru_par = st_par->ctrl_par->sru;
 	struct vsp_uds_t *uds_par = st_par->ctrl_par->uds;
@@ -1427,17 +1430,16 @@ Description:	Replace RPF module of partition.
 Returns:		void
 ******************************************************************************/
 static void vsp_ins_replace_part_rpf_module(
-	struct vsp_prv_data *prv,
+	struct vsp_ch_info *ch_info,
 	struct vsp_start_t *st_par,
 	unsigned int *l_pos,
 	unsigned int *r_pos)
 {
-	struct vsp_ch_info *ch_info = &prv->ch_info[prv->widx];
 	struct vsp_part_info *part_info = &ch_info->part_info;
 
 	struct vsp_rpf_info *rpf_info =
-		&prv->rpf_info[ch_info->src_info[0].rpf_ch];
-	struct vsp_uds_info *uds_info = &prv->uds_info;
+		&ch_info->rpf_info[ch_info->src_info[0].rpf_ch];
+	struct vsp_uds_info *uds_info = &ch_info->uds_info;
 
 	struct vsp_src_t *src_par = st_par->src_par[0]; /* input source 0 */
 	struct vsp_sru_t *sru_par = st_par->ctrl_par->sru;
@@ -1493,13 +1495,13 @@ Description:	Replace connecting module of partition.
 Returns:		void
 ******************************************************************************/
 static void vsp_ins_replace_part_connection_module(
-	struct vsp_prv_data *prv,
+	struct vsp_ch_info *ch_info,
 	struct vsp_start_t *st_par,
 	unsigned short dst_offset,
 	unsigned short dst_width)
 {
-	struct vsp_ch_info *ch_info = &prv->ch_info[prv->widx];
 	struct vsp_part_info *part_info = &ch_info->part_info;
+	struct vsp_wpf_info *wpf_info = &ch_info->wpf_info;
 
 	struct vsp_dst_t *dst_par = st_par->dst_par;
 	unsigned short width;
@@ -1523,12 +1525,12 @@ static void vsp_ins_replace_part_connection_module(
 	}
 
 	/* replace horizontal clipping size */
-	ch_info->val_hszclip = VSP_WPF_HSZCLIP_HCEN;
-	ch_info->val_hszclip |= ((unsigned int)dst_width);
+	wpf_info->val_hszclip = VSP_WPF_HSZCLIP_HCEN;
+	wpf_info->val_hszclip |= ((unsigned int)dst_width);
 
 	if (dst_offset != 0) {
 		/* add horizontal clipping offset */
-		ch_info->val_hszclip |=
+		wpf_info->val_hszclip |=
 			(((unsigned int)part_info->margin) << 16);
 
 		/* replace destinationaddress */
@@ -1536,10 +1538,10 @@ static void vsp_ins_replace_part_connection_module(
 	}
 
 	/* replace UDS module parameter */
-	vsp_ins_replace_part_uds_module(prv, st_par, &l_pos, &r_pos);
+	vsp_ins_replace_part_uds_module(ch_info, st_par, &l_pos, &r_pos);
 
 	/* replace RPF module parameter */
-	vsp_ins_replace_part_rpf_module(prv, st_par, &l_pos, &r_pos);
+	vsp_ins_replace_part_rpf_module(ch_info, st_par, &l_pos, &r_pos);
 }
 
 
@@ -1609,7 +1611,6 @@ Description:	Get sampling offset of partition.
 Returns:		void
 ******************************************************************************/
 static void vsp_ins_get_part_sampling_offset(
-	struct vsp_ch_info *ch_info,
 	struct vsp_start_t *st_par,
 	unsigned long sampling,
 	unsigned int *left,
@@ -1701,15 +1702,14 @@ Description:	Replace HGO detect window of partition.
 Returns:		void
 ******************************************************************************/
 static void vsp_ins_replace_part_window_of_hgo(
-	struct vsp_prv_data *prv,
+	struct vsp_ch_info *ch_info,
 	struct vsp_start_t *st_par,
 	unsigned int left,
 	unsigned int right)
 {
-	struct vsp_ch_info *ch_info = &prv->ch_info[prv->widx];
 	struct vsp_part_info *part_info = &ch_info->part_info;
 
-	struct vsp_hgo_info *hgo_info = &prv->hgo_info;
+	struct vsp_hgo_info *hgo_info = &ch_info->hgo_info;
 	struct vsp_hgo_t *hgo_par = st_par->ctrl_par->hgo;
 
 	unsigned int x_offset;
@@ -1753,15 +1753,14 @@ Description:	Replace HGT detect window of partition.
 Returns:		void
 ******************************************************************************/
 static void vsp_ins_replace_part_window_of_hgt(
-	struct vsp_prv_data *prv,
+	struct vsp_ch_info *ch_info,
 	struct vsp_start_t *st_par,
 	unsigned int left,
 	unsigned int right)
 {
-	struct vsp_ch_info *ch_info = &prv->ch_info[prv->widx];
 	struct vsp_part_info *part_info = &ch_info->part_info;
 
-	struct vsp_hgt_info *hgt_info = &prv->hgt_info;
+	struct vsp_hgt_info *hgt_info = &ch_info->hgt_info;
 	struct vsp_hgt_t *hgt_par = st_par->ctrl_par->hgt;
 
 	unsigned int x_offset;
@@ -1805,13 +1804,11 @@ Description:	Replace independent module of partition.
 Returns:		void
 ******************************************************************************/
 static void vsp_ins_replace_part_independent_module(
-	struct vsp_prv_data *prv,
+	struct vsp_ch_info *ch_info,
 	struct vsp_start_t *st_par,
 	unsigned short dst_offset,
 	unsigned short dst_width)
 {
-	struct vsp_ch_info *ch_info = &prv->ch_info[prv->widx];
-
 	struct vsp_hgo_t *hgo_par = st_par->ctrl_par->hgo;
 	struct vsp_hgt_t *hgt_par = st_par->ctrl_par->hgt;
 
@@ -1827,11 +1824,11 @@ static void vsp_ins_replace_part_independent_module(
 
 		/* calculate sampling offset */
 		vsp_ins_get_part_sampling_offset(
-			ch_info, st_par, hgo_par->sampling, &left, &right);
+			st_par, hgo_par->sampling, &left, &right);
 
 		/* replace detect window of HGO */
 		vsp_ins_replace_part_window_of_hgo(
-			prv, st_par, left, right);
+			ch_info, st_par, left, right);
 	}
 
 	if (ch_info->reserved_module & VSP_HGT_USE) {
@@ -1843,11 +1840,11 @@ static void vsp_ins_replace_part_independent_module(
 
 		/* calculate sampling offset */
 		vsp_ins_get_part_sampling_offset(
-			ch_info, st_par, hgt_par->sampling, &left, &right);
+			st_par, hgt_par->sampling, &left, &right);
 
 		/* replace detect window of HGO */
 		vsp_ins_replace_part_window_of_hgt(
-			prv, st_par, left, right);
+			ch_info, st_par, left, right);
 	}
 }
 
@@ -1875,7 +1872,7 @@ static void vsp_ins_set_part_parameter(
 	else
 		width = dst_par->height;
 
-	if (ch_info->val_outfmt & VSP_WPF_OUTFMT_FCNL) {
+	if (ch_info->wpf_info.val_outfmt & VSP_WPF_OUTFMT_FCNL) {
 		if ((dst_par->rotation == VSP_ROT_H_FLIP) ||
 			(dst_par->rotation == VSP_ROT_180)) {
 			/* enable FCNL compression */
@@ -1885,11 +1882,11 @@ static void vsp_ins_set_part_parameter(
 			if (dst_offset > 0) {
 				/* replace partition register except HGO, HGT */
 				vsp_ins_replace_part_connection_module(
-					prv, st_par, 0, dst_offset);
+					ch_info, st_par, 0, dst_offset);
 
 				/* replace partition register for HGO, HGT */
 				vsp_ins_replace_part_independent_module(
-					prv, st_par, 0, dst_offset);
+					ch_info, st_par, 0, dst_offset);
 
 				/* set display list of partition */
 				vsp_ins_set_part_full(prv, st_par);
@@ -1901,11 +1898,11 @@ static void vsp_ins_set_part_parameter(
 	while (width > dst_offset) {
 		/* replace partition register except HGO, HGT */
 		vsp_ins_replace_part_connection_module(
-			prv, st_par, dst_offset, part_info->div_size);
+			ch_info, st_par, dst_offset, part_info->div_size);
 
 		/* replace partition register for HGO, HGT */
 		vsp_ins_replace_part_independent_module(
-			prv, st_par, dst_offset, part_info->div_size);
+			ch_info, st_par, dst_offset, part_info->div_size);
 
 		/* set display list of partition */
 		if (dst_offset == 0) {
@@ -1913,7 +1910,7 @@ static void vsp_ins_set_part_parameter(
 			vsp_ins_set_part_full(prv, st_par);
 		} else {
 			/* 2nd or more partition */
-			vsp_ins_set_part_diff(pre_head, prv, st_par);
+			vsp_ins_set_part_diff(pre_head, ch_info, st_par);
 
 			/* update DL header */
 			pre_head = (struct vsp_dl_head_info *)
@@ -1933,12 +1930,20 @@ Returns:		0
 ******************************************************************************/
 static long vsp_ins_get_hgo_register(struct vsp_prv_data *prv)
 {
-	struct vsp_hgo_info *hgo_info = &prv->hgo_info;
+	struct vsp_res_data *rdata = &prv->rdata;
+	struct vsp_hgo_info *hgo_info =
+		&prv->ch_info[prv->ridx].hgo_info;
 
 	unsigned int *dst;
 
 	unsigned int offset;
 	unsigned int i;
+
+	if (rdata->start_reservation == 1) {
+		/* set HGO read buffer */
+		vsp_write_reg(
+			(unsigned int)prv->ridx, prv->vsp_reg, VSP_HGO_RBUFS);
+	}
 
 	if ((hgo_info->val_mode & VSP_HGO_MODE_STEP) == 0) {
 		/* set pointer */
@@ -1987,11 +1992,19 @@ Returns:		0
 ******************************************************************************/
 static long vsp_ins_get_hgt_register(struct vsp_prv_data *prv)
 {
-	struct vsp_hgt_info *hgt_info = &prv->hgt_info;
+	struct vsp_res_data *rdata = &prv->rdata;
+	struct vsp_hgt_info *hgt_info =
+		&prv->ch_info[prv->ridx].hgt_info;
 
 	unsigned int *dst = hgt_info->virt_addr;
 	unsigned int offset = VSP_HGT_HIST_OFFSET;
 	int i;
+
+	if (rdata->start_reservation == 1) {
+		/* set HGT read buffer */
+		vsp_write_reg(
+			(unsigned int)prv->ridx, prv->vsp_reg, VSP_HGT_RBUFS);
+	}
 
 	for (i = 0; i < 192; i++) {
 		*dst++ = vsp_read_reg(prv->vsp_reg, offset);
@@ -2061,16 +2074,32 @@ Returns:		void
 ******************************************************************************/
 void vsp_ins_start_processing(struct vsp_prv_data *prv)
 {
+	struct vsp_res_data *rdata = &prv->rdata;
 	struct vsp_ch_info *ch_info = &prv->ch_info[prv->widx];
+
+	if (rdata->start_reservation == 1) {
+		if (ch_info->reserved_module & VSP_HGO_USE) {
+			/* set HGO write buffer */
+			vsp_write_reg(
+				(unsigned int)prv->widx,
+				prv->vsp_reg,
+				VSP_HGO_WBUFS);
+		}
+
+		if (ch_info->reserved_module & VSP_HGT_USE) {
+			/* set HGT write buffer */
+			vsp_write_reg(
+				(unsigned int)prv->widx,
+				prv->vsp_reg,
+				VSP_HGT_WBUFS);
+		}
+	}
 
 	/* set display list header address */
 	vsp_write_reg(
-		(unsigned int)ch_info->val_dl_addr,
+		(unsigned int)ch_info->wpf_info.val_dl_addr,
 		prv->vsp_reg,
 		VSP_DL_HDR_ADDR0);
-
-	/* clear interrupt status */
-	vsp_write_reg(~VSP_IRQ_FRMEND, prv->vsp_reg, VSP_WPF0_IRQ_STA);
 
 	/* enable interrupt */
 	vsp_write_reg(VSP_IRQ_FRMEND, prv->vsp_reg, VSP_WPF0_IRQ_ENB);
@@ -2078,8 +2107,10 @@ void vsp_ins_start_processing(struct vsp_prv_data *prv)
 	/* start */
 	vsp_write_reg(VSP_CMD_STRCMD, prv->vsp_reg, VSP_WPF0_CMD);
 
-	/* update write index */
-	prv->widx = 1 - prv->widx;
+	if (rdata->start_reservation != 0) {
+		/* update write index */
+		prv->widx = 1 - prv->widx;
+	}
 }
 
 
@@ -2255,6 +2286,12 @@ long vsp_ins_get_vsp_resource(struct vsp_prv_data *prv)
 		(rdata->read_outstanding != FCP_MODE_16))
 		return E_VSP_PARA_INPAR;
 
+	/* read start resevation value */
+	of_property_read_u32(
+		np,
+		"renesas,#start_reservation",
+		&rdata->start_reservation);
+
 	return 0;
 }
 
@@ -2317,12 +2354,16 @@ long vsp_ins_init_vsp_reg(struct vsp_prv_data *prv)
 	/* initialize DL control register */
 	vsp_write_reg(
 		VSP_DL_CTRL_WAIT |
+		VSP_DL_CTRL_RLM0 |
 		VSP_DL_CTRL_DLE,
 		prv->vsp_reg,
 		VSP_DL_CTRL);
 
 	/* initialize DL swap register */
 	vsp_write_reg(VSP_DL_SWAP_LWS, prv->vsp_reg, VSP_DL_SWAP);
+
+	/* clear interrupt */
+	vsp_write_reg(0, prv->vsp_reg, VSP_WPF0_IRQ_STA);
 
 	return 0;
 }
@@ -2456,8 +2497,10 @@ void vsp_ins_cb_function(struct vsp_prv_data *prv, long ercd)
 		id = (unsigned long)prv->ridx;
 		userdata = ch_info->cb_userdata;
 
-		/* update read index */
-		prv->ridx = 1 - prv->ridx;
+		if (prv->rdata.start_reservation != 0) {
+			/* update read index */
+			prv->ridx = 1 - prv->ridx;
+		}
 
 		/* update status */
 		ch_info->status = VSP_STAT_READY;
@@ -2489,9 +2532,6 @@ static irqreturn_t vsp_ins_ih(int irq, void *dev)
 		tmp = vsp_read_reg(prv->vsp_reg, VSP_WPF0_IRQ_STA);
 
 		if ((tmp & VSP_IRQ_FRMEND) == VSP_IRQ_FRMEND) {
-			/* disable interrupt */
-			vsp_write_reg(0, prv->vsp_reg, VSP_WPF0_IRQ_ENB);
-
 			/* clear interrupt */
 			vsp_write_reg(0, prv->vsp_reg, VSP_WPF0_IRQ_STA);
 

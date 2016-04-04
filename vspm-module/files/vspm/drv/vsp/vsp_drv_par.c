@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015 Renesas Electronics Corporation
+ Copyright (C) 2015-2016 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -1148,6 +1148,7 @@ Returns:		0/E_VSP_PARA_OUT_ADR/E_VSP_PARA_OUT_ADRC0
 static long vsp_ins_check_wpf_format(
 	struct vsp_ch_info *ch_info, struct vsp_dst_t *dst_par)
 {
+	struct vsp_wpf_info *wpf_info = &ch_info->wpf_info;
 	unsigned long x_offset = (unsigned long)dst_par->x_offset;
 	unsigned long x_offset_c = (unsigned long)dst_par->x_offset;
 	unsigned long y_offset = (unsigned long)dst_par->y_offset;
@@ -1199,13 +1200,13 @@ static long vsp_ins_check_wpf_format(
 		temp = (unsigned long)((dst_par->format & 0x0f00) >> 8);
 
 		/* set address */
-		ch_info->val_addr_y =
+		wpf_info->val_addr_y =
 			(unsigned long)dst_par->addr +
 			(y_offset * stride) +
 			(x_offset * temp);
 
-		ch_info->val_addr_c0 = 0;
-		ch_info->val_addr_c1 = 0;
+		wpf_info->val_addr_c0 = 0;
+		wpf_info->val_addr_c1 = 0;
 		break;
 	/* YUV interleaved */
 	case VSP_OUT_YUV420_INTERLEAVED:
@@ -1239,10 +1240,10 @@ static long vsp_ins_check_wpf_format(
 		temp = (y_offset * stride) +
 			(x_offset + x_offset_c + x_offset_c);
 
-		ch_info->val_addr_y = (unsigned long)dst_par->addr + temp;
+		wpf_info->val_addr_y = (unsigned long)dst_par->addr + temp;
 
-		ch_info->val_addr_c0 = 0;
-		ch_info->val_addr_c1 = 0;
+		wpf_info->val_addr_c0 = 0;
+		wpf_info->val_addr_c1 = 0;
 		break;
 	/* YUV semi planer */
 	case VSP_OUT_YUV420_SEMI_PLANAR:
@@ -1275,15 +1276,15 @@ static long vsp_ins_check_wpf_format(
 			return E_VSP_PARA_OUT_ADRC0;
 
 		/* set address */
-		ch_info->val_addr_y =
+		wpf_info->val_addr_y =
 			(unsigned long)dst_par->addr +
 			(y_offset * stride) +
 			x_offset;
 
 		temp = (y_offset_c * stride_c) + (x_offset_c + x_offset_c);
 
-		ch_info->val_addr_c0 = (unsigned long)dst_par->addr_c0 + temp;
-		ch_info->val_addr_c1 = 0;
+		wpf_info->val_addr_c0 = (unsigned long)dst_par->addr_c0 + temp;
+		wpf_info->val_addr_c1 = 0;
 		break;
 	/* YUV planar */
 	case VSP_OUT_YUV420_PLANAR:
@@ -1317,15 +1318,15 @@ static long vsp_ins_check_wpf_format(
 			return E_VSP_PARA_OUT_ADRC1;
 
 		/* set address */
-		ch_info->val_addr_y =
+		wpf_info->val_addr_y =
 			(unsigned long)dst_par->addr +
 			(y_offset * stride) +
 			x_offset;
 
 		temp = (y_offset_c * stride_c) + x_offset_c;
 
-		ch_info->val_addr_c0 = (unsigned long)dst_par->addr_c0 + temp;
-		ch_info->val_addr_c1 = (unsigned long)dst_par->addr_c1 + temp;
+		wpf_info->val_addr_c0 = (unsigned long)dst_par->addr_c0 + temp;
+		wpf_info->val_addr_c1 = (unsigned long)dst_par->addr_c1 + temp;
 		break;
 	default:
 		return E_VSP_PARA_OUT_FORMAT;
@@ -1333,7 +1334,7 @@ static long vsp_ins_check_wpf_format(
 	}
 
 	/* set format parameter */
-	ch_info->val_outfmt =
+	wpf_info->val_outfmt =
 		(unsigned int)(dst_par->format & VSP_WPF_OUTFMT_MSK);
 
 	return 0;
@@ -1352,6 +1353,7 @@ static long vsp_ins_check_wpf_rotation(
 {
 	struct vsp_src_info *src_info = &ch_info->src_info[ch_info->src_idx];
 	struct vsp_part_info *part_info = &ch_info->part_info;
+	struct vsp_wpf_info *wpf_info = &ch_info->wpf_info;
 
 	unsigned int width;
 	unsigned int height;
@@ -1419,14 +1421,14 @@ static long vsp_ins_check_wpf_rotation(
 	}
 
 	/* set rotation parameter */
-	ch_info->val_outfmt |= ((unsigned int)dst_par->rotation) << 16;
+	wpf_info->val_outfmt |= ((unsigned int)dst_par->rotation) << 16;
 
 	/* set clipping parameter */
-	ch_info->val_hszclip = VSP_WPF_HSZCLIP_HCEN;
-	ch_info->val_hszclip |= (x_coffset << 16) | width;
+	wpf_info->val_hszclip = VSP_WPF_HSZCLIP_HCEN;
+	wpf_info->val_hszclip |= (x_coffset << 16) | width;
 
-	ch_info->val_vszclip = VSP_WPF_VSZCLIP_VCEN;
-	ch_info->val_vszclip |= (y_coffset << 16) | height;
+	wpf_info->val_vszclip = VSP_WPF_VSZCLIP_VCEN;
+	wpf_info->val_vszclip |= (y_coffset << 16) | height;
 
 	/* check partition */
 	if (dst_par->rotation > VSP_ROT_V_FLIP) {
@@ -1452,6 +1454,7 @@ Returns:		0/E_VSP_PARA_OUT_STRIDE_C/E_VSP_PARA_OUT_ADRC0
 static long vsp_ins_check_wpf_fcnl(
 	struct vsp_ch_info *ch_info, struct vsp_dst_t *dst_par)
 {
+	struct vsp_wpf_info *wpf_info = &ch_info->wpf_info;
 	struct fcp_info_t *fcp = dst_par->fcp;
 
 	if (fcp != NULL) {
@@ -1463,10 +1466,10 @@ static long vsp_ins_check_wpf_fcnl(
 				if (dst_par->stride_c & 0xff)
 					return E_VSP_PARA_OUT_STRIDE_C;
 
-				if (ch_info->val_addr_c0 & 0xff)
+				if (wpf_info->val_addr_c0 & 0xff)
 					return E_VSP_PARA_OUT_ADRC0;
 
-				if (ch_info->val_addr_c1 & 0xff)
+				if (wpf_info->val_addr_c1 & 0xff)
 					return E_VSP_PARA_OUT_ADRC1;
 				/* break; */
 			case VSP_ROT_H_FLIP:
@@ -1475,7 +1478,7 @@ static long vsp_ins_check_wpf_fcnl(
 				if (dst_par->stride & 0xff)
 					return E_VSP_PARA_OUT_STRIDE_Y;
 
-				if (ch_info->val_addr_y & 0xff)
+				if (wpf_info->val_addr_y & 0xff)
 					return E_VSP_PARA_OUT_ADR;
 
 				/* check format */
@@ -1499,7 +1502,7 @@ static long vsp_ins_check_wpf_fcnl(
 				if (dst_par->stride & 0xff)
 					return E_VSP_PARA_OUT_STRIDE_Y;
 
-				if (ch_info->val_addr_y & 0xff)
+				if (wpf_info->val_addr_y & 0xff)
 					return E_VSP_PARA_OUT_ADR;
 
 				/* check format */
@@ -1516,7 +1519,7 @@ static long vsp_ins_check_wpf_fcnl(
 				return E_VSP_PARA_OUT_SWAP;
 
 			/* enable FCNL compression */
-			ch_info->val_outfmt |= VSP_WPF_OUTFMT_FCNL;
+			wpf_info->val_outfmt |= VSP_WPF_OUTFMT_FCNL;
 		} else if (fcp->fcnl == FCP_FCNL_DISABLE) {
 			/* no error */
 		} else {
@@ -1537,13 +1540,14 @@ static long vsp_ins_recalculate_wpf_addr(
 	struct vsp_ch_info *ch_info, struct vsp_dst_t *dst_par)
 {
 	struct vsp_part_info *part_info = &ch_info->part_info;
+	struct vsp_wpf_info *wpf_info = &ch_info->wpf_info;
 
 	unsigned long temp_y;
 	unsigned long temp_c;
 
 	if ((dst_par->rotation == VSP_ROT_90) ||
 		(dst_par->rotation == VSP_ROT_90_V_FLIP)) {
-		if (ch_info->val_outfmt & VSP_WPF_OUTFMT_FCNL) {
+		if (wpf_info->val_outfmt & VSP_WPF_OUTFMT_FCNL) {
 			/* enable FCNL compression */
 			temp_y = vsp_ins_get_bpp_luma(
 				dst_par->format, dst_par->width);
@@ -1567,15 +1571,15 @@ static long vsp_ins_recalculate_wpf_addr(
 			}
 		}
 
-		ch_info->val_addr_y += temp_y;
-		if (ch_info->val_addr_c0)
-			ch_info->val_addr_c0 += temp_c;
-		if (ch_info->val_addr_c1)
-			ch_info->val_addr_c1 += temp_c;
+		wpf_info->val_addr_y += temp_y;
+		if (wpf_info->val_addr_c0)
+			wpf_info->val_addr_c0 += temp_c;
+		if (wpf_info->val_addr_c1)
+			wpf_info->val_addr_c1 += temp_c;
 	} else if ((dst_par->rotation == VSP_ROT_H_FLIP) ||
 		(dst_par->rotation == VSP_ROT_180)) {
 		if (part_info->div_flag != 0) {
-			if (ch_info->val_outfmt & VSP_WPF_OUTFMT_FCNL) {
+			if (wpf_info->val_outfmt & VSP_WPF_OUTFMT_FCNL) {
 				/* enable FCNL compression */
 				temp_y =
 					(dst_par->width - 1) /
@@ -1605,11 +1609,11 @@ static long vsp_ins_recalculate_wpf_addr(
 				}
 			}
 
-			ch_info->val_addr_y += temp_y;
-			if (ch_info->val_addr_c0)
-				ch_info->val_addr_c0 += temp_c;
-			if (ch_info->val_addr_c1)
-				ch_info->val_addr_c1 += temp_c;
+			wpf_info->val_addr_y += temp_y;
+			if (wpf_info->val_addr_c0)
+				wpf_info->val_addr_c0 += temp_c;
+			if (wpf_info->val_addr_c1)
+				wpf_info->val_addr_c1 += temp_c;
 		}
 	}
 
@@ -1617,15 +1621,15 @@ static long vsp_ins_recalculate_wpf_addr(
 		temp_y = vsp_ins_get_line_luma(
 			dst_par->format, dst_par->height);
 		temp_y = (temp_y - 1) * (unsigned int)dst_par->stride;
-		ch_info->val_addr_y += temp_y;
+		wpf_info->val_addr_y += temp_y;
 
 		temp_c = vsp_ins_get_line_luma(
 			dst_par->format, dst_par->height);
 		temp_c = (temp_c - 1) * (unsigned int)dst_par->stride_c;
-		if (ch_info->val_addr_c0)
-			ch_info->val_addr_c0 += temp_c;
-		if (ch_info->val_addr_c1)
-			ch_info->val_addr_c1 += temp_c;
+		if (wpf_info->val_addr_c0)
+			wpf_info->val_addr_c0 += temp_c;
+		if (wpf_info->val_addr_c1)
+			wpf_info->val_addr_c1 += temp_c;
 	}
 
 	return 0;
@@ -1648,6 +1652,7 @@ static long vsp_ins_check_wpf_param(
 	struct vsp_ch_info *ch_info, struct vsp_dst_t *dst_par)
 {
 	struct vsp_src_info *src_info = &ch_info->src_info[ch_info->src_idx];
+	struct vsp_wpf_info *wpf_info = &ch_info->wpf_info;
 
 	unsigned char exp_color;
 	long ercd;
@@ -1661,7 +1666,7 @@ static long vsp_ins_check_wpf_param(
 		return E_VSP_PARA_OUT_INHSV;
 
 	/* set source RPF parameter */
-	ch_info->val_srcrpf = src_info->master;
+	wpf_info->val_srcrpf = src_info->master;
 
 	/* check format parameter */
 	ercd = vsp_ins_check_wpf_format(ch_info, dst_par);
@@ -1685,9 +1690,9 @@ static long vsp_ins_check_wpf_param(
 
 	/* check PAD data parameter */
 	if (dst_par->pxa == VSP_PAD_P)
-		ch_info->val_outfmt |= ((unsigned int)(dst_par->pad)) << 24;
+		wpf_info->val_outfmt |= ((unsigned int)(dst_par->pad)) << 24;
 	else if (dst_par->pxa == VSP_PAD_IN)
-		ch_info->val_outfmt |= VSP_WPF_OUTFMT_PXA;
+		wpf_info->val_outfmt |= VSP_WPF_OUTFMT_PXA;
 	else
 		return E_VSP_PARA_OUT_PXA;
 
@@ -1697,10 +1702,10 @@ static long vsp_ins_check_wpf_param(
 		/* no error */
 	} else if (dst_par->dith == VSP_DITH_COLOR_REDUCTION) {
 		/* enable color reduction dither */
-		ch_info->val_outfmt |= VSP_WPF_OUTFMT_DITH;
+		wpf_info->val_outfmt |= VSP_WPF_OUTFMT_DITH;
 	} else if (dst_par->dith == VSP_DITH_ORDERED_DITHER) {
 		/* enable ordered dither */
-		ch_info->val_outfmt |= VSP_WPF_OUTFMT_ODE;
+		wpf_info->val_outfmt |= VSP_WPF_OUTFMT_ODE;
 	} else {
 		return E_VSP_PARA_OUT_DITH;
 	}
@@ -1710,14 +1715,14 @@ static long vsp_ins_check_wpf_param(
 		/* disable color space conversion */
 		/* no error */
 	} else if (dst_par->csc == VSP_CSC_ON) {
-		ch_info->val_outfmt |= VSP_WPF_OUTFMT_CSC;
+		wpf_info->val_outfmt |= VSP_WPF_OUTFMT_CSC;
 
 		if (dst_par->iturbt == VSP_ITURBT_601) {
 			/* ITU-R BT601 compliant */
 			/* no error */
 		} else if (dst_par->iturbt == VSP_ITURBT_709) {
 			/* ITU-R BT709 compliant */
-			ch_info->val_outfmt |= VSP_WPF_OUTFMT_WRTM1;
+			wpf_info->val_outfmt |= VSP_WPF_OUTFMT_WRTM1;
 		} else {
 			return E_VSP_PARA_OUT_ITURBT;
 		}
@@ -1727,7 +1732,7 @@ static long vsp_ins_check_wpf_param(
 			/* no error */
 		} else if (dst_par->clrcng == VSP_FULL_COLOR) {
 			/* Full scale conversion */
-			ch_info->val_outfmt |= VSP_WPF_OUTFMT_WRTM0;
+			wpf_info->val_outfmt |= VSP_WPF_OUTFMT_WRTM0;
 		} else {
 			return E_VSP_PARA_OUT_CLRCNG;
 		}
@@ -1775,12 +1780,11 @@ Returns:		0/E_VSP_PARA_NOSRU/E_VSP_PARA_SRU_INHSV
 	E_VSP_PARA_SRU_PARAM/E_VSP_PARA_SRU_ENSCL/E_VSP_PARA_SRU_CONNECT
 ******************************************************************************/
 static long vsp_ins_check_sru_param(
-	struct vsp_ch_info *ch_info,
-	struct vsp_sru_info *sru_info,
-	struct vsp_sru_t *sru_param)
+	struct vsp_ch_info *ch_info, struct vsp_sru_t *sru_param)
 {
 	struct vsp_src_info *src_info = &ch_info->src_info[ch_info->src_idx];
 	struct vsp_part_info *part_info = &ch_info->part_info;
+	struct vsp_sru_info *sru_info = &ch_info->sru_info;
 
 	/* check pointer */
 	if (sru_param == NULL)
@@ -1862,12 +1866,11 @@ Returns:		0/E_VSP_PARA_NOUDS/E_VSP_PARA_UDS_INWIDTH
 	E_VSP_PARA_UDS_ALPHA/E_VSP_PARA_UDS_COMP/E_VSP_PARA_UDS_CONNECT
 ******************************************************************************/
 static long vsp_ins_check_uds_param(
-	struct vsp_ch_info *ch_info,
-	struct vsp_uds_info *uds_info,
-	struct vsp_uds_t *uds_param)
+	struct vsp_ch_info *ch_info, struct vsp_uds_t *uds_param)
 {
 	struct vsp_src_info *src_info = &ch_info->src_info[ch_info->src_idx];
 	struct vsp_part_info *part_info = &ch_info->part_info;
+	struct vsp_uds_info *uds_info = &ch_info->uds_info;
 
 	/* initialise */
 	uds_info->val_ctrl = 0;
@@ -2005,10 +2008,9 @@ Returns:		0/E_VSP_PARA_NOLUT/E_VSP_PARA_LUT_ADR
 	E_VSP_PARA_LUT_SIZE/E_VSP_PARA_LUT_CONNECT
 ******************************************************************************/
 static long vsp_ins_check_lut_param(
-	struct vsp_ch_info *ch_info,
-	struct vsp_lut_info *lut_info,
-	struct vsp_lut_t *lut_param)
+	struct vsp_ch_info *ch_info, struct vsp_lut_t *lut_param)
 {
+	struct vsp_lut_info *lut_info = &ch_info->lut_info;
 	struct vsp_dl_t *lut = &lut_param->lut;
 
 	/* check pointer */
@@ -2044,10 +2046,9 @@ Returns:		0/E_VSP_PARA_NOCLU/E_VSP_PARA_CLU_ADR
 	E_VSP_PARA_CLU_SIZE/E_VSP_PARA_CLU_MODE/E_VSP_PARA_CLU_CONNECT
 ******************************************************************************/
 static long vsp_ins_check_clu_param(
-	struct vsp_ch_info *ch_info,
-	struct vsp_clu_info *clu_info,
-	struct vsp_clu_t *clu_param)
+	struct vsp_ch_info *ch_info, struct vsp_clu_t *clu_param)
 {
+	struct vsp_clu_info *clu_info = &ch_info->clu_info;
 	struct vsp_dl_t *clu = &clu_param->clu;
 
 	/* initialise */
@@ -2133,11 +2134,10 @@ Returns:		0/E_VSP_PARA_NOHST/E_VSP_PARA_HST_NOTRGB
 	E_VSP_PARA_HST_CONNECT
 ******************************************************************************/
 static long vsp_ins_check_hst_param(
-	struct vsp_ch_info *ch_info,
-	struct vsp_hst_info *hst_info,
-	struct vsp_hst_t *hst_param)
+	struct vsp_ch_info *ch_info, struct vsp_hst_t *hst_param)
 {
 	struct vsp_src_info *src_info = &ch_info->src_info[ch_info->src_idx];
+	struct vsp_hst_info *hst_info = &ch_info->hst_info;
 
 	/* check pointer */
 	if (hst_param == NULL)
@@ -2171,11 +2171,10 @@ Returns:		0/E_VSP_PARA_NOHSI/E_VSP_PARA_HSI_NOTHSV
 	E_VSP_PARA_HSI_CONNECT
 ******************************************************************************/
 static long vsp_ins_check_hsi_param(
-	struct vsp_ch_info *ch_info,
-	struct vsp_hsi_info *hsi_info,
-	struct vsp_hsi_t *hsi_param)
+	struct vsp_ch_info *ch_info, struct vsp_hsi_t *hsi_param)
 {
 	struct vsp_src_info *src_info = &ch_info->src_info[ch_info->src_idx];
+	struct vsp_hsi_info *hsi_info = &ch_info->hsi_info;
 
 	/* check pointer */
 	if (hsi_param == NULL)
@@ -2209,11 +2208,10 @@ Returns:		0/E_VSP_PARA_VIR_ADR/E_VSP_PARA_VIR_WIDTH
 				E_VSP_PARA_VIR_HEIGHT/E_VSP_PARA_VIR_PWD
 ******************************************************************************/
 static long vsp_ins_check_blend_virtual_param(
-	struct vsp_ch_info *ch_info,
-	struct vsp_bru_info *bru_info,
-	struct vsp_bld_vir_t *vir_param)
+	struct vsp_ch_info *ch_info, struct vsp_bld_vir_t *vir_param)
 {
 	struct vsp_src_info *src_info = &ch_info->src_info[ch_info->src_idx];
+	struct vsp_bru_info *bru_info = &ch_info->bru_info;
 	unsigned int x_pos, y_pos;
 
 	/* check pointer */
@@ -2387,10 +2385,10 @@ Returns:		0/E_VSP_PARA_NOBRU/E_VSP_PARA_BRU_LAYORDER
 	return of vsp_ins_check_blend_control_param()
 ******************************************************************************/
 static long vsp_ins_check_bru_param(
-	struct vsp_ch_info *ch_info,
-	struct vsp_bru_info *bru_info,
-	struct vsp_bru_t *bru_param)
+	struct vsp_ch_info *ch_info, struct vsp_bru_t *bru_param)
 {
+	struct vsp_bru_info *bru_info = &ch_info->bru_info;
+
 	unsigned long order_tmp;
 	unsigned long order_bit;
 	unsigned char layer[VSP_BROP_MAX];
@@ -2499,7 +2497,7 @@ static long vsp_ins_check_bru_param(
 	/* check blend virtual parameter */
 	if (order_bit & 0x10) {
 		ercd = vsp_ins_check_blend_virtual_param(
-			ch_info, bru_info, bru_param->blend_virtual);
+			ch_info, bru_param->blend_virtual);
 		if (ercd)
 			return ercd;
 	}
@@ -2597,11 +2595,10 @@ Returns:		0/E_VSP_PARA_NOHGO/E_VSP_PARA_HGO_ADR
 	E_VSP_PARA_HGO_SMMPT
 ******************************************************************************/
 static long vsp_ins_check_hgo_param(
-	struct vsp_ch_info *ch_info,
-	struct vsp_hgo_info *hgo_info,
-	struct vsp_hgo_t *hgo_param)
+	struct vsp_ch_info *ch_info, struct vsp_hgo_t *hgo_param)
 {
 	struct vsp_part_info *part_info = &ch_info->part_info;
+	struct vsp_hgo_info *hgo_info = &ch_info->hgo_info;
 
 	if (hgo_param == NULL)
 		return E_VSP_PARA_NOHGO;
@@ -2720,11 +2717,10 @@ Returns:		0/E_VSP_PARA_NOHGT/E_VSP_PARA_HGT_ADR
 	return of vsp_ins_check_hue_area_param()
 ******************************************************************************/
 static long vsp_ins_check_hgt_param(
-	struct vsp_ch_info *ch_info,
-	struct vsp_hgt_info *hgt_info,
-	struct vsp_hgt_t *hgt_param)
+	struct vsp_ch_info *ch_info, struct vsp_hgt_t *hgt_param)
 {
 	struct vsp_part_info *part_info = &ch_info->part_info;
+	struct vsp_hgt_info *hgt_info = &ch_info->hgt_info;
 
 	long ercd;
 
@@ -2799,11 +2795,10 @@ Description:	Check module parameter of SHP.
 Returns:		0/E_VSP_PARA_NOSHP/E_VSP_PARA_SHP_CONNECT
 ******************************************************************************/
 static long vsp_ins_check_shp_param(
-	struct vsp_ch_info *ch_info,
-	struct vsp_shp_info *shp_info,
-	struct vsp_shp_t *shp_param)
+	struct vsp_ch_info *ch_info, struct vsp_shp_t *shp_param)
 {
 	struct vsp_src_info *src_info = &ch_info->src_info[ch_info->src_idx];
+	struct vsp_shp_info *shp_info = &ch_info->shp_info;
 
 	/* check pointer */
 	if (shp_param == NULL)
@@ -2850,11 +2845,10 @@ Returns:		0/E_VSP_PARA_NODRC/E_VSP_PARA_DRC_ADR
 	E_VSP_PARA_DRC_SIZE/E_VSP_PARA_DRC_CONNECT
 ******************************************************************************/
 static long vsp_ins_check_drc_param(
-	struct vsp_ch_info *ch_info,
-	struct vsp_drc_info *drc_info,
-	struct vsp_drc_t *drc_param)
+	struct vsp_ch_info *ch_info, struct vsp_drc_t *drc_param)
 {
 	struct vsp_src_info *src_info = &ch_info->src_info[ch_info->src_idx];
+	struct vsp_drc_info *drc_info = &ch_info->drc_info;
 
 	/* check pointer */
 	if (drc_param == NULL)
@@ -2903,6 +2897,8 @@ Returns:		0/E_VSP_PARA_DL_ADR/E_VSP_PARA_DL_SIZE
 static long vsp_ins_check_dl_param(
 	struct vsp_ch_info *ch_info, struct vsp_dl_t *dl_param)
 {
+	struct vsp_wpf_info *wpf_info = &ch_info->wpf_info;
+
 	/* check address */
 	if ((dl_param->hard_addr == NULL) ||
 		(dl_param->virt_addr == NULL))
@@ -2914,7 +2910,7 @@ static long vsp_ins_check_dl_param(
 		(dl_param->tbl_num > 16383))
 		return E_VSP_PARA_DL_SIZE;
 
-	ch_info->val_dl_addr = (unsigned long)dl_param->hard_addr;
+	wpf_info->val_dl_addr = (unsigned long)dl_param->hard_addr;
 
 	return 0;
 }
@@ -2927,9 +2923,8 @@ Returns:		0/E_VSP_PARA_CONNECT
 	return of each of modules parameter function.
 ******************************************************************************/
 static long vsp_ins_check_module_param(
-	struct vsp_prv_data *prv, struct vsp_ctrl_t *ctrl_param)
+	struct vsp_ch_info *ch_info, struct vsp_ctrl_t *ctrl_param)
 {
-	struct vsp_ch_info *ch_info = &prv->ch_info[prv->widx];
 	unsigned long processing_module;
 
 	long ercd;
@@ -2947,56 +2942,56 @@ static long vsp_ins_check_module_param(
 		case VSP_SRU_USE:
 			/* check sru parameter */
 			ercd = vsp_ins_check_sru_param(
-				ch_info, &prv->sru_info, ctrl_param->sru);
+				ch_info, ctrl_param->sru);
 			if (ercd)
 				return ercd;
 			break;
 		case VSP_UDS_USE:
 			/* check uds parameter */
 			ercd = vsp_ins_check_uds_param(
-				ch_info, &prv->uds_info, ctrl_param->uds);
+				ch_info, ctrl_param->uds);
 			if (ercd)
 				return ercd;
 			break;
 		case VSP_LUT_USE:
 			/* check lut parameter */
 			ercd = vsp_ins_check_lut_param(
-				ch_info, &prv->lut_info, ctrl_param->lut);
+				ch_info, ctrl_param->lut);
 			if (ercd)
 				return ercd;
 			break;
 		case VSP_CLU_USE:
 			/* check clu parameter */
 			ercd = vsp_ins_check_clu_param(
-				ch_info, &prv->clu_info, ctrl_param->clu);
+				ch_info, ctrl_param->clu);
 			if (ercd)
 				return ercd;
 			break;
 		case VSP_HST_USE:
 			/* check hst parameter */
 			ercd = vsp_ins_check_hst_param(
-				ch_info, &prv->hst_info, ctrl_param->hst);
+				ch_info, ctrl_param->hst);
 			if (ercd)
 				return ercd;
 			break;
 		case VSP_HSI_USE:
 			/* check hsi parameter */
 			ercd = vsp_ins_check_hsi_param(
-				ch_info, &prv->hsi_info, ctrl_param->hsi);
+				ch_info, ctrl_param->hsi);
 			if (ercd)
 				return ercd;
 			break;
 		case VSP_SHP_USE:
 			/* check shp parameter */
 			ercd = vsp_ins_check_shp_param(
-				ch_info, &prv->shp_info, ctrl_param->shp);
+				ch_info, ctrl_param->shp);
 			if (ercd)
 				return ercd;
 			break;
 		case VSP_DRC_USE:
 			/* check drc parameter */
 			ercd = vsp_ins_check_drc_param(
-				ch_info, &prv->drc_info, ctrl_param->drc);
+				ch_info, ctrl_param->drc);
 			if (ercd)
 				return ercd;
 			break;
@@ -3058,12 +3053,12 @@ static long vsp_ins_check_connection_module_from_rpf(
 
 		/* check RPF parameter */
 		ercd = vsp_ins_check_rpf_param(
-			ch_info, &prv->rpf_info[rpf_ch], param->src_par[i]);
+			ch_info, &ch_info->rpf_info[rpf_ch], param->src_par[i]);
 		if (ercd)
 			return ercd;
 
 		/* check module parameter */
-		ercd = vsp_ins_check_module_param(prv, param->ctrl_par);
+		ercd = vsp_ins_check_module_param(ch_info, param->ctrl_par);
 		if (ercd)
 			return ercd;
 
@@ -3092,9 +3087,8 @@ Returns:		0/E_VSP_PARA_CONNECT
 	return of vsp_ins_check_module_param()
 ******************************************************************************/
 static long vsp_ins_check_connection_module_from_bru(
-	struct vsp_prv_data *prv, struct vsp_start_t *param)
+	struct vsp_ch_info *ch_info, struct vsp_start_t *param)
 {
-	struct vsp_ch_info *ch_info = &prv->ch_info[prv->widx];
 	long ercd;
 
 	/* initialise */
@@ -3105,8 +3099,7 @@ static long vsp_ins_check_connection_module_from_bru(
 
 	if (param->use_module & VSP_BRU_USE) {
 		/* check BRU parameter */
-		ercd = vsp_ins_check_bru_param(
-			ch_info, &prv->bru_info, param->ctrl_par->bru);
+		ercd = vsp_ins_check_bru_param(ch_info, param->ctrl_par->bru);
 		if (ercd)
 			return ercd;
 
@@ -3119,7 +3112,7 @@ static long vsp_ins_check_connection_module_from_bru(
 		return ercd;
 
 	/* check module parameter */
-	ercd = vsp_ins_check_module_param(prv, param->ctrl_par);
+	ercd = vsp_ins_check_module_param(ch_info, param->ctrl_par);
 	if (ercd)
 		return ercd;
 
@@ -3139,10 +3132,8 @@ Returns:		0
 	return of vsp_ins_check_hgt_param()
 ******************************************************************************/
 static long vsp_ins_check_independent_module(
-	struct vsp_prv_data *prv, struct vsp_start_t *param)
+	struct vsp_ch_info *ch_info, struct vsp_start_t *param)
 {
-	struct vsp_ch_info *ch_info = &prv->ch_info[prv->widx];
-
 	long ercd;
 
 	/* check module parameter pointer */
@@ -3150,8 +3141,7 @@ static long vsp_ins_check_independent_module(
 
 	/* check HGO parameter */
 	if (param->use_module & VSP_HGO_USE) {
-		ercd = vsp_ins_check_hgo_param(
-			ch_info, &prv->hgo_info, param->ctrl_par->hgo);
+		ercd = vsp_ins_check_hgo_param(ch_info, param->ctrl_par->hgo);
 		if (ercd)
 			return ercd;
 
@@ -3160,8 +3150,7 @@ static long vsp_ins_check_independent_module(
 
 	/* check HGT parameter */
 	if (param->use_module & VSP_HGT_USE) {
-		ercd = vsp_ins_check_hgt_param(
-			ch_info, &prv->hgt_info, param->ctrl_par->hgt);
+		ercd = vsp_ins_check_hgt_param(ch_info, param->ctrl_par->hgt);
 		if (ercd)
 			return ercd;
 
@@ -3180,9 +3169,8 @@ Returns:		0
 	return of vsp_ins_check_dl_param()
 ******************************************************************************/
 static long vsp_ins_check_output_module(
-	struct vsp_prv_data *prv, struct vsp_start_t *param)
+	struct vsp_ch_info *ch_info, struct vsp_start_t *param)
 {
-	struct vsp_ch_info *ch_info = &prv->ch_info[prv->widx];
 	long ercd;
 
 	/* check WPF parameter */
@@ -3207,9 +3195,8 @@ Returns:		0/E_VSP_PARA_IN_WIDTHEX/E_VSP_PARA_IN_HEIGHTEX
 	E_VSP_PARA_DL_SIZE/E_VSP_PARA_CONNECT
 ******************************************************************************/
 static long vsp_ins_check_partition(
-	struct vsp_prv_data *prv, struct vsp_start_t *st_par)
+	struct vsp_ch_info *ch_info, struct vsp_start_t *st_par)
 {
-	struct vsp_ch_info *ch_info = &prv->ch_info[prv->widx];
 	struct vsp_part_info *part_info = &ch_info->part_info;
 
 	struct vsp_src_t *src_par = st_par->src_par[0];	/* input source 0 */
@@ -3241,7 +3228,8 @@ static long vsp_ins_check_partition(
 
 		/* check display list size */
 		div_cnt = VSP_ROUND_UP(
-			(ch_info->val_hszclip & 0x1fff), part_info->div_size);
+			(ch_info->wpf_info.val_hszclip & 0x1fff),
+			part_info->div_size);
 
 		tbl_num = VSP_DL_HEAD_SIZE + VSP_DL_BODY_SIZE;
 		tbl_num +=
@@ -3306,12 +3294,12 @@ long vsp_ins_check_start_parameter(
 		return ercd;
 
 	/* check connection module parameter (BRU->WPF) */
-	ercd = vsp_ins_check_connection_module_from_bru(prv, param);
+	ercd = vsp_ins_check_connection_module_from_bru(ch_info, param);
 	if (ercd)
 		return ercd;
 
 	/* check independent module parameter (HGO, HGT) */
-	ercd = vsp_ins_check_independent_module(prv, param);
+	ercd = vsp_ins_check_independent_module(ch_info, param);
 	if (ercd)
 		return ercd;
 
@@ -3325,12 +3313,12 @@ long vsp_ins_check_start_parameter(
 		return E_VSP_PARA_USEMODULE;
 
 	/* check WPF module parameter */
-	ercd = vsp_ins_check_output_module(prv, param);
+	ercd = vsp_ins_check_output_module(ch_info, param);
 	if (ercd)
 		return ercd;
 
 	/* check partition */
-	ercd = vsp_ins_check_partition(prv, param);
+	ercd = vsp_ins_check_partition(ch_info, param);
 	if (ercd)
 		return ercd;
 

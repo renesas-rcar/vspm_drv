@@ -342,6 +342,8 @@
 #define VSP_HGO_B_HISTO_OFFSET	(0x3250)
 #define VSP_HGO_EXT_HIST_ADDR	(0x335C)
 #define VSP_HGO_EXT_HIST_DATA	(0x3360)
+#define VSP_HGO_WBUFS			(0x3364)
+#define VSP_HGO_RBUFS			(0x3368)
 #define VSP_HGO_REGRST			(0x33FC)
 
 /* HGT control registers offset */
@@ -355,6 +357,8 @@
 #define VSP_HGT_HUE_AREA4		(0x341C)
 #define VSP_HGT_HUE_AREA5		(0x3420)
 #define VSP_HGT_HIST_OFFSET		(0x3450)
+#define VSP_HGT_WBUFS			(0x3764)
+#define VSP_HGT_RBUFS			(0x3768)
 #define VSP_HGT_REGRST			(0x37FC)
 
 /* SHP control registers offset */
@@ -380,6 +384,7 @@
 #define VSP_STATUS_WPF0			(0x00000100)
 
 #define VSP_DL_CTRL_WAIT		(0x01000000)
+#define VSP_DL_CTRL_RLM0		(0x00000008)
 #define VSP_DL_CTRL_DLE			(0x00001111)
 
 #define VSP_DL_SWAP_LWS			(0x00000004)
@@ -660,6 +665,18 @@ struct vsp_drc_info {
 	unsigned int val_dpr;
 };
 
+/* WPF information structure */
+struct vsp_wpf_info {
+	unsigned int val_srcrpf;
+	unsigned int val_hszclip;
+	unsigned int val_vszclip;
+	unsigned int val_outfmt;
+	unsigned long val_addr_y;
+	unsigned long val_addr_c0;
+	unsigned long val_addr_c1;
+	unsigned long val_dl_addr;
+};
+
 struct vsp_src_info {
 	unsigned char rpf_ch;
 	unsigned char color;
@@ -692,14 +709,19 @@ struct vsp_ch_info {
 	unsigned char wpf_cnt;
 	unsigned char bru_cnt;
 
-	unsigned int val_srcrpf;
-	unsigned int val_hszclip;
-	unsigned int val_vszclip;
-	unsigned int val_outfmt;
-	unsigned long val_addr_y;
-	unsigned long val_addr_c0;
-	unsigned long val_addr_c1;
-	unsigned long val_dl_addr;
+	struct vsp_rpf_info rpf_info[VSP_RPF_MAX];
+	struct vsp_sru_info sru_info;
+	struct vsp_uds_info uds_info;
+	struct vsp_lut_info lut_info;
+	struct vsp_clu_info clu_info;
+	struct vsp_hst_info hst_info;
+	struct vsp_hsi_info hsi_info;
+	struct vsp_bru_info bru_info;
+	struct vsp_hgo_info hgo_info;
+	struct vsp_hgt_info hgt_info;
+	struct vsp_shp_info shp_info;
+	struct vsp_drc_info drc_info;
+	struct vsp_wpf_info wpf_info;
 };
 
 /* private data structure */
@@ -715,24 +737,12 @@ struct vsp_prv_data {
 		unsigned int usable_wpf_rot;
 		unsigned int usable_module;
 		unsigned int read_outstanding;
+		unsigned int start_reservation;
 	} rdata;
 
 	struct vsp_ch_info ch_info[2];
 	unsigned char widx;
 	unsigned char ridx;
-
-	struct vsp_rpf_info rpf_info[VSP_RPF_MAX];
-	struct vsp_sru_info sru_info;
-	struct vsp_uds_info uds_info;
-	struct vsp_lut_info lut_info;
-	struct vsp_clu_info clu_info;
-	struct vsp_hst_info hst_info;
-	struct vsp_hsi_info hsi_info;
-	struct vsp_bru_info bru_info;
-	struct vsp_hgo_info hgo_info;
-	struct vsp_hgt_info hgt_info;
-	struct vsp_shp_info shp_info;
-	struct vsp_drc_info drc_info;
 };
 
 
