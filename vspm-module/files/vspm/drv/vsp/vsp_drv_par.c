@@ -1623,7 +1623,7 @@ static long vsp_ins_recalculate_wpf_addr(
 		temp_y = (temp_y - 1) * (unsigned int)dst_par->stride;
 		wpf_info->val_addr_y += temp_y;
 
-		temp_c = vsp_ins_get_line_luma(
+		temp_c = vsp_ins_get_line_chroma(
 			dst_par->format, dst_par->height);
 		temp_c = (temp_c - 1) * (unsigned int)dst_par->stride_c;
 		if (wpf_info->val_addr_c0)
