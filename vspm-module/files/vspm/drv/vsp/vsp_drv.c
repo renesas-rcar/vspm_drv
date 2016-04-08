@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015 Renesas Electronics Corporation
+ Copyright (C) 2015-2016 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -142,8 +142,8 @@ long vsp_lib_quit(void)
 					return ercd;
 			}
 
-			if (((*prv)->ch_info[0].status != VSP_STAT_INIT) ||
-				((*prv)->ch_info[1].status != VSP_STAT_INIT)) {
+			if (((*prv)->ch_info[0].status == VSP_STAT_READY) &&
+				((*prv)->ch_info[1].status == VSP_STAT_READY)) {
 				ercd = vsp_lib_close((unsigned char)i);
 				if (ercd)
 					return ercd;
