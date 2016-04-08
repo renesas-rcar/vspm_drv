@@ -1296,6 +1296,8 @@ Returns:		void
 ******************************************************************************/
 void fdp_int_hdr(struct fdp_obj_t *obj)
 {
+	struct fdp_cb_info_t cb_info;
+
 	/* check parameter */
 	if (obj == NULL)
 		return;
@@ -1304,14 +1306,17 @@ void fdp_int_hdr(struct fdp_obj_t *obj)
 		/* get processing result */
 		fdp_int_get_process_result(obj);
 
-		/* execute callback2 */
-		if (obj->cb_info.fdp_cb2 != NULL) {
-			obj->cb_info.fdp_cb2(
-				0, R_VSPM_OK, obj->cb_info.userdata2);
-		}
+		/* save callback information */
+		cb_info = obj->cb_info;
 
 		/* update status */
 		obj->status = FDP_STAT_READY;
+
+		/* execute callback2 */
+		if (cb_info.fdp_cb2 != NULL) {
+			cb_info.fdp_cb2(
+				0, R_VSPM_OK, cb_info.userdata2);
+		}
 	}
 }
 
