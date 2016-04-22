@@ -121,7 +121,8 @@ Function:		vsp_write_reg
 Description:	Write to register
 Returns:		void
 ******************************************************************************/
-inline void vsp_write_reg(unsigned int data, void *base, unsigned int offset)
+inline void vsp_write_reg(
+	unsigned int data, void __iomem *base, unsigned int offset)
 {
 	iowrite32(data, base + offset);
 }
@@ -132,7 +133,7 @@ Function:		vsp_read_reg
 Description:	Read from register
 Returns:		void
 ******************************************************************************/
-inline unsigned int vsp_read_reg(void *base, unsigned int offset)
+inline unsigned int vsp_read_reg(void __iomem *base, unsigned int offset)
 {
 	return ioread32(base + offset);
 }

@@ -1706,16 +1706,17 @@ Description:	Write LUT table to register
 Returns:		void
 ******************************************************************************/
 void fdp_write_reg_lut_tbl(
-	const unsigned char *data, void *base, unsigned int offset)
+	const unsigned char *data, void __iomem *base, unsigned int offset)
 {
-	unsigned int *dst_addr = (unsigned int *)(base + offset);
+	void __iomem *dst_addr = base + offset;
 	unsigned int src_data;
 
 	int i;
 
 	for (i = 0; i < 256; i++) {
 		src_data = (unsigned int)(*data++);
-		iowrite32(src_data, dst_addr++);
+		iowrite32(src_data, dst_addr);
+		dst_addr += 4;
 	}
 }
 
@@ -1727,7 +1728,7 @@ Returns:		void
 inline void fdp_rewrite_reg(
 	unsigned int data,
 	unsigned int mask,
-	void *base,
+	void __iomem *base,
 	unsigned int offset)
 {
 	unsigned int reg_data;
@@ -1743,7 +1744,8 @@ Function:		fdp_write_reg
 Description:	Write to register
 Returns:		void
 ******************************************************************************/
-inline void fdp_write_reg(unsigned int data, void *base, unsigned int offset)
+inline void fdp_write_reg(
+	unsigned int data, void __iomem *base, unsigned int offset)
 {
 	iowrite32(data, base + offset);
 }
@@ -1753,7 +1755,7 @@ Function:		fdp_read_reg
 Description:	Read from register
 Returns:		read value from register.
 ******************************************************************************/
-inline unsigned int fdp_read_reg(void *base, unsigned int offset)
+inline unsigned int fdp_read_reg(void __iomem *base, unsigned int offset)
 {
 	return ioread32(base + offset);
 }

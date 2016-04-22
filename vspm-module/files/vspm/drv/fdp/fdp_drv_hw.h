@@ -354,22 +354,22 @@
 
 void fdp_write_reg_lut_tbl(
 	const unsigned char *data,
-	void *base,
+	void __iomem *base,
 	unsigned int offset);
 
 void fdp_rewrite_reg(
 	unsigned int data,
 	unsigned int mask,
-	void *base,
+	void __iomem *base,
 	unsigned int offset);
 
 void fdp_write_reg(
 	unsigned int data,
-	void *base,
+	void __iomem *base,
 	unsigned int offset);
 
 unsigned int fdp_read_reg(
-	void *base,
+	void __iomem *base,
 	unsigned int offset);
 
 #endif
