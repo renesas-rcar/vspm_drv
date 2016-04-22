@@ -73,6 +73,7 @@ void fdp_ins_start_processing(
 	struct fdp_obj_t *obj, struct fdp_start_t *start_par);
 void fdp_ins_stop_processing(struct fdp_obj_t *obj);
 
+long fdp_ins_get_resource(struct fdp_obj_t *obj);
 long fdp_ins_init_reg(struct fdp_obj_t *obj);
 long fdp_ins_quit_reg(struct fdp_obj_t *obj);
 long fdp_free_inth(struct fdp_obj_t *obj);

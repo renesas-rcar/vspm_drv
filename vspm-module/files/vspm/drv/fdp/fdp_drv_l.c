@@ -60,6 +60,8 @@
 */ /*************************************************************************/
 
 #include <linux/platform_device.h>
+#include <linux/of.h>
+#include <linux/of_device.h>
 #include <linux/io.h>
 #include <linux/slab.h>
 #include <linux/delay.h>
@@ -1429,12 +1431,49 @@ static void fdp_ins_init_ipc_reg(struct fdp_obj_t *obj)
 		FD1_IPC_SENSOR_TH1);
 
 	/* look-up table */
-	fdp_write_reg_lut_tbl(fdp_tbl_dif_adj, P_FDP, FD1_DIF_ADJ_OFFSET);
-	fdp_write_reg_lut_tbl(fdp_tbl_sad_adj, P_FDP, FD1_SAD_ADJ_OFFSET);
-	fdp_write_reg_lut_tbl(fdp_tbl_bld_gain, P_FDP, FD1_BLD_GAIN_OFFSET);
-	fdp_write_reg_lut_tbl(fdp_tbl_dif_gain, P_FDP, FD1_DIF_GAIN_OFFSET);
-	fdp_write_reg_lut_tbl(fdp_tbl_mdet, P_FDP, FD1_MDET_OFFSET);
+	fdp_write_reg_lut_tbl(
+		fdp_tbl_dif_adj[obj->lut_tbl_idx],
+		P_FDP,
+		FD1_DIF_ADJ_OFFSET);
+	fdp_write_reg_lut_tbl(
+		fdp_tbl_sad_adj[obj->lut_tbl_idx],
+		P_FDP,
+		FD1_SAD_ADJ_OFFSET);
+	fdp_write_reg_lut_tbl(
+		fdp_tbl_bld_gain[obj->lut_tbl_idx],
+		P_FDP,
+		FD1_BLD_GAIN_OFFSET);
+	fdp_write_reg_lut_tbl(
+		fdp_tbl_dif_gain[obj->lut_tbl_idx],
+		P_FDP,
+		FD1_DIF_GAIN_OFFSET);
+	fdp_write_reg_lut_tbl(
+		fdp_tbl_mdet[obj->lut_tbl_idx],
+		P_FDP,
+		FD1_MDET_OFFSET);
 }
+
+
+/******************************************************************************
+Function:		fdp_ins_get_resource
+Description:	Get FDP resource.
+Returns:		0/E_FDP_INVALID_PARAM
+******************************************************************************/
+long fdp_ins_get_resource(struct fdp_obj_t *obj)
+{
+	struct device_node *np = obj->pdev->dev.of_node;
+
+	/* read LUT table index */
+	of_property_read_u32(
+		np,
+		"renesas,#lut_table_index",
+		&obj->lut_tbl_idx);
+	if (obj->lut_tbl_idx >= FDP_LUT_TBL_MAX)
+		return E_FDP_INVALID_PARAM;
+
+	return 0;
+}
+
 
 /******************************************************************************
 Function:		fdp_ins_init_reg

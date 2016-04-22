@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015 Renesas Electronics Corporation
+ Copyright (C) 2015-2016 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -136,6 +136,7 @@ long fdp_lib_quit(struct fdp_obj_t *obj)
 Function:		fdp_lib_open
 Description:	Initialize FDP hardware
 Returns:		0/E_FDP_INVALID_PARAM/E_FDP_INVALID_STATE
+	return of fdp_ins_get_resource()
 	return of fdp_ins_enable_clock()
 	return of fdp_ins_init_reg()
 	return of fdp_reg_inth()
@@ -151,6 +152,11 @@ long fdp_lib_open(struct fdp_obj_t *obj)
 	/* check status */
 	if (obj->status != FDP_STAT_INIT)
 		return E_FDP_INVALID_STATE;
+
+	/* get FDP resource */
+	ercd = fdp_ins_get_resource(obj);
+	if (ercd)
+		goto err_exit1;
 
 	/* enable clock */
 	ercd = fdp_ins_enable_clock(obj);

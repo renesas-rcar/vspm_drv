@@ -70,6 +70,9 @@
 #define FDP_STATUS_LOOP_TIME	(2)
 #define FDP_STATUS_LOOP_CNT		(500)
 
+/* define LUT table maximum size */
+#define FDP_LUT_TBL_MAX			(3)
+
 /* General control registers */
 #define FD1_CTL_CMD			(0x0000)
 #define FD1_CTL_SGCMD		(0x0004)

@@ -104,6 +104,7 @@ struct fdp_obj_t {
 	struct resource *irq;
 	void __iomem *fdp_reg;
 	void __iomem *fcp_reg;
+	unsigned int lut_tbl_idx;
 };
 
 long fdp_lib_init(struct fdp_obj_t **obj);
