@@ -478,9 +478,10 @@ static long fdp_ins_check_fcp_param(
 
 			/* check stride */
 			fcp_stride = fcp->stride_div16 << 4;
-			if ((fcp_stride == 0) ||
-				(fcp_stride > 8192) ||
-				(fcp_stride % 128))
+			if (fcp_stride & (fcp_stride - 1))
+				return E_FDP_PARA_FCP_STRIDE;
+
+			if ((fcp_stride < 128) || (fcp_stride > 8192))
 				return E_FDP_PARA_FCP_STRIDE;
 
 			/* check current address of reference */
@@ -507,7 +508,6 @@ static long fdp_ins_check_fcp_param(
 
 			buf = fproc_par->ref_buf->cur_buf;
 			/* check source stride */
-			fcp_stride = fcp->stride_div16 << 4;
 			if (buf->stride != fcp_stride)
 				return E_FDP_PARA_SRC_STRIDE;
 
