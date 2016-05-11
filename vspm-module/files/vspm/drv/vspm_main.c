@@ -82,26 +82,31 @@ struct vspm_drvdata *p_vspm_drvdata;
 Function:		vspm_init_driver
 Description:	Initialize VSP Manager.
 Returns:		R_VSPM_OK/R_VSPM_NG
+	return of vspm_init()
 	return of vspm_lib_set_mode()
 ******************************************************************************/
 long vspm_init_driver(unsigned long *handle, struct vspm_init_t *param)
 {
 	struct vspm_privdata *priv = 0;
 	struct vspm_drvdata *pdrv = p_vspm_drvdata;
+	int cnt;
 
 	long ercd;
 
 	down(&pdrv->init_sem);
 
 	/* check parameter */
-	if ((handle == NULL) || (param == NULL))
+	if ((handle == NULL) || (param == NULL)) {
+		ercd = R_VSPM_NG;
 		goto err_exit1;
+	}
 
 	/* allocate the private data area of the vspm device file */
 	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
 	if (!priv) {
 		APRINT("could not allocate the private data area of the ");
 		APRINT("vspm device file\n");
+		ercd = R_VSPM_NG;
 		goto err_exit1;
 	}
 
@@ -110,30 +115,33 @@ long vspm_init_driver(unsigned long *handle, struct vspm_init_t *param)
 	if (atomic_add_return(1, &pdrv->counter) == 1) {
 		/* first time open */
 		ercd = vspm_init(pdrv);
-		if (ercd)
+		if (ercd) {
+			atomic_dec(&pdrv->counter);
 			goto err_exit2;
+		}
 	}
 
 	/* set mode parameter */
 	ercd = vspm_lib_set_mode(priv, param);
-	if (ercd) {
-		up(&pdrv->init_sem);
-		(void)vspm_quit_driver((unsigned long)priv);
-		return ercd;
-	}
+	if (ercd)
+		goto err_exit3;
 
 	*handle = (unsigned long)priv;
 
 	up(&pdrv->init_sem);
 	return R_VSPM_OK;
 
+err_exit3:
+	cnt = atomic_sub_return(1, &pdrv->counter);
+	if (cnt == 0)
+		(void)vspm_quit(pdrv);
+
 err_exit2:
-	atomic_dec(&pdrv->counter);
 	kfree(priv);
 
 err_exit1:
 	up(&pdrv->init_sem);
-	return R_VSPM_NG;
+	return ercd;
 }
 EXPORT_SYMBOL(vspm_init_driver);
 
