@@ -74,8 +74,6 @@
 #include "vspm_lib_public.h"
 #include "vsp_drv_public.h"
 
-#define gic_spi(n)		((n)+32)
-
 struct vspm_drvdata *p_vspm_drvdata;
 
 /******************************************************************************
