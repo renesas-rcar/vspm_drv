@@ -709,6 +709,8 @@ struct vsp_ch_info {
 	unsigned char wpf_cnt;
 	unsigned char bru_cnt;
 
+	unsigned int next_dl_addr;
+
 	struct vsp_rpf_info rpf_info[VSP_RPF_MAX];
 	struct vsp_sru_info sru_info;
 	struct vsp_uds_info uds_info;
