@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015 Renesas Electronics Corporation
+ Copyright (C) 2015-2016 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -102,6 +102,10 @@ enum {
 /* Job priority */
 #define VSPM_PRI_MAX		((char)126)
 #define VSPM_PRI_MIN		((char)  1)
+
+#define VSPM_PRI_LOW		((char) 32)
+#define VSPM_PRI_STD		((char) 64)
+#define VSPM_PRI_HIGH		((char) 96)
 
 /* State of the entry */
 #define VSPM_STATUS_WAIT		1
