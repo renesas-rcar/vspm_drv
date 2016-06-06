@@ -1012,8 +1012,8 @@ static void vsp_ins_set_part_full(
 
 	/* initialize DL header */
 	memset(head, 0, VSP_DL_HEAD_SIZE);
-	head->body_info[0].addr =
-		VSP_VP_TO_INT(st_par->dl_par.hard_addr + VSP_DL_HEAD_SIZE);
+	ch_info->next_dl_addr += VSP_DL_HEAD_SIZE;
+	head->body_info[0].addr = ch_info->next_dl_addr;
 
 	/* init DRP register */
 	vsp_ins_set_dl_for_dpr(head, prv);
@@ -1036,7 +1036,8 @@ static void vsp_ins_set_part_full(
 	vsp_ins_set_dl_for_wpf(head, ch_info, st_par->dst_par);
 
 	/* finalize DL header */
-	head->next_head_addr = head->body_info[0].addr + VSP_DL_BODY_SIZE;
+	ch_info->next_dl_addr += VSP_DL_BODY_SIZE;
+	head->next_head_addr = ch_info->next_dl_addr;
 	head->next_frame_ctrl = 2;
 }
 
@@ -1047,9 +1048,7 @@ Description:	Set diff registers value to display list.
 Returns:		void
 ******************************************************************************/
 static void vsp_ins_set_part_diff(
-	struct vsp_dl_head_info *pre_head,
-	struct vsp_ch_info *ch_info,
-	struct vsp_start_t *st_par)
+	struct vsp_ch_info *ch_info, struct vsp_start_t *st_par)
 {
 	struct vsp_rpf_info *rpf_info;
 	struct vsp_wpf_info *wpf_info;
@@ -1059,11 +1058,8 @@ static void vsp_ins_set_part_diff(
 	struct vsp_dl_head_info *head;
 	unsigned int *body0, *body;
 
-	/* set next frame auto start of previous header */
-	pre_head->next_frame_ctrl = 1;
-
 	head = (struct vsp_dl_head_info *)
-		VSP_DL_HARD_TO_VIRT(pre_head->next_head_addr);
+		VSP_DL_HARD_TO_VIRT(ch_info->next_dl_addr);
 
 	body = (unsigned int *)head;
 	body += (VSP_DL_HEAD_SIZE >> 2);
@@ -1071,7 +1067,8 @@ static void vsp_ins_set_part_diff(
 
 	/* initialize DL header */
 	memset(head, 0, VSP_DL_HEAD_SIZE);
-	head->body_info[0].addr = pre_head->next_head_addr + VSP_DL_HEAD_SIZE;
+	ch_info->next_dl_addr += VSP_DL_HEAD_SIZE;
+	head->body_info[0].addr = ch_info->next_dl_addr;
 
 	/* set RPF parameter */
 	rpf_ch = ch_info->src_info[0].rpf_ch;
@@ -1149,7 +1146,8 @@ static void vsp_ins_set_part_diff(
 	/* finalize DL header */
 	head->body_info[0].size =
 		(unsigned int)((unsigned long)(body) - (unsigned long)(body0));
-	head->next_head_addr = head->body_info[0].addr + VSP_DL_PART_SIZE;
+	ch_info->next_dl_addr += VSP_DL_PART_SIZE;
+	head->next_head_addr = ch_info->next_dl_addr;
 	head->next_frame_ctrl = 2;
 }
 
@@ -1910,12 +1908,15 @@ static void vsp_ins_set_part_parameter(
 			/* 1st partition */
 			vsp_ins_set_part_full(prv, st_par);
 		} else {
-			/* 2nd or more partition */
-			vsp_ins_set_part_diff(pre_head, ch_info, st_par);
+			/* set next frame auto start of previous header */
+			pre_head->next_frame_ctrl = 1;
 
 			/* update DL header */
 			pre_head = (struct vsp_dl_head_info *)
-				VSP_DL_HARD_TO_VIRT(pre_head->next_head_addr);
+				VSP_DL_HARD_TO_VIRT(ch_info->next_dl_addr);
+
+			/* 2nd or more partition */
+			vsp_ins_set_part_diff(ch_info, st_par);
 		}
 
 		/* update offset */
@@ -2055,6 +2056,10 @@ long vsp_ins_set_start_parameter(
 	struct vsp_prv_data *prv, struct vsp_start_t *param)
 {
 	struct vsp_ch_info *ch_info = &prv->ch_info[prv->widx];
+
+	/* set display list write address */
+	ch_info->next_dl_addr =
+		VSP_VP_TO_INT(param->dl_par.hard_addr);
 
 	if (ch_info->part_info.div_flag == 0) {
 		/* unnecessary partition */
