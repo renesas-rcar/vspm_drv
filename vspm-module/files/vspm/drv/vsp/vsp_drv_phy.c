@@ -2315,9 +2315,6 @@ long vsp_ins_enable_clock(struct vsp_prv_data *prv)
 	int ercd;
 
 	/* wake up device */
-	pm_suspend_ignore_children(dev, true);
-	pm_runtime_enable(dev);
-
 	ercd = pm_runtime_get_sync(dev);
 	if (ercd != 0) {
 		EPRINT("%s: failed to pm_runtime_get_sync!! ercd=%d\n",
@@ -2341,7 +2338,6 @@ long vsp_ins_disable_clock(struct vsp_prv_data *prv)
 
 	/* mark device as idle */
 	pm_runtime_put_sync(&pdev->dev);
-	pm_runtime_disable(&pdev->dev);
 
 	return 0;
 }

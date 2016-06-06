@@ -65,6 +65,7 @@
 #include <linux/of_device.h>
 #include <linux/slab.h>
 #include <linux/io.h>
+#include <linux/pm_runtime.h>
 
 #include "vspm_public.h"
 #include "vspm_ip_ctrl.h"
@@ -326,6 +327,10 @@ static int vspm_vsp_probe(struct platform_device *pdev)
 	platform_set_drvdata(pdev, pdrv);
 	pdrv->vsp_pdev[ch] = pdev;
 
+	/* set runtime PM */
+	pm_suspend_ignore_children(&pdev->dev, true);
+	pm_runtime_enable(&pdev->dev);
+
 	return 0;
 }
 
@@ -336,6 +341,9 @@ static int vspm_vsp_remove(struct platform_device *pdev)
 	struct device_node *np = pdev->dev.of_node;
 
 	int ch;
+
+	/* unset runtime PM */
+	pm_runtime_disable(&pdev->dev);
 
 	/* get channel */
 	of_property_read_u32(np, "renesas,#ch", &ch);
@@ -376,6 +384,10 @@ static int vspm_fdp_probe(struct platform_device *pdev)
 	platform_set_drvdata(pdev, pdrv);
 	pdrv->fdp_pdev[ch] = pdev;
 
+	/* set runtime PM */
+	pm_suspend_ignore_children(&pdev->dev, true);
+	pm_runtime_enable(&pdev->dev);
+
 	return 0;
 }
 
@@ -386,6 +398,9 @@ static int vspm_fdp_remove(struct platform_device *pdev)
 	struct device_node *np = pdev->dev.of_node;
 
 	int ch;
+
+	/* unset runtime PM */
+	pm_runtime_disable(&pdev->dev);
 
 	/* get channel */
 	of_property_read_u32(np, "renesas,#ch", &ch);
