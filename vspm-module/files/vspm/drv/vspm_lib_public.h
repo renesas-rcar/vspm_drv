@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015 Renesas Electronics Corporation
+ Copyright (C) 2015-2016 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -69,7 +69,7 @@ struct vspm_api_param_entry {
 	char job_priority;
 	struct vspm_job_t *p_ip_par;
 	PFN_VSPM_COMPLETE_CALLBACK pfn_complete_cb;
-	unsigned long user_data;
+	void *user_data;
 };
 
 /* set mode parameter */

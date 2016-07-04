@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015 Renesas Electronics Corporation
+ Copyright (C) 2015-2016 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -107,7 +107,7 @@ long vsp_lib_start(
 	unsigned char ch,
 	void *callback,
 	struct vsp_start_t *param,
-	unsigned long userdata);
+	void *userdata);
 long vsp_lib_abort(unsigned char ch);
 long vsp_lib_get_status(unsigned char ch, struct vsp_status_t *status);
 

@@ -79,9 +79,9 @@ struct fdp_obj_t {
 
 	/* callback information */
 	struct fdp_cb_info_t {
-		unsigned long userdata2;
+		void *userdata2;
 		void (*fdp_cb2)
-			(unsigned long id, long ercd, unsigned long userdata);
+			(unsigned long id, long ercd, void *userdata);
 	} cb_info;
 
 	/* register value */

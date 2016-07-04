@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015 Renesas Electronics Corporation
+ Copyright (C) 2015-2016 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -207,10 +207,12 @@ Function:		vspm_cb_vsp
 Description:	Callback function.
 Returns:		void
 ******************************************************************************/
-static void vspm_cb_vsp(unsigned long id, long ercd, unsigned long userdata)
+static void vspm_cb_vsp(unsigned long id, long ercd, void *userdata)
 {
+	unsigned long module_id = (unsigned long)userdata;
+
 	/* callback function */
-	vspm_inc_ctrl_on_driver_complete((unsigned short)userdata, ercd);
+	vspm_inc_ctrl_on_driver_complete((unsigned short)module_id, ercd);
 }
 
 
@@ -326,7 +328,7 @@ long vspm_ins_vsp_execute(unsigned short module_id, struct vsp_start_t *vsp_par)
 		ch,
 		(void *)vspm_cb_vsp,
 		start_param,
-		(unsigned long)module_id);
+		(void *)(unsigned long)module_id);
 	if (ercd)
 		return ercd;
 

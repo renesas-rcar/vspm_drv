@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015 Renesas Electronics Corporation
+ Copyright (C) 2015-2016 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -61,10 +61,6 @@
 
 #ifndef _FDP_DRV_LOCAL_H_
 #define _FDP_DRV_LOCAL_H_
-
-/* define macro */
-#define FDP_VP_TO_INT(addr)	\
-	((unsigned int)((unsigned long)(addr)))
 
 /* define local functions */
 long fdp_ins_check_start_param(

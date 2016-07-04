@@ -100,9 +100,10 @@ Function:		vspm_cb_fdp
 Description:	Callback function.
 Returns:		void
 ******************************************************************************/
-static void vspm_cb_fdp(unsigned long id, long ercd, unsigned long userdata)
+static void vspm_cb_fdp(unsigned long id, long ercd, void *userdata)
 {
-	vspm_inc_ctrl_on_driver_complete((unsigned short)userdata, ercd);
+	unsigned long module_id = (unsigned long)userdata;
+	vspm_inc_ctrl_on_driver_complete((unsigned short)module_id, ercd);
 }
 
 /******************************************************************************
@@ -157,7 +158,7 @@ err_exit:
 	for (i = 0; i < VSPM_FDP_IP_MAX; i++) {
 		if (g_fdp_obj[i]) {
 			(void)fdp_lib_quit(g_fdp_obj[i]);
-			g_fdp_obj[i] = 0;
+			g_fdp_obj[i] = NULL;
 		}
 	}
 
@@ -200,7 +201,7 @@ long vspm_ins_fdp_execute(
 	obj->proc_info = proc_info;
 
 	/* set callback function */
-	obj->cb_info.userdata2 = (unsigned long)module_id;
+	obj->cb_info.userdata2 = (void *)(unsigned long)module_id;
 	obj->cb_info.fdp_cb2 = (void *)vspm_cb_fdp;
 
 	/* execute FDP process */
@@ -264,7 +265,7 @@ long vspm_ins_fdp_quit(struct vspm_usable_res_info *usable)
 			/* finalize FDP driver */
 			(void)fdp_lib_quit(g_fdp_obj[i]);
 
-			g_fdp_obj[i] = 0;
+			g_fdp_obj[i] = NULL;
 
 			/* clear usable channel bits */
 			for (j = 0; j < VSPM_FDP_CH_MAX; j++) {

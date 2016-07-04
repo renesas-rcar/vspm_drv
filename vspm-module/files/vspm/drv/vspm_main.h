@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015 Renesas Electronics Corporation
+ Copyright (C) 2015-2016 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -83,7 +83,7 @@ struct vspm_drvdata {
 /* FDP process information structure */
 struct vspm_fdp_proc_info {
 	struct fdp_seq_t seq_par;	/* sequence parameter */
-	void *stlmsk_addr[2];		/* Still mask address */
+	unsigned int stlmsk_addr[2];/* Still mask address */
 	unsigned char stlmsk_idx;	/* Still mask index */
 	unsigned char set_prev_flag;/* flag of previous setting */
 	unsigned char seq_cnt;		/* sequence counter */

@@ -301,7 +301,7 @@ long vsp_lib_start(
 	unsigned char ch,
 	void *callback,
 	struct vsp_start_t *param,
-	unsigned long userdata)
+	void *userdata)
 {
 	struct vsp_prv_data *prv;
 	struct vsp_ch_info *ch_info;

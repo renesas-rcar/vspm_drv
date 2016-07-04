@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015 Renesas Electronics Corporation
+ Copyright (C) 2015-2016 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -676,7 +676,7 @@ enum {
 #define VSP_SHP_UNSHARP			(0x02)	/* unsharpness */
 
 struct vsp_dl_t {
-	void *hard_addr;		/* DL buffer address for H/W IP */
+	unsigned int hard_addr;	/* DL buffer address for H/W IP */
 	void *virt_addr;		/* DL buffer address for CPU */
 	unsigned short tbl_num;	/* table number(max 16383) */
 	void *mem_par;			/* reserved */
@@ -704,7 +704,7 @@ struct vsp_mult_unit_t {
 };
 
 struct vsp_alpha_unit_t {
-	void *addr_a;
+	unsigned int addr_a;
 	unsigned short stride_a;
 	unsigned char swap;
 	unsigned char asel;
@@ -718,9 +718,9 @@ struct vsp_alpha_unit_t {
 };
 
 struct vsp_src_t {
-	void *addr;				/* Y or RGB buffer address */
-	void *addr_c0;			/* CbCr or CB buffer address */
-	void *addr_c1;			/* Cr buffer address */
+	unsigned int addr;		/* Y or RGB buffer address */
+	unsigned int addr_c0;	/* CbCr or CB buffer address */
+	unsigned int addr_c1;	/* Cr buffer address */
 	unsigned short stride;
 	unsigned short stride_c;
 	unsigned short width;
@@ -747,9 +747,9 @@ struct vsp_src_t {
 };
 
 struct vsp_dst_t {
-	void *addr;				/* Y or RGB buffer address */
-	void *addr_c0;			/* CbCr or CB buffer address */
-	void *addr_c1;			/* Cr buffer address */
+	unsigned int addr;		/* Y or RGB buffer address */
+	unsigned int addr_c0;	/* CbCr or CB buffer address */
+	unsigned int addr_c1;	/* Cr buffer address */
 	unsigned short stride;
 	unsigned short stride_c;
 	unsigned short width;
@@ -877,7 +877,7 @@ struct vsp_bru_t {
 /* HGO parameter */
 struct vsp_hgo_t {
 	/* histogram detection window */
-	void *hard_addr;			/* use 1088 bytes */
+	unsigned int hard_addr;		/* use 1088 bytes */
 	void *virt_addr;
 	void *mem_par;				/* reserved */
 	unsigned short width;		/* horizontal size */
@@ -901,7 +901,7 @@ struct vsp_hue_area_t {
 
 struct vsp_hgt_t {
 	/* histogram detection window */
-	void *hard_addr;			/* use 800 bytes */
+	unsigned int hard_addr;		/* use 800 bytes */
 	void *virt_addr;
 	void *mem_par;				/* reserved */
 	unsigned short width;		/* horizontal size */

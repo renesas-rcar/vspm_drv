@@ -341,7 +341,7 @@ static void vsp_ins_set_dl_for_rpf(
 			/* insert display list */
 			head->body_num_minus1++;
 			head->body_info[head->body_num_minus1].addr =
-				VSP_VP_TO_INT(param->clut->hard_addr);
+				param->clut->hard_addr;
 			head->body_info[head->body_num_minus1].size =
 				((unsigned int)param->clut->tbl_num) << 3;
 		}
@@ -552,8 +552,7 @@ static void vsp_ins_set_dl_for_lut(
 
 	/* insert LUT table to display list */
 	head->body_num_minus1++;
-	head->body_info[head->body_num_minus1].addr =
-		VSP_VP_TO_INT(param->lut.hard_addr);
+	head->body_info[head->body_num_minus1].addr = param->lut.hard_addr;
 	head->body_info[head->body_num_minus1].size =
 		((unsigned int)param->lut.tbl_num) << 3;
 
@@ -597,8 +596,7 @@ static void vsp_ins_set_dl_for_clu(
 
 	/* insert CLU table to display list */
 	head->body_num_minus1++;
-	head->body_info[head->body_num_minus1].addr =
-		VSP_VP_TO_INT(param->clu.hard_addr);
+	head->body_info[head->body_num_minus1].addr = param->clu.hard_addr;
 	head->body_info[head->body_num_minus1].size =
 		((unsigned int)param->clu.tbl_num) << 3;
 
@@ -902,8 +900,7 @@ static void vsp_ins_set_dl_for_drc(
 
 	/* insert display list */
 	head->body_num_minus1++;
-	head->body_info[head->body_num_minus1].addr =
-		VSP_VP_TO_INT(param->drc.hard_addr);
+	head->body_info[head->body_num_minus1].addr = param->drc.hard_addr;
 	head->body_info[head->body_num_minus1].size =
 		((unsigned int)param->drc.tbl_num) << 3;
 
@@ -1157,10 +1154,10 @@ Function:		vsp_ins_get_bpp_luma
 Description:	Get byte per pixel of RGB/Y.
 Returns:		byte per pixel.
 ******************************************************************************/
-unsigned long vsp_ins_get_bpp_luma(
+unsigned int vsp_ins_get_bpp_luma(
 	unsigned short format, unsigned short offset)
 {
-	unsigned long bpp;
+	unsigned int bpp;
 
 	switch (format & 0xff) {
 	case VSP_IN_YUV444_SEMI_PLANAR:
@@ -1170,22 +1167,22 @@ unsigned long vsp_ins_get_bpp_luma(
 	case VSP_IN_YUV422_PLANAR:
 	case VSP_IN_YUV420_PLANAR:
 		/* semi planar and planar */
-		bpp = (unsigned long)offset;
+		bpp = (unsigned int)offset;
 		break;
 	case VSP_IN_YUV422_INTERLEAVED0:
 	case VSP_IN_YUV422_INTERLEAVED1:
 		/* interleaved */
-		bpp = (unsigned long)(offset * 2);
+		bpp = (unsigned int)(offset * 2);
 		break;
 	case VSP_IN_YUV444_INTERLEAVED:
 	case VSP_IN_YUV420_INTERLEAVED:
 		/* interleaved */
-		bpp = (unsigned long)(offset * 3);
+		bpp = (unsigned int)(offset * 3);
 		break;
 	default:
 		/* RGB format */
-		bpp = (unsigned long)((format & 0x0f00) >> 8);
-		bpp *= (unsigned long)offset;
+		bpp = (unsigned int)((format & 0x0f00) >> 8);
+		bpp *= (unsigned int)offset;
 		break;
 	}
 
@@ -1198,26 +1195,26 @@ Function:		vsp_ins_get_bpp_chroma
 Description:	Get byte per pixel of choroma.
 Returns:		byte per pixel.
 ******************************************************************************/
-unsigned long vsp_ins_get_bpp_chroma(
+unsigned int vsp_ins_get_bpp_chroma(
 	unsigned short format, unsigned short offset)
 {
-	unsigned long bpp;
+	unsigned int bpp;
 
 	switch (format & 0xff) {
 	case VSP_IN_YUV422_PLANAR:
 	case VSP_IN_YUV420_PLANAR:
 		/* planar */
-		bpp = (unsigned long)(offset >> 1);
+		bpp = (unsigned int)(offset >> 1);
 		break;
 	case VSP_IN_YUV422_SEMI_PLANAR:
 	case VSP_IN_YUV420_SEMI_PLANAR:
 	case VSP_IN_YUV444_PLANAR:
 		/* semi planar and planar(4:4:4) */
-		bpp = (unsigned long)offset;
+		bpp = (unsigned int)offset;
 		break;
 	case VSP_IN_YUV444_SEMI_PLANAR:
 		/* semi planar(4:4:4) */
-		bpp = (unsigned long)(offset << 1);
+		bpp = (unsigned int)(offset << 1);
 		break;
 	default:
 		bpp = 0;
@@ -1233,13 +1230,13 @@ Function:		vsp_ins_get_line_luma
 Description:	Get byte per line of RGB/Y.
 Returns:		byte per line.
 ******************************************************************************/
-unsigned long vsp_ins_get_line_luma(
+unsigned int vsp_ins_get_line_luma(
 	unsigned short format, unsigned short offset)
 {
 	if (format == VSP_IN_YUV420_INTERLEAVED)
-		return (unsigned long)(offset >> 1);
+		return (unsigned int)(offset >> 1);
 	else
-		return (unsigned long)offset;
+		return (unsigned int)offset;
 }
 
 
@@ -1248,15 +1245,15 @@ Function:		vsp_ins_get_line_chroma
 Description:	Get byte per line of chroma.
 Returns:		byte per line.
 ******************************************************************************/
-unsigned long vsp_ins_get_line_chroma(
+unsigned int vsp_ins_get_line_chroma(
 	unsigned short format, unsigned short offset)
 {
 	if ((format == VSP_IN_YUV420_SEMI_NV12) ||
 		(format == VSP_IN_YUV420_SEMI_NV21) ||
 		(format == VSP_IN_YUV420_PLANAR))
-		return (unsigned long)(offset >> 1);
+		return (unsigned int)(offset >> 1);
 	else
-		return (unsigned long)offset;
+		return (unsigned int)offset;
 }
 
 
@@ -1271,7 +1268,7 @@ static void vsp_ins_replace_part_src_addr(
 	struct vsp_src_t *src_par,
 	unsigned short offset)
 {
-	unsigned long temp;
+	unsigned int temp;
 
 	/* replace luma address */
 	temp = vsp_ins_get_bpp_luma(src_par->format, offset);
@@ -1287,7 +1284,7 @@ static void vsp_ins_replace_part_src_addr(
 	/* replace alpha plane */
 	if (rpf_info->val_addr_ai) {
 		rpf_info->val_addr_ai =
-			part_info->rpf_addr_ai + (unsigned long)offset;
+			part_info->rpf_addr_ai + (unsigned int)offset;
 	}
 }
 
@@ -1305,8 +1302,8 @@ static void vsp_ins_replace_part_dst_addr(
 	struct vsp_part_info *part_info = &ch_info->part_info;
 	struct vsp_wpf_info *wpf_info = &ch_info->wpf_info;
 
-	unsigned long temp_y;
-	unsigned long temp_c;
+	unsigned int temp_y;
+	unsigned int temp_c;
 
 	/* calculate offset */
 	if (dst_par->rotation <= VSP_ROT_V_FLIP) {
@@ -1323,10 +1320,10 @@ static void vsp_ins_replace_part_dst_addr(
 		/* move vertical */
 		temp_y = vsp_ins_get_line_luma(
 			dst_par->format, part_info->div_size);
-		temp_y *= (unsigned long)dst_par->stride;
+		temp_y *= (unsigned int)dst_par->stride;
 		temp_c = vsp_ins_get_line_chroma(
 			dst_par->format, part_info->div_size);
-		temp_c *= (unsigned long)dst_par->stride_c;
+		temp_c *= (unsigned int)dst_par->stride_c;
 	}
 
 	/* replace address */
@@ -2058,8 +2055,7 @@ long vsp_ins_set_start_parameter(
 	struct vsp_ch_info *ch_info = &prv->ch_info[prv->widx];
 
 	/* set display list write address */
-	ch_info->next_dl_addr =
-		VSP_VP_TO_INT(param->dl_par.hard_addr);
+	ch_info->next_dl_addr = param->dl_par.hard_addr;
 
 	if (ch_info->part_info.div_flag == 0) {
 		/* unnecessary partition */
@@ -2103,7 +2099,7 @@ void vsp_ins_start_processing(struct vsp_prv_data *prv)
 
 	/* set display list header address */
 	vsp_write_reg(
-		(unsigned int)ch_info->wpf_info.val_dl_addr,
+		ch_info->wpf_info.val_dl_addr,
 		prv->vsp_reg,
 		VSP_DL_HDR_ADDR0);
 
@@ -2475,9 +2471,9 @@ void vsp_ins_cb_function(struct vsp_prv_data *prv, long ercd)
 	struct vsp_ch_info *ch_info;
 
 	void (*cb_func)
-		(unsigned long id, long ercd, unsigned long userdata);
+		(unsigned long id, long ercd, void *userdata);
 	unsigned long id;
-	unsigned long userdata;
+	void *userdata;
 
 	/* check parameter */
 	if (prv == NULL) {

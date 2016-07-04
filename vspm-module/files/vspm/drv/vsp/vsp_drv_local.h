@@ -63,14 +63,11 @@
 #define __VSP_DRV_LOCAL_H__
 
 /* define macro */
-#define VSP_VP_TO_INT(addr)	\
-	((unsigned int)((unsigned long)(addr)))
-
 #define VSP_DL_HARD_TO_VIRT(addr) \
 	(st_par->dl_par.virt_addr + \
 	((unsigned long)(addr) - (unsigned long)(st_par->dl_par.hard_addr)))
 #define VSP_DL_WRITE(offset, data) \
-	dlwrite32(&body, reg_offset + (offset), (unsigned int)(data));
+	dlwrite32(&body, reg_offset + (offset), (data));
 
 #define VSP_UDS_SCALE_AMD1(width, ratio) \
 	(((unsigned int)(width) << 12) / (ratio))
@@ -551,10 +548,10 @@ struct vsp_part_info {
 	unsigned short margin;		/* margin size */
 	unsigned short sru_first_flag;
 
-	unsigned long rpf_addr_y;
-	unsigned long rpf_addr_c0;
-	unsigned long rpf_addr_c1;
-	unsigned long rpf_addr_ai;
+	unsigned int rpf_addr_y;
+	unsigned int rpf_addr_c0;
+	unsigned int rpf_addr_c1;
+	unsigned int rpf_addr_ai;
 
 	unsigned int hgo_smppt;
 	unsigned int hgt_smppt;
@@ -574,10 +571,10 @@ struct vsp_rpf_info {
 	unsigned int val_ckey_ctrl;
 	unsigned int val_ckey_set[2];
 	unsigned int val_astride;
-	unsigned long val_addr_y;
-	unsigned long val_addr_c0;
-	unsigned long val_addr_c1;
-	unsigned long val_addr_ai;
+	unsigned int val_addr_y;
+	unsigned int val_addr_c0;
+	unsigned int val_addr_c1;
+	unsigned int val_addr_ai;
 	unsigned int val_mult_alph;
 
 	unsigned int val_dpr;
@@ -671,10 +668,10 @@ struct vsp_wpf_info {
 	unsigned int val_hszclip;
 	unsigned int val_vszclip;
 	unsigned int val_outfmt;
-	unsigned long val_addr_y;
-	unsigned long val_addr_c0;
-	unsigned long val_addr_c1;
-	unsigned long val_dl_addr;
+	unsigned int val_addr_y;
+	unsigned int val_addr_c0;
+	unsigned int val_addr_c1;
+	unsigned int val_dl_addr;
 };
 
 struct vsp_src_info {
@@ -692,8 +689,8 @@ struct vsp_ch_info {
 	unsigned char status;
 
 	void (*cb_func)
-		(unsigned long id, long ercd, unsigned long userdata);
-	unsigned long cb_userdata;
+		(unsigned long id, long ercd, void *userdata);
+	void *cb_userdata;
 
 	unsigned long reserved_rpf;
 	unsigned long reserved_module;
@@ -775,13 +772,13 @@ long vsp_ins_unreg_ih(struct vsp_prv_data *prv);
 long vsp_ins_get_vsp_ip_num(
 	unsigned char *vsp, unsigned char *wpf, unsigned char ch);
 
-unsigned long vsp_ins_get_bpp_luma(
+unsigned int vsp_ins_get_bpp_luma(
 	unsigned short format, unsigned short offset);
-unsigned long vsp_ins_get_bpp_chroma(
+unsigned int vsp_ins_get_bpp_chroma(
 	unsigned short format, unsigned short offset);
-unsigned long vsp_ins_get_line_luma(
+unsigned int vsp_ins_get_line_luma(
 	unsigned short format, unsigned short offset);
-unsigned long vsp_ins_get_line_chroma(
+unsigned int vsp_ins_get_line_chroma(
 	unsigned short format, unsigned short offset);
 
 #endif

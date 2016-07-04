@@ -299,7 +299,7 @@ static long fdp_ins_check_dstbuf_param(
 	/* planar */
 	case FDP_YUV420_YV12:
 		/* check c1 address */
-		if (buf->addr_c1 == NULL)
+		if (buf->addr_c1 == 0)
 			return E_FDP_PARA_DST_ADDR_C1;
 
 		stride_c >>= 1;
@@ -308,7 +308,7 @@ static long fdp_ins_check_dstbuf_param(
 	case FDP_YUV420_NV21:
 	case FDP_YUV422_NV16:
 		/* check c0 address */
-		if (buf->addr_c0 == NULL)
+		if (buf->addr_c0 == 0)
 			return E_FDP_PARA_DST_ADDR_C0;
 
 		/* check chroma stride */
@@ -320,7 +320,7 @@ static long fdp_ins_check_dstbuf_param(
 	case FDP_YUV422_YUY2:
 	case FDP_YUV422_UYVY:
 		/* check luma address */
-		if (buf->addr == NULL)
+		if (buf->addr == 0)
 			return E_FDP_PARA_DST_ADDR;
 
 		/* check luma stride */
@@ -369,7 +369,7 @@ static long fdp_ins_check_refbuf_param(
 	/* planar */
 	case FDP_YUV420_YV12:
 		/* check c1 address */
-		if (buf->addr_c1 == NULL)
+		if (buf->addr_c1 == 0)
 			return E_FDP_PARA_SRC_ADDR_C1;
 
 		stride_c >>= 1;
@@ -378,7 +378,7 @@ static long fdp_ins_check_refbuf_param(
 	case FDP_YUV420_NV21:
 	case FDP_YUV422_NV16:
 		/* check c0 address */
-		if (buf->addr_c0 == NULL)
+		if (buf->addr_c0 == 0)
 			return E_FDP_PARA_SRC_ADDR_C0;
 
 		/* check chroma stride */
@@ -390,7 +390,7 @@ static long fdp_ins_check_refbuf_param(
 	case FDP_YUV422_YUY2:
 	case FDP_YUV422_UYVY:
 		/* check luma address */
-		if (buf->addr == NULL)
+		if (buf->addr == 0)
 			return E_FDP_PARA_SRC_ADDR;
 
 		/* check luma stride */
@@ -403,11 +403,11 @@ static long fdp_ins_check_refbuf_param(
 
 	/* get previous address */
 	if (ref->prev_buf != NULL)
-		obj->rpf0_addr_y = FDP_VP_TO_INT(ref->prev_buf->addr);
+		obj->rpf0_addr_y = ref->prev_buf->addr;
 
 	/* get next address */
 	if (ref->next_buf != NULL)
-		obj->rpf2_addr_y = FDP_VP_TO_INT(ref->next_buf->addr);
+		obj->rpf2_addr_y = ref->next_buf->addr;
 
 	return 0;
 }
@@ -442,13 +442,13 @@ static long fdp_ins_check_fcp_param(
 
 			buf = fproc_par->out_buf;
 			/* check destination address */
-			if ((unsigned long)buf->addr & 0xff)
+			if (buf->addr & 0xff)
 				return E_FDP_PARA_DST_ADDR;
 
-			if ((unsigned long)buf->addr_c0 & 0xff)
+			if (buf->addr_c0 & 0xff)
 				return E_FDP_PARA_DST_ADDR_C0;
 
-			if ((unsigned long)buf->addr_c1 & 0xff)
+			if (buf->addr_c1 & 0xff)
 				return E_FDP_PARA_DST_ADDR_C1;
 
 			/* check destination strude */
@@ -485,19 +485,17 @@ static long fdp_ins_check_fcp_param(
 				return E_FDP_PARA_FCP_STRIDE;
 
 			/* check current address of reference */
-			if ((fcp->ba_ref_cur_y == NULL) ||
-				(fcp->ba_ref_cur_c == NULL) ||
-				(FDP_VP_TO_INT(fcp->ba_ref_cur_y) & 0x3fff) ||
-				(FDP_VP_TO_INT(fcp->ba_ref_cur_c) & 0x3fff))
+			if ((fcp->ba_ref_cur_y == 0) ||
+				(fcp->ba_ref_cur_c == 0) ||
+				(fcp->ba_ref_cur_y & 0x3fff) ||
+				(fcp->ba_ref_cur_c & 0x3fff))
 				return E_FDP_PARA_BA_REF;
 
 			/* get previous address of reference */
-			obj->fcp_ref_addr_y0 =
-				FDP_VP_TO_INT(fcp->ba_ref_prev_y);
+			obj->fcp_ref_addr_y0 = fcp->ba_ref_prev_y;
 
 			/* get next address of reference */
-			obj->fcp_ref_addr_y2 =
-				FDP_VP_TO_INT(fcp->ba_ref_next_y);
+			obj->fcp_ref_addr_y2 = fcp->ba_ref_next_y;
 
 			/* check source format */
 			if ((fproc_par->in_pic->chroma_format !=
@@ -524,17 +522,15 @@ static long fdp_ins_check_fcp_param(
 
 		/* check FCL decompress parameter */
 		/* check current address of ancillary */
-		if ((FDP_VP_TO_INT(fcp->ba_anc_cur_y) & 0x7f) ||
-			(FDP_VP_TO_INT(fcp->ba_anc_cur_c) & 0x7f))
+		if ((fcp->ba_anc_cur_y & 0x7f) ||
+			(fcp->ba_anc_cur_c & 0x7f))
 			return E_FDP_PARA_BA_ANC;
 
 		/* get previous address of ancillary */
-		obj->fcp_anc_addr_y0 =
-			FDP_VP_TO_INT(fcp->ba_anc_prev_y);
+		obj->fcp_anc_addr_y0 = fcp->ba_anc_prev_y;
 
 		/* get next address of ancillary */
-		obj->fcp_anc_addr_y2 =
-			FDP_VP_TO_INT(fcp->ba_anc_next_y);
+		obj->fcp_anc_addr_y2 = fcp->ba_anc_next_y;
 	} else {
 		/* disable FCNL compress */
 		obj->wpf_swap = FD1_WPF_SWAP_SSWAP | FD1_WPF_SWAP_OSWAP;
@@ -776,8 +772,8 @@ static long fdp_ins_check_fproc_param(
 	/* check still mask address parameter */
 	if ((obj->ctrl_chact & FD1_CTL_CHACT_SMSK_WRITE) ||
 		(obj->ctrl_chact & FD1_CTL_CHACT_SMSK_READ)) {
-		if ((proc_info->stlmsk_addr[0] == NULL) ||
-			(proc_info->stlmsk_addr[1] == NULL))
+		if ((proc_info->stlmsk_addr[0] == 0) ||
+			(proc_info->stlmsk_addr[1] == 0))
 			return E_FDP_PARA_STLMSK_ADDR;
 	}
 
@@ -934,19 +930,19 @@ static void fdp_ins_set_rpf_reg(struct fdp_obj_t *obj, struct fdp_refbuf_t *ref)
 	fdp_write_reg(obj->rpf0_addr_y, P_FDP, FD1_RPF0_ADDR_Y);
 
 	/* RPF1 source component-Y address register */
-	fdp_write_reg(FDP_VP_TO_INT(cur->addr), P_FDP, FD1_RPF1_ADDR_Y);
+	fdp_write_reg(cur->addr, P_FDP, FD1_RPF1_ADDR_Y);
 
 	/* RPF1 source component-C0 address register */
-	fdp_write_reg(FDP_VP_TO_INT(cur->addr_c0), P_FDP, FD1_RPF1_ADDR_C0);
+	fdp_write_reg(cur->addr_c0, P_FDP, FD1_RPF1_ADDR_C0);
 
 	/* RPF1 source component-C1 address register */
-	fdp_write_reg(FDP_VP_TO_INT(cur->addr_c1), P_FDP, FD1_RPF1_ADDR_C1);
+	fdp_write_reg(cur->addr_c1, P_FDP, FD1_RPF1_ADDR_C1);
 
 	/* RPF2 source component-Y address register */
 	fdp_write_reg(obj->rpf2_addr_y, P_FDP, FD1_RPF2_ADDR_Y);
 
 	/* still mask address register */
-	reg_data = FDP_VP_TO_INT(proc_info->stlmsk_addr[proc_info->stlmsk_idx]);
+	reg_data = proc_info->stlmsk_addr[proc_info->stlmsk_idx];
 	fdp_write_reg(reg_data, P_FDP, FD1_RPF_SMSK_ADDR);
 
 	/* data swap register */
@@ -972,13 +968,13 @@ static void fdp_ins_set_wpf_reg(struct fdp_obj_t *obj, struct fdp_imgbuf_t *buf)
 	fdp_write_reg(reg_data, P_FDP, FD1_WPF_PSTRIDE);
 
 	/* component-Y address register */
-	fdp_write_reg(FDP_VP_TO_INT(buf->addr), P_FDP, FD1_WPF_ADDR_Y);
+	fdp_write_reg(buf->addr, P_FDP, FD1_WPF_ADDR_Y);
 
 	/* component-C0 address register */
-	fdp_write_reg(FDP_VP_TO_INT(buf->addr_c0), P_FDP, FD1_WPF_ADDR_C0);
+	fdp_write_reg(buf->addr_c0, P_FDP, FD1_WPF_ADDR_C0);
 
 	/* component-C1 address register */
-	fdp_write_reg(FDP_VP_TO_INT(buf->addr_c1), P_FDP, FD1_WPF_ADDR_C1);
+	fdp_write_reg(buf->addr_c1, P_FDP, FD1_WPF_ADDR_C1);
 
 	/* data swap register */
 	fdp_write_reg(obj->wpf_swap, P_FDP, FD1_WPF_SWAP);
@@ -1072,39 +1068,23 @@ static void fdp_ins_set_fcp_reg(
 
 		/* Base address of reference information register */
 		fdp_write_reg(
-			obj->fcp_ref_addr_y0,
-			P_FCP,
-			FD1_BA_REF_Y0);
+			obj->fcp_ref_addr_y0, P_FCP, FD1_BA_REF_Y0);
 		fdp_write_reg(
-			FDP_VP_TO_INT(fcp->ba_ref_cur_y),
-			P_FCP,
-			FD1_BA_REF_Y1);
+			fcp->ba_ref_cur_y, P_FCP, FD1_BA_REF_Y1);
 		fdp_write_reg(
-			obj->fcp_ref_addr_y2,
-			P_FCP,
-			FD1_BA_REF_Y2);
+			obj->fcp_ref_addr_y2, P_FCP, FD1_BA_REF_Y2);
 		fdp_write_reg(
-			FDP_VP_TO_INT(fcp->ba_ref_cur_c),
-			P_FCP,
-			FD1_BA_REF_C);
+			fcp->ba_ref_cur_c, P_FCP, FD1_BA_REF_C);
 
 		/* Base address of ancillary information register */
 		fdp_write_reg(
-			obj->fcp_anc_addr_y0,
-			P_FCP,
-			FD1_BA_ANC_Y0);
+			obj->fcp_anc_addr_y0, P_FCP, FD1_BA_ANC_Y0);
 		fdp_write_reg(
-			FDP_VP_TO_INT(fcp->ba_anc_cur_y),
-			P_FCP,
-			FD1_BA_ANC_Y1);
+			fcp->ba_anc_cur_y, P_FCP, FD1_BA_ANC_Y1);
 		fdp_write_reg(
-			obj->fcp_anc_addr_y2,
-			P_FCP,
-			FD1_BA_ANC_Y2);
+			obj->fcp_anc_addr_y2, P_FCP, FD1_BA_ANC_Y2);
 		fdp_write_reg(
-			FDP_VP_TO_INT(fcp->ba_anc_cur_c),
-			P_FCP,
-			FD1_BA_ANC_C);
+			fcp->ba_anc_cur_c, P_FCP, FD1_BA_ANC_C);
 	} else {
 		/* TL conversion control register */
 		fdp_write_reg(0, P_FCP, FD1_FCP_TL_CTRL);

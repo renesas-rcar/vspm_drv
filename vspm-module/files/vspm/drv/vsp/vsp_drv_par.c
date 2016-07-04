@@ -411,17 +411,17 @@ Returns:		0/E_VSP_PARA_IN_ADR/E_VSP_PARA_IN_ADRC0
 static long vsp_ins_check_rpf_format(
 	struct vsp_rpf_info *rpf_info, struct vsp_src_t *src_par)
 {
-	unsigned long x_offset = (unsigned long)src_par->x_offset;
-	unsigned long x_offset_c = (unsigned long)src_par->x_offset;
-	unsigned long y_offset = (unsigned long)src_par->y_offset;
-	unsigned long y_offset_c = (unsigned long)src_par->y_offset;
-	unsigned long stride = (unsigned long)src_par->stride;
-	unsigned long stride_c = (unsigned long)src_par->stride_c;
-	unsigned long temp;
+	unsigned int x_offset = (unsigned int)src_par->x_offset;
+	unsigned int x_offset_c = (unsigned int)src_par->x_offset;
+	unsigned int y_offset = (unsigned int)src_par->y_offset;
+	unsigned int y_offset_c = (unsigned int)src_par->y_offset;
+	unsigned int stride = (unsigned int)src_par->stride;
+	unsigned int stride_c = (unsigned int)src_par->stride_c;
+	unsigned int temp;
 
 	if (src_par->vir == VSP_NO_VIR) {
 		/* check RGB(Y) address pointer */
-		if (src_par->addr == NULL)
+		if (src_par->addr == 0)
 			return E_VSP_PARA_IN_ADR;
 
 		switch (src_par->format) {
@@ -462,12 +462,12 @@ static long vsp_ins_check_rpf_format(
 		case VSP_IN_XRGB16565:
 		case VSP_IN_RGB_CLUT_DATA:
 		case VSP_IN_YUV_CLUT_DATA:
-			temp = (unsigned long)
+			temp = (unsigned int)
 				((src_par->format & 0x0f00) >> 8);
 
 			/* set address */
 			rpf_info->val_addr_y =
-				(unsigned long)src_par->addr +
+				src_par->addr +
 				(y_offset * stride) +
 				(x_offset * temp);
 
@@ -514,8 +514,7 @@ static long vsp_ins_check_rpf_format(
 			temp = (y_offset * stride) +
 				(x_offset + x_offset_c + x_offset_c);
 
-			rpf_info->val_addr_y =
-				(unsigned long)src_par->addr + temp;
+			rpf_info->val_addr_y = src_par->addr + temp;
 
 			rpf_info->val_addr_c0 = 0;
 			rpf_info->val_addr_c1 = 0;
@@ -555,20 +554,19 @@ static long vsp_ins_check_rpf_format(
 			/* break; */
 		case VSP_IN_YUV444_SEMI_PLANAR:
 			/* check Cb address pointer */
-			if (src_par->addr_c0 == NULL)
+			if (src_par->addr_c0 == 0)
 				return E_VSP_PARA_IN_ADRC0;
 
 			/* set address */
 			rpf_info->val_addr_y =
-				(unsigned long)src_par->addr +
+				src_par->addr +
 				(y_offset * stride) +
 				x_offset;
 
 			temp = (y_offset_c * stride_c) +
 				(x_offset_c + x_offset_c);
 
-			rpf_info->val_addr_c0 =
-				(unsigned long)src_par->addr_c0 + temp;
+			rpf_info->val_addr_c0 = src_par->addr_c0 + temp;
 			rpf_info->val_addr_c1 = 0;
 			break;
 		/* YUV planar */
@@ -604,24 +602,22 @@ static long vsp_ins_check_rpf_format(
 			/* break; */
 		case VSP_IN_YUV444_PLANAR:
 			/* check CbCr address pointer */
-			if (src_par->addr_c0 == NULL)
+			if (src_par->addr_c0 == 0)
 				return E_VSP_PARA_IN_ADRC0;
 
-			if (src_par->addr_c1 == NULL)
+			if (src_par->addr_c1 == 0)
 				return E_VSP_PARA_IN_ADRC1;
 
 			/* set address */
 			rpf_info->val_addr_y =
-				(unsigned long)src_par->addr +
+				src_par->addr +
 				(y_offset * stride) +
 				x_offset;
 
 			temp = (y_offset_c * stride_c) + x_offset_c;
 
-			rpf_info->val_addr_c0 =
-				(unsigned long)src_par->addr_c0 + temp;
-			rpf_info->val_addr_c1 =
-				(unsigned long)src_par->addr_c1 + temp;
+			rpf_info->val_addr_c0 = src_par->addr_c0 + temp;
+			rpf_info->val_addr_c1 = src_par->addr_c1 + temp;
 			break;
 		default:
 			return E_VSP_PARA_IN_FORMAT;
@@ -658,7 +654,7 @@ static long vsp_ins_check_rpf_clut_param(
 
 		if (clut != NULL) {
 			/* check display list pointer */
-			if ((clut->hard_addr == NULL) ||
+			if ((clut->hard_addr == 0) ||
 				(clut->virt_addr == NULL))
 				return E_VSP_PARA_OSD_CLUT;
 
@@ -926,7 +922,7 @@ static long vsp_ins_check_alpha_blend_param(
 
 	if (use_alpha_plane) {
 		/* check alpha plane buffer pointer */
-		if (alpha->addr_a == NULL)
+		if (alpha->addr_a == 0)
 			return E_VSP_PARA_ALPHA_ADR;
 
 		/* check x_offset parameter */
@@ -935,10 +931,10 @@ static long vsp_ins_check_alpha_blend_param(
 
 		/* set address and stride value */
 		rpf_info->val_addr_ai =
-			(unsigned long)alpha->addr_a +
-			((unsigned long)alpha->stride_a) *
-			((unsigned long)src_par->y_offset) +
-			(unsigned long)(src_par->x_offset / use_alpha_plane);
+			alpha->addr_a +
+			((unsigned int)alpha->stride_a) *
+			((unsigned int)src_par->y_offset) +
+			(unsigned int)(src_par->x_offset / use_alpha_plane);
 		rpf_info->val_astride = (unsigned int)alpha->stride_a;
 
 		/* update swap value */
@@ -1149,16 +1145,16 @@ static long vsp_ins_check_wpf_format(
 	struct vsp_ch_info *ch_info, struct vsp_dst_t *dst_par)
 {
 	struct vsp_wpf_info *wpf_info = &ch_info->wpf_info;
-	unsigned long x_offset = (unsigned long)dst_par->x_offset;
-	unsigned long x_offset_c = (unsigned long)dst_par->x_offset;
-	unsigned long y_offset = (unsigned long)dst_par->y_offset;
-	unsigned long y_offset_c = (unsigned long)dst_par->y_offset;
-	unsigned long stride = (unsigned long)dst_par->stride;
-	unsigned long stride_c = (unsigned long)dst_par->stride_c;
-	unsigned long temp;
+	unsigned int x_offset = (unsigned int)dst_par->x_offset;
+	unsigned int x_offset_c = (unsigned int)dst_par->x_offset;
+	unsigned int y_offset = (unsigned int)dst_par->y_offset;
+	unsigned int y_offset_c = (unsigned int)dst_par->y_offset;
+	unsigned int stride = (unsigned int)dst_par->stride;
+	unsigned int stride_c = (unsigned int)dst_par->stride_c;
+	unsigned int temp;
 
 	/* check RGB(Y) address pointer */
-	if (dst_par->addr == NULL)
+	if (dst_par->addr == 0)
 		return E_VSP_PARA_OUT_ADR;
 
 	switch (dst_par->format) {
@@ -1197,11 +1193,11 @@ static long vsp_ins_check_wpf_format(
 	case VSP_OUT_XXXBGR2666:
 	case VSP_OUT_PBGR8888:
 	case VSP_OUT_XRGB16565:
-		temp = (unsigned long)((dst_par->format & 0x0f00) >> 8);
+		temp = (unsigned int)((dst_par->format & 0x0f00) >> 8);
 
 		/* set address */
 		wpf_info->val_addr_y =
-			(unsigned long)dst_par->addr +
+			dst_par->addr +
 			(y_offset * stride) +
 			(x_offset * temp);
 
@@ -1240,7 +1236,7 @@ static long vsp_ins_check_wpf_format(
 		temp = (y_offset * stride) +
 			(x_offset + x_offset_c + x_offset_c);
 
-		wpf_info->val_addr_y = (unsigned long)dst_par->addr + temp;
+		wpf_info->val_addr_y = dst_par->addr + temp;
 
 		wpf_info->val_addr_c0 = 0;
 		wpf_info->val_addr_c1 = 0;
@@ -1272,18 +1268,18 @@ static long vsp_ins_check_wpf_format(
 		/* break; */
 	case VSP_OUT_YUV444_SEMI_PLANAR:
 		/* check Cb address pointer */
-		if (dst_par->addr_c0 == NULL)
+		if (dst_par->addr_c0 == 0)
 			return E_VSP_PARA_OUT_ADRC0;
 
 		/* set address */
 		wpf_info->val_addr_y =
-			(unsigned long)dst_par->addr +
+			dst_par->addr +
 			(y_offset * stride) +
 			x_offset;
 
 		temp = (y_offset_c * stride_c) + (x_offset_c + x_offset_c);
 
-		wpf_info->val_addr_c0 = (unsigned long)dst_par->addr_c0 + temp;
+		wpf_info->val_addr_c0 = dst_par->addr_c0 + temp;
 		wpf_info->val_addr_c1 = 0;
 		break;
 	/* YUV planar */
@@ -1311,22 +1307,22 @@ static long vsp_ins_check_wpf_format(
 		/* break; */
 	case VSP_OUT_YUV444_PLANAR:
 		/* check CbCr address pointer */
-		if (dst_par->addr_c0 == NULL)
+		if (dst_par->addr_c0 == 0)
 			return E_VSP_PARA_OUT_ADRC0;
 
-		if (dst_par->addr_c1 == NULL)
+		if (dst_par->addr_c1 == 0)
 			return E_VSP_PARA_OUT_ADRC1;
 
 		/* set address */
 		wpf_info->val_addr_y =
-			(unsigned long)dst_par->addr +
+			dst_par->addr +
 			(y_offset * stride) +
 			x_offset;
 
 		temp = (y_offset_c * stride_c) + x_offset_c;
 
-		wpf_info->val_addr_c0 = (unsigned long)dst_par->addr_c0 + temp;
-		wpf_info->val_addr_c1 = (unsigned long)dst_par->addr_c1 + temp;
+		wpf_info->val_addr_c0 = dst_par->addr_c0 + temp;
+		wpf_info->val_addr_c1 = dst_par->addr_c1 + temp;
 		break;
 	default:
 		return E_VSP_PARA_OUT_FORMAT;
@@ -1542,8 +1538,8 @@ static long vsp_ins_recalculate_wpf_addr(
 	struct vsp_part_info *part_info = &ch_info->part_info;
 	struct vsp_wpf_info *wpf_info = &ch_info->wpf_info;
 
-	unsigned long temp_y;
-	unsigned long temp_c;
+	unsigned int temp_y;
+	unsigned int temp_c;
 
 	if ((dst_par->rotation == VSP_ROT_90) ||
 		(dst_par->rotation == VSP_ROT_90_V_FLIP)) {
@@ -2018,7 +2014,7 @@ static long vsp_ins_check_lut_param(
 		return E_VSP_PARA_NOLUT;
 
 	/* check display list address */
-	if (lut->hard_addr == NULL)
+	if (lut->hard_addr == 0)
 		return E_VSP_PARA_LUT_ADR;
 
 	/* check display list size */
@@ -2059,7 +2055,7 @@ static long vsp_ins_check_clu_param(
 		return E_VSP_PARA_NOCLU;
 
 	/* check display list address */
-	if (clu->hard_addr == NULL)
+	if (clu->hard_addr == 0)
 		return E_VSP_PARA_CLU_ADR;
 
 	/* check mode */
@@ -2604,16 +2600,16 @@ static long vsp_ins_check_hgo_param(
 		return E_VSP_PARA_NOHGO;
 
 	/* check address pointer */
-	if ((hgo_param->hard_addr == NULL) ||
+	if ((hgo_param->hard_addr == 0) ||
 		(hgo_param->virt_addr == NULL))
 		return E_VSP_PARA_HGO_ADR;
 
-	if ((((unsigned long)hgo_param->hard_addr) & 0xff) ||
+	if ((hgo_param->hard_addr & 0xff) ||
 		(((unsigned long)hgo_param->virt_addr) & 0xff))
 		return E_VSP_PARA_HGO_ADR;
 
 	hgo_info->virt_addr = (unsigned int *)hgo_param->virt_addr;
-	hgo_info->val_hard_addr = VSP_VP_TO_INT(hgo_param->hard_addr);
+	hgo_info->val_hard_addr = hgo_param->hard_addr;
 
 	/* check detection window area */
 	if ((hgo_param->width < 1) || (hgo_param->width > 8190))
@@ -2728,16 +2724,16 @@ static long vsp_ins_check_hgt_param(
 		return E_VSP_PARA_NOHGT;
 
 	/* check address pointer */
-	if ((hgt_param->hard_addr == NULL) ||
+	if ((hgt_param->hard_addr == 0) ||
 		(hgt_param->virt_addr == NULL))
 		return E_VSP_PARA_HGT_ADR;
 
-	if ((((unsigned long)hgt_param->hard_addr) & 0xff) ||
+	if ((hgt_param->hard_addr & 0xff) ||
 		(((unsigned long)hgt_param->virt_addr) & 0xff))
 		return E_VSP_PARA_HGT_ADR;
 
 	hgt_info->virt_addr = (unsigned int *)hgt_param->virt_addr;
-	hgt_info->val_hard_addr = VSP_VP_TO_INT(hgt_param->hard_addr);
+	hgt_info->val_hard_addr = hgt_param->hard_addr;
 
 	/* check detection window area */
 	if ((hgt_param->width < 1) || (hgt_param->width > 8190))
@@ -2868,7 +2864,7 @@ static long vsp_ins_check_drc_param(
 		return E_VSP_PARA_DRC_HEIGHT;
 
 	/* check address */
-	if (drc_param->drc.hard_addr == NULL)
+	if (drc_param->drc.hard_addr == 0)
 		return E_VSP_PARA_DRC_ADR;
 
 	/* check size */
@@ -2900,7 +2896,7 @@ static long vsp_ins_check_dl_param(
 	struct vsp_wpf_info *wpf_info = &ch_info->wpf_info;
 
 	/* check address */
-	if ((dl_param->hard_addr == NULL) ||
+	if ((dl_param->hard_addr == 0) ||
 		(dl_param->virt_addr == NULL))
 		return E_VSP_PARA_DL_ADR;
 
@@ -2910,7 +2906,7 @@ static long vsp_ins_check_dl_param(
 		(dl_param->tbl_num > 16383))
 		return E_VSP_PARA_DL_SIZE;
 
-	wpf_info->val_dl_addr = (unsigned long)dl_param->hard_addr;
+	wpf_info->val_dl_addr = dl_param->hard_addr;
 
 	return 0;
 }

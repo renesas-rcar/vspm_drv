@@ -84,7 +84,7 @@ Returns:		R_VSPM_OK/R_VSPM_NG
 	return of vspm_init()
 	return of vspm_lib_set_mode()
 ******************************************************************************/
-long vspm_init_driver(unsigned long *handle, struct vspm_init_t *param)
+long vspm_init_driver(void **handle, struct vspm_init_t *param)
 {
 	struct vspm_privdata *priv = 0;
 	struct vspm_drvdata *pdrv = p_vspm_drvdata;
@@ -125,7 +125,7 @@ long vspm_init_driver(unsigned long *handle, struct vspm_init_t *param)
 	if (ercd)
 		goto err_exit3;
 
-	*handle = (unsigned long)priv;
+	*handle = (void *)priv;
 
 	up(&pdrv->init_sem);
 	return R_VSPM_OK;
@@ -150,7 +150,7 @@ Function:		vspm_quit_driver
 Description:	Finalize VSP Manager.
 Returns:		R_VSPM_OK/R_VSPM_NG
 ******************************************************************************/
-long vspm_quit_driver(unsigned long handle)
+long vspm_quit_driver(void *handle)
 {
 	struct vspm_privdata *priv = (struct vspm_privdata *)handle;
 	struct vspm_drvdata *pdrv = p_vspm_drvdata;
@@ -209,11 +209,11 @@ Returns:		R_VSPM_PARAERR
 	return of vspm_lib_entry()
 ******************************************************************************/
 long vspm_entry_job(
-	unsigned long handle,
+	void *handle,
 	unsigned long *job_id,
 	char job_priority,
 	struct vspm_job_t *ip_param,
-	unsigned long user_data,
+	void *user_data,
 	PFN_VSPM_COMPLETE_CALLBACK cb_func)
 {
 	struct vspm_privdata *priv = (struct vspm_privdata *)handle;
@@ -251,7 +251,7 @@ Description:	Cancel of job.
 Returns:		R_VSPM_PARAERR
 	return of vspm_lib_queue_cancel()
 ******************************************************************************/
-long vspm_cancel_job(unsigned long handle, unsigned long job_id)
+long vspm_cancel_job(void *handle, unsigned long job_id)
 {
 	struct vspm_privdata *priv = (struct vspm_privdata *)handle;
 	long ercd;
@@ -277,7 +277,7 @@ Description:	Get status of processing.
 Returns:		R_VSPM_OK
 	return of vspm_lib_get_status()
 ******************************************************************************/
-long vspm_get_status(unsigned long handle, struct vspm_status_t *status)
+long vspm_get_status(void *handle, struct vspm_status_t *status)
 {
 	struct vspm_privdata *priv = (struct vspm_privdata *)handle;
 	long ercd;
