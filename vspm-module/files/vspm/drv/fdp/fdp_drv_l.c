@@ -985,7 +985,8 @@ Function:		fdp_ins_set_ipc_reg
 Description:	Set IPC register.
 Returns:		void
 ******************************************************************************/
-static void fdp_ins_set_ipc_reg(struct fdp_obj_t *obj)
+static void fdp_ins_set_ipc_reg(
+	struct fdp_obj_t *obj, struct fdp_ipc_t *ipc)
 {
 	struct fdp_seq_t *seq_par =
 		&obj->proc_info->seq_par; /* use private parameter */
@@ -993,6 +994,22 @@ static void fdp_ins_set_ipc_reg(struct fdp_obj_t *obj)
 
 	/* IPC mode register */
 	fdp_write_reg(obj->ipc_mode, P_FDP, FD1_IPC_MODE);
+
+	/* Comb detection parameter register */
+	if ((seq_par->seq_mode == FDP_SEQ_INTER) &&
+		(ipc != NULL)) {
+		reg_data =
+			(((unsigned int)ipc->cmb_ofst) << 16) |
+			(((unsigned int)ipc->cmb_max) << 8) |
+			((unsigned int)ipc->cmb_gard);
+	} else {
+		/* default setting */
+		reg_data =
+			FD1_IPC_COMB_DET_CMB_OFST |
+			FD1_IPC_COMB_DET_CMB_MAX |
+			FD1_IPC_COMB_DET_CMB_GRAD;
+	}
+	fdp_write_reg(reg_data, P_FDP, FD1_IPC_COMB_DET);
 
 	/* sensor control register0 */
 	fdp_write_reg(
@@ -1126,7 +1143,7 @@ void fdp_ins_start_processing(
 		fdp_ins_set_wpf_reg(obj, start_par->fproc_par->out_buf);
 
 		/* set IPC register */
-		fdp_ins_set_ipc_reg(obj);
+		fdp_ins_set_ipc_reg(obj, start_par->fproc_par->ipc_par);
 
 		/* set FCPF register */
 		fdp_ins_set_fcp_reg(obj, start_par->fproc_par->fcp_par);
