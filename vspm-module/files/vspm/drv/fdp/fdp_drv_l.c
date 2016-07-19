@@ -97,7 +97,7 @@ static long fdp_ins_check_seq_param(
 	case FDP_SEQ_PROG:
 		/* check input pucture vertical size */
 		if ((seq_par->in_height < 32) ||
-			(seq_par->in_height > 2160) ||
+			(seq_par->in_height > 8190) ||
 			(seq_par->in_height & 0x1))
 				return E_FDP_PARA_INHEIGHT;
 
@@ -115,7 +115,7 @@ static long fdp_ins_check_seq_param(
 	case FDP_SEQ_INTER_2D:
 		/* check input pucture vertical size */
 		if ((seq_par->in_height < 16) ||
-			(seq_par->in_height > 1080))
+			(seq_par->in_height > 4095))
 			return E_FDP_PARA_INHEIGHT;
 
 		/* set interlace mode */
@@ -142,7 +142,7 @@ static long fdp_ins_check_seq_param(
 
 	/* check input picture horizontal size */
 	if ((seq_par->in_width < 32) ||
-		(seq_par->in_width > 3840) ||
+		(seq_par->in_width > 8190) ||
 		(seq_par->in_width & 0x1))
 		return E_FDP_PARA_INWIDTH;
 
