@@ -183,7 +183,7 @@ static long fdp_ins_check_pic_param(
 	case FDP_YUV420:	/* supported TL conversion */
 		obj->rpf_format |= FD1_RPF_FORMAT_YUV420_NV12;
 		break;
-	case FDP_YUV420_YV12:
+	case FDP_YUV420_PLANAR:
 		obj->rpf_format |= FD1_RPF_FORMAT_YUV420_YV12;
 		break;
 	case FDP_YUV420_NV21:	/* supported TL conversion */
@@ -197,6 +197,12 @@ static long fdp_ins_check_pic_param(
 		break;
 	case FDP_YUV422_UYVY:
 		obj->rpf_format |= FD1_RPF_FORMAT_YUV422_UYVY;
+		break;
+	case FDP_YUV422_PLANAR:
+		obj->rpf_format |= FD1_RPF_FORMAT_YUV422_YV16;
+		break;
+	case FDP_YUV444_PLANAR:
+		obj->rpf_format |= FD1_RPF_FORMAT_YUV444_PLANAR;
 		break;
 	default:
 		return E_FDP_PARA_CHROMA;
@@ -297,12 +303,13 @@ static long fdp_ins_check_dstbuf_param(
 
 	switch (fproc_par->out_format) {
 	/* planar */
-	case FDP_YUV420_YV12:
+	case FDP_YUV420_PLANAR:
+	case FDP_YUV422_PLANAR:
+		stride_c >>= 1;
+	case FDP_YUV444_PLANAR:
 		/* check c1 address */
 		if (buf->addr_c1 == 0)
 			return E_FDP_PARA_DST_ADDR_C1;
-
-		stride_c >>= 1;
 	/* semi-planar */
 	case FDP_YUV420:
 	case FDP_YUV420_NV21:
@@ -367,12 +374,13 @@ static long fdp_ins_check_refbuf_param(
 	/* check format */
 	switch (fproc_par->in_pic->chroma_format) {
 	/* planar */
-	case FDP_YUV420_YV12:
+	case FDP_YUV420_PLANAR:
+	case FDP_YUV422_PLANAR:
+		stride_c >>= 1;
+	case FDP_YUV444_PLANAR:
 		/* check c1 address */
 		if (buf->addr_c1 == 0)
 			return E_FDP_PARA_SRC_ADDR_C1;
-
-		stride_c >>= 1;
 	/* semi-planar */
 	case FDP_YUV420:
 	case FDP_YUV420_NV21:
@@ -437,7 +445,9 @@ static long fdp_ins_check_fcp_param(
 		/* check FCNL compress parameter */
 		if (fcp->fcnl == FCP_FCNL_ENABLE) {
 			/* check destination format */
-			if (fproc_par->out_format != FDP_YUV420_YV12)
+			if ((fproc_par->out_format != FDP_YUV420_PLANAR) &&
+				(fproc_par->out_format != FDP_YUV422_PLANAR) &&
+				(fproc_par->out_format != FDP_YUV444_PLANAR))
 				return E_FDP_PARA_OUTFORMAT;
 
 			buf = fproc_par->out_buf;
@@ -782,7 +792,7 @@ static long fdp_ins_check_fproc_param(
 	case FDP_YUV420:
 		obj->wpf_format = FD1_WPF_FORMAT_YUV420_NV12;
 		break;
-	case FDP_YUV420_YV12:	/* supports FCNL compression */
+	case FDP_YUV420_PLANAR:	/* supports FCNL compression */
 		obj->wpf_format = FD1_WPF_FORMAT_YUV420_YV12;
 		break;
 	case FDP_YUV420_NV21:
@@ -796,6 +806,12 @@ static long fdp_ins_check_fproc_param(
 		break;
 	case FDP_YUV422_UYVY:
 		obj->wpf_format = FD1_WPF_FORMAT_YUV422_UYVY;
+		break;
+	case FDP_YUV422_PLANAR:	/* supports FCNL compression */
+		obj->wpf_format = FD1_RPF_FORMAT_YUV422_YV16;
+		break;
+	case FDP_YUV444_PLANAR:	/* supports FCNL compression */
+		obj->wpf_format = FD1_RPF_FORMAT_YUV444_PLANAR;
 		break;
 	default:
 		return E_FDP_PARA_OUTFORMAT;
