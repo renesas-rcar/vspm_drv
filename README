@@ -12,7 +12,7 @@ The VSP Manager has the following softwares.
       (Mutual mode or occupy mode).
     - Mutual mode supports queue buffer control.
       The VSP manager has 32 queue buffers controlled by priority.
-      ItÅfs possible to buffer the entry jobs of 32.
+      It's possible to buffer the entry jobs of 32.
       Therefore maximum 32 applications can use at a time.
     - Occupy mode supports low latency access.
       User application can low latency access
