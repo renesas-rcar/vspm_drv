@@ -64,8 +64,8 @@
 
 /* define macro */
 #define VSP_DL_HARD_TO_VIRT(addr) \
-	(st_par->dl_par.virt_addr + \
-	((unsigned long)(addr) - (unsigned long)(st_par->dl_par.hard_addr)))
+	((void *)((unsigned long)(st_par->dl_par.virt_addr) + \
+	((unsigned long)(addr) - (unsigned long)(st_par->dl_par.hard_addr))))
 #define VSP_DL_WRITE(offset, data) \
 	dlwrite32(&body, reg_offset + (offset), (data));
 

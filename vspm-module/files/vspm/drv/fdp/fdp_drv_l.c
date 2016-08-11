@@ -1717,15 +1717,18 @@ Returns:		void
 void fdp_write_reg_lut_tbl(
 	const unsigned char *data, void __iomem *base, unsigned int offset)
 {
-	void __iomem *dst_addr = base + offset;
+	unsigned int __iomem *dst_addr;
 	unsigned int src_data;
 
 	int i;
 
+	dst_addr = (unsigned int __iomem *)base;
+	dst_addr += (offset >> 2);
+
 	for (i = 0; i < 256; i++) {
 		src_data = (unsigned int)(*data++);
 		iowrite32(src_data, dst_addr);
-		dst_addr += 4;
+		dst_addr++;
 	}
 }
 
@@ -1740,12 +1743,16 @@ inline void fdp_rewrite_reg(
 	void __iomem *base,
 	unsigned int offset)
 {
+	unsigned int __iomem *reg_addr;
 	unsigned int reg_data;
 
-	reg_data = ioread32(base + offset);
+	reg_addr = (unsigned int __iomem *)base;
+	reg_addr += (offset >> 2);
+
+	reg_data = ioread32(reg_addr);
 	reg_data = (reg_data & mask) | data;
 
-	iowrite32(reg_data, base + offset);
+	iowrite32(reg_data, reg_addr);
 }
 
 /******************************************************************************
@@ -1756,7 +1763,10 @@ Returns:		void
 inline void fdp_write_reg(
 	unsigned int data, void __iomem *base, unsigned int offset)
 {
-	iowrite32(data, base + offset);
+	unsigned int __iomem *reg =
+		(unsigned int __iomem *)base;
+	reg += (offset >> 2);
+	iowrite32(data, reg);
 }
 
 /******************************************************************************
@@ -1766,5 +1776,8 @@ Returns:		read value from register.
 ******************************************************************************/
 inline unsigned int fdp_read_reg(void __iomem *base, unsigned int offset)
 {
-	return ioread32(base + offset);
+	unsigned int __iomem *reg =
+		(unsigned int __iomem *)base;
+	reg += (offset >> 2);
+	return ioread32(reg);
 }

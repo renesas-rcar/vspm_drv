@@ -124,7 +124,10 @@ Returns:		void
 inline void vsp_write_reg(
 	unsigned int data, void __iomem *base, unsigned int offset)
 {
-	iowrite32(data, base + offset);
+	unsigned int __iomem *reg =
+		(unsigned int __iomem *)base;
+	reg += (offset >> 2);
+	iowrite32(data, reg);
 }
 
 
@@ -135,7 +138,10 @@ Returns:		void
 ******************************************************************************/
 inline unsigned int vsp_read_reg(void __iomem *base, unsigned int offset)
 {
-	return ioread32(base + offset);
+	unsigned int __iomem *reg =
+		(unsigned int __iomem *)base;
+	reg += (offset >> 2);
+	return ioread32(reg);
 }
 
 
