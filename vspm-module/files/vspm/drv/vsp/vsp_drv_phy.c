@@ -1555,23 +1555,19 @@ Returns:		void
 static void vsp_ins_get_part_offset(
 	struct vsp_ch_info *ch_info,
 	struct vsp_start_t *st_par,
-	unsigned int *left,
-	unsigned int *right)
+	unsigned int *offset)
 {
 	struct vsp_part_info *part_info = &ch_info->part_info;
 
 	struct vsp_sru_t *sru_par = st_par->ctrl_par->sru;
 	struct vsp_uds_t *uds_par = st_par->ctrl_par->uds;
 
-	unsigned int temp_l = *left;
-	unsigned int temp_r = *right;
+	unsigned int temp = *offset;
 
 	if ((ch_info->reserved_module & VSP_SRU_USE) &&
 		(part_info->sru_first_flag == 0)) {
-		if (sru_par->mode == VSP_SRU_MODE2) {
-			temp_l >>= 1;
-			temp_r >>= 1;
-		}
+		if (sru_par->mode == VSP_SRU_MODE2)
+			temp >>= 1;
 	}
 
 	if (ch_info->reserved_module & VSP_UDS_USE) {
@@ -1580,30 +1576,24 @@ static void vsp_ins_get_part_offset(
 
 		if ((uds_par->amd == VSP_AMD_NO) &&
 			(uds_par->x_ratio < VSP_UDS_SCALE_1_1)) {
-			if (temp_l == 0)
-				temp_l = 4096 - ratio;
+			if (temp == 0)
+				temp = 4096 - ratio;
 			else
-				temp_l = (temp_l - 1) * ratio + 4096;
-			temp_r = (temp_r - 1) * ratio + 4096;
+				temp = (temp - 1) * ratio + 4096;
 		} else {
-			temp_l *= ratio;
-			temp_r *= ratio;
+			temp *= ratio;
 		}
 	} else {
-		temp_l *= 4096;
-		temp_r *= 4096;
+		temp *= 4096;
 	}
 
 	if ((ch_info->reserved_module & VSP_SRU_USE) &&
 		(part_info->sru_first_flag == 1)) {
-		if (sru_par->mode == VSP_SRU_MODE2) {
-			temp_l >>= 1;
-			temp_r >>= 1;
-		}
+		if (sru_par->mode == VSP_SRU_MODE2)
+			temp >>= 1;
 	}
 
-	*left = temp_l;
-	*right = temp_r;
+	*offset = temp;
 }
 
 
@@ -1615,11 +1605,11 @@ Returns:		void
 static void vsp_ins_get_part_sampling_offset(
 	struct vsp_start_t *st_par,
 	unsigned long sampling,
-	unsigned int *left,
-	unsigned int *right)
+	unsigned int *offset)
 {
 	struct vsp_src_t *src_par = st_par->src_par[0];	/* input source 0 */
 	unsigned int ratio = 4096;
+	unsigned int temp = *offset;
 
 	unsigned long connect;
 
@@ -1631,10 +1621,8 @@ static void vsp_ins_get_part_sampling_offset(
 	while (connect != 0) {
 		switch (connect) {
 		case VSP_SRU_USE:
-			if (st_par->ctrl_par->sru->mode == VSP_SRU_MODE2) {
-				*left <<= 1;
-				*right <<= 1;
-			}
+			if (st_par->ctrl_par->sru->mode == VSP_SRU_MODE2)
+				temp <<= 1;
 
 			if (sampling == VSP_SMPPT_SRU)
 				connect = 0;	/* end */
@@ -1646,10 +1634,8 @@ static void vsp_ins_get_part_sampling_offset(
 
 			if ((st_par->ctrl_par->uds->amd == VSP_AMD_NO) &&
 				(st_par->ctrl_par->uds->x_ratio <
-					VSP_UDS_SCALE_1_1)) {
-				*left = *left + ratio - 4096;
-				*right = *right + ratio - 4096;
-			}
+					VSP_UDS_SCALE_1_1))
+				temp = temp + ratio - 4096;
 
 			if (sampling == VSP_SMPPT_UDS)
 				connect = 0;	/* end */
@@ -1693,8 +1679,7 @@ static void vsp_ins_get_part_sampling_offset(
 		}
 	}
 
-	*left = VSP_ROUND_UP(*left, ratio);
-	*right = VSP_ROUND_UP(*right, ratio);
+	*offset = VSP_ROUND_UP(temp, ratio);
 }
 
 
@@ -1707,7 +1692,8 @@ static void vsp_ins_replace_part_window_of_hgo(
 	struct vsp_ch_info *ch_info,
 	struct vsp_start_t *st_par,
 	unsigned int left,
-	unsigned int right)
+	unsigned int right,
+	unsigned int margin)
 {
 	struct vsp_part_info *part_info = &ch_info->part_info;
 
@@ -1730,7 +1716,7 @@ static void vsp_ins_replace_part_window_of_hgo(
 
 		/* replace offset value */
 		hgo_info->val_offset &= 0x0000FFFF;
-		hgo_info->val_offset |= (x_offset << 16);
+		hgo_info->val_offset |= ((x_offset + margin) << 16);
 
 		/* replace size value */
 		hgo_info->val_size &= 0x0000FFFF;
@@ -1739,10 +1725,6 @@ static void vsp_ins_replace_part_window_of_hgo(
 		/* set DPR value */
 		hgo_info->val_dpr = part_info->hgo_smppt;
 	} else {
-		/* replace offset and value */
-		hgo_info->val_offset = 0;
-		hgo_info->val_size = 0;
-
 		/* set DPR value (disconnect) */
 		hgo_info->val_dpr = VSP_DPR_SMPPT_NOT_USE;
 	}
@@ -1758,7 +1740,8 @@ static void vsp_ins_replace_part_window_of_hgt(
 	struct vsp_ch_info *ch_info,
 	struct vsp_start_t *st_par,
 	unsigned int left,
-	unsigned int right)
+	unsigned int right,
+	unsigned int margin)
 {
 	struct vsp_part_info *part_info = &ch_info->part_info;
 
@@ -1781,7 +1764,7 @@ static void vsp_ins_replace_part_window_of_hgt(
 
 		/* replace offset value */
 		hgt_info->val_offset &= 0x0000FFFF;
-		hgt_info->val_offset |= (x_offset << 16);
+		hgt_info->val_offset |= ((x_offset + margin) << 16);
 
 		/* replace size value */
 		hgt_info->val_size &= 0x0000FFFF;
@@ -1790,10 +1773,6 @@ static void vsp_ins_replace_part_window_of_hgt(
 		/* set DPR value */
 		hgt_info->val_dpr = part_info->hgt_smppt;
 	} else {
-		/* replace offset and value */
-		hgt_info->val_offset = 0;
-		hgt_info->val_size = 0;
-
 		/* set DPR value (disconnect) */
 		hgt_info->val_dpr = VSP_DPR_SMPPT_NOT_USE;
 	}
@@ -1816,37 +1795,58 @@ static void vsp_ins_replace_part_independent_module(
 
 	unsigned int left;
 	unsigned int right;
+	unsigned int margin;
 
 	if (ch_info->reserved_module & VSP_HGO_USE) {
-		left = dst_offset;
-		right = dst_offset + dst_width;
+		left = (unsigned int)dst_offset;
+		right = (unsigned int)(dst_offset + dst_width);
+		if (left == 0)
+			margin = 0;
+		else
+			margin = (unsigned int)ch_info->part_info.margin;
 
 		/* calculate partition expanded offset of valid area */
-		vsp_ins_get_part_offset(ch_info, st_par, &left, &right);
-
-		/* calculate sampling offset */
+		vsp_ins_get_part_offset(ch_info, st_par, &left);
 		vsp_ins_get_part_sampling_offset(
-			st_par, hgo_par->sampling, &left, &right);
+			st_par, hgo_par->sampling, &left);
+
+		vsp_ins_get_part_offset(ch_info, st_par, &right);
+		vsp_ins_get_part_sampling_offset(
+			st_par, hgo_par->sampling, &right);
+
+		vsp_ins_get_part_offset(ch_info, st_par, &margin);
+		vsp_ins_get_part_sampling_offset(
+			st_par, hgo_par->sampling, &margin);
 
 		/* replace detect window of HGO */
 		vsp_ins_replace_part_window_of_hgo(
-			ch_info, st_par, left, right);
+			ch_info, st_par, left, right, margin);
 	}
 
 	if (ch_info->reserved_module & VSP_HGT_USE) {
-		left = dst_offset;
-		right = dst_offset + dst_width;
+		left = (unsigned int)dst_offset;
+		right = (unsigned int)(dst_offset + dst_width);
+		if (left == 0)
+			margin = 0;
+		else
+			margin = (unsigned int)ch_info->part_info.margin;
 
 		/* calculate partition expanded offset of valid area */
-		vsp_ins_get_part_offset(ch_info, st_par, &left, &right);
-
-		/* calculate sampling offset */
+		vsp_ins_get_part_offset(ch_info, st_par, &left);
 		vsp_ins_get_part_sampling_offset(
-			st_par, hgt_par->sampling, &left, &right);
+			st_par, hgt_par->sampling, &left);
 
-		/* replace detect window of HGO */
+		vsp_ins_get_part_offset(ch_info, st_par, &right);
+		vsp_ins_get_part_sampling_offset(
+			st_par, hgt_par->sampling, &right);
+
+		vsp_ins_get_part_offset(ch_info, st_par, &margin);
+		vsp_ins_get_part_sampling_offset(
+			st_par, hgt_par->sampling, &margin);
+
+		/* replace detect window of HGT */
 		vsp_ins_replace_part_window_of_hgt(
-			ch_info, st_par, left, right);
+			ch_info, st_par, left, right, margin);
 	}
 }
 
