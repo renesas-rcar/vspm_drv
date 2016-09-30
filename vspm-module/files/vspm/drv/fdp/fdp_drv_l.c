@@ -1653,7 +1653,7 @@ long fdp_ins_enable_clock(struct fdp_obj_t *obj)
 
 	/* wake up device */
 	ercd = pm_runtime_get_sync(dev);
-	if (ercd != 0) {
+	if (ercd < 0) {
 		EPRINT("%s: failed to pm_runtime_get_sync!! ercd=%d\n",
 			__func__, ercd);
 		pm_runtime_disable(dev);
