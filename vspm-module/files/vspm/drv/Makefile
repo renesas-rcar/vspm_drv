@@ -9,14 +9,15 @@ obj-m += vspm.o
 vspm-objs := $(CFILES:.c=.o)
 
 U_INCLUDE := -I$(PWD)
-U_INCLUDE += -I$(KERNELSRC)/include
+U_INCLUDE += -I$(PWD)/../include
 EXTRA_CFLAGS += $(U_INCLUDE)
 
 all:
+	make -C $(KERNELSRC) M=$(PWD) modules
+clean:
+	make -C $(KERNELSRC) M=$(PWD) clean
+install:
 	$(CP) ../include/vspm_public.h $(KERNELSRC)/include
 	$(CP) ../include/vsp_drv.h $(KERNELSRC)/include
 	$(CP) ../include/fdp_drv.h $(KERNELSRC)/include
-	make -C $(KERNELDIR) M=$(PWD) modules
-clean:
-	make -C $(KERNELDIR) M=$(PWD) clean
 
