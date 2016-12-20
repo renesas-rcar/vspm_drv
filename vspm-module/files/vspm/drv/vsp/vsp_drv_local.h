@@ -127,8 +127,7 @@
 	 VSP_CLU_USE|	\
 	 VSP_HST_USE|	\
 	 VSP_BRU_USE|	\
-	 VSP_SHP_USE|	\
-	 VSP_DRC_USE)
+	 VSP_SHP_USE)
 
 #define VSP_SRU_USABLE_DPR \
 	(VSP_UDS_USE|	\
@@ -182,13 +181,9 @@
 	 VSP_CLU_USE|	\
 	 VSP_HST_USE)
 
-#define VSP_DRC_USABLE_DPR \
-	(0)
-
 #define VSP_BRU_USABLE_DPR \
 	(VSP_LUT_USE|	\
-	 VSP_CLU_USE|	\
-	 VSP_DRC_USE)
+	 VSP_CLU_USE)
 
 /* define register offset */
 #define VSP_WPF0_CMD			(0x0000)
@@ -362,12 +357,6 @@
 #define VSP_SHP_CTRL0			(0x3E00)
 #define VSP_SHP_CTRL1			(0x3E04)
 #define VSP_SHP_CTRL2			(0x3E08)
-
-/* DRC(UIF0) control registers offset */
-#define VSP_UIF0_PARAM_OFFSET	(0x1800)
-#define VSP_UIF1_PARAM_OFFSET	(0x1900)
-#define VSP_UIF2_PARAM_OFFSET	(0x1A00)
-#define VSP_UIF3_PARAM_OFFSET	(0x1B00)
 
 /* FCP register */
 #define VSP_FCP_CFG0			(0x0004)
@@ -657,11 +646,6 @@ struct vsp_shp_info {
 	unsigned int val_dpr;
 };
 
-/* DRC(UIF0) information structure */
-struct vsp_drc_info {
-	unsigned int val_dpr;
-};
-
 /* WPF information structure */
 struct vsp_wpf_info {
 	unsigned int val_srcrpf;
@@ -719,7 +703,6 @@ struct vsp_ch_info {
 	struct vsp_hgo_info hgo_info;
 	struct vsp_hgt_info hgt_info;
 	struct vsp_shp_info shp_info;
-	struct vsp_drc_info drc_info;
 	struct vsp_wpf_info wpf_info;
 };
 

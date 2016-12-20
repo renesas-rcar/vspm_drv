@@ -253,10 +253,6 @@ static void vsp_ins_set_dl_for_dpr(
 	if (rdata->usable_module & VSP_SHP_USE)
 		dlwrite32(&body, VSP_DPR_SHP_ROUTE, VSP_DPR_ROUTE_NOT_USE);
 
-	/* dynamic range compression */
-	if (rdata->usable_module & VSP_DRC_USE)
-		dlwrite32(&body, VSP_DPR_UIF0_ROUTE, VSP_DPR_ROUTE_NOT_USE);
-
 	/* add size */
 	head->body_info[0].size +=
 		(unsigned int)((unsigned long)(body) - (unsigned long)(body0));
@@ -888,38 +884,6 @@ static void vsp_ins_set_dl_for_shp(
 
 
 /******************************************************************************
-Function:		vsp_ins_set_dl_for_drc
-Description:	Set DRC register value to display list.
-Returns:		void
-******************************************************************************/
-static void vsp_ins_set_dl_for_drc(
-	struct vsp_dl_head_info *head,
-	struct vsp_drc_info *drc_info,
-	struct vsp_drc_t *param)
-{
-	unsigned int *body0, *body;
-
-	/* set pointer */
-	body = (unsigned int *)head;
-	body += ((head->body_info[0].size + VSP_DL_HEAD_SIZE) >> 2);
-	body0 = body;
-
-	/* insert display list */
-	head->body_num_minus1++;
-	head->body_info[head->body_num_minus1].addr = param->drc.hard_addr;
-	head->body_info[head->body_num_minus1].size =
-		((unsigned int)param->drc.tbl_num) << 3;
-
-	/* routing register */
-	dlwrite32(&body, VSP_DPR_UIF0_ROUTE, drc_info->val_dpr);
-
-	/* add size */
-	head->body_info[0].size +=
-		(unsigned int)((unsigned long)(body) - (unsigned long)(body0));
-}
-
-
-/******************************************************************************
 Function:		vsp_ins_set_dl_for_module
 Description:	Set modules register value to display list.
 Returns:		void
@@ -985,12 +949,6 @@ static void vsp_ins_set_dl_for_module(
 	if (module & VSP_SHP_USE) {
 		vsp_ins_set_dl_for_shp(
 			head, &ch_info->shp_info, ctrl_param->shp);
-	}
-
-	/* set dynamic range compression parameter */
-	if (module & VSP_DRC_USE) {
-		vsp_ins_set_dl_for_drc(
-			head, &ch_info->drc_info, ctrl_param->drc);
 	}
 }
 
@@ -2281,9 +2239,6 @@ long vsp_ins_get_vsp_resource(struct vsp_prv_data *prv)
 
 	if (of_property_read_bool(np, "renesas,has-shp"))
 		rdata->usable_module |= VSP_SHP_USE;
-
-	if (of_property_read_bool(np, "renesas,has-drc"))
-		rdata->usable_module |= VSP_DRC_USE;
 
 	/* read out standing value */
 	of_property_read_u32(

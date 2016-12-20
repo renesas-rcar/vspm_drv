@@ -153,9 +153,6 @@ static unsigned int vsp_ins_get_dpr_route(
 	case VSP_SHP_USE:
 		route |= VSP_DPR_ROUTE_SHP;
 		break;
-	case VSP_DRC_USE:
-		route |= VSP_DPR_ROUTE_UIF0;
-		break;
 	case VSP_BRU_USE:
 		if (ch_info->bru_cnt < VSP_BRU_IN_MAX) {
 			route |= vsp_tbl_bru_route[ch_info->bru_cnt];
@@ -242,12 +239,6 @@ static unsigned int vsp_ins_get_dpr_smppt(
 		break;
 	case VSP_SMPPT_SHP:
 		if (ch_info->reserved_module & VSP_SHP_USE)
-			smppt |= sampling;
-		else
-			smppt = VSP_DPR_SMPPT_NOT_USE;
-		break;
-	case VSP_SMPPT_DRC:
-		if (ch_info->reserved_module & VSP_DRC_USE)
 			smppt |= sampling;
 		else
 			smppt = VSP_DPR_SMPPT_NOT_USE;
@@ -2835,57 +2826,6 @@ static long vsp_ins_check_shp_param(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_drc_param
-Description:	Check module parameter of DRC.
-Returns:		0/E_VSP_PARA_NODRC/E_VSP_PARA_DRC_ADR
-	E_VSP_PARA_DRC_SIZE/E_VSP_PARA_DRC_CONNECT
-******************************************************************************/
-static long vsp_ins_check_drc_param(
-	struct vsp_ch_info *ch_info, struct vsp_drc_t *drc_param)
-{
-	struct vsp_src_info *src_info = &ch_info->src_info[ch_info->src_idx];
-	struct vsp_drc_info *drc_info = &ch_info->drc_info;
-
-	/* check pointer */
-	if (drc_param == NULL)
-		return E_VSP_PARA_NODRC;
-
-	/* check input color space */
-	if (src_info->color != VSP_COLOR_YUV)
-		return E_VSP_PARA_DRC_INYUV;
-
-	/* check image size */
-	if ((src_info->width < 352) ||
-		(src_info->width > 1280))
-		return E_VSP_PARA_DRC_WIDTH;
-
-	if ((src_info->height < 288) ||
-		(src_info->height > 960))
-		return E_VSP_PARA_DRC_HEIGHT;
-
-	/* check address */
-	if (drc_param->drc.hard_addr == 0)
-		return E_VSP_PARA_DRC_ADR;
-
-	/* check size */
-	if (drc_param->drc.tbl_num > 16383)
-		return E_VSP_PARA_DRC_SIZE;
-
-	/* check connect parameter */
-	if (drc_param->connect & ~VSP_DRC_USABLE_DPR)
-		return E_VSP_PARA_DRC_CONNECT;
-
-	/* check connect parameter */
-	drc_info->val_dpr = vsp_ins_get_dpr_route(
-		ch_info, drc_param->connect, drc_param->fxa);
-	if (drc_info->val_dpr == VSP_DPR_ROUTE_NOT_USE)
-		return E_VSP_PARA_DRC_CONNECT;
-
-	return 0;
-}
-
-
-/******************************************************************************
 Function:		vsp_ins_check_dl_param
 Description:	Check display list parameter.
 Returns:		0/E_VSP_PARA_DL_ADR/E_VSP_PARA_DL_SIZE
@@ -2981,13 +2921,6 @@ static long vsp_ins_check_module_param(
 			/* check shp parameter */
 			ercd = vsp_ins_check_shp_param(
 				ch_info, ctrl_param->shp);
-			if (ercd)
-				return ercd;
-			break;
-		case VSP_DRC_USE:
-			/* check drc parameter */
-			ercd = vsp_ins_check_drc_param(
-				ch_info, ctrl_param->drc);
 			if (ercd)
 				return ercd;
 			break;

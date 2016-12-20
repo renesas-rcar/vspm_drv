@@ -234,13 +234,6 @@
 #define E_VSP_PARA_SHP_MODE		(-693)	/* illegal mode */
 #define E_VSP_PARA_SHP_CONNECT	(-694)	/* illegal connecting module */
 
-#define E_VSP_PARA_DRC_INYUV	(-710)	/* illegal input color space */
-#define E_VSP_PARA_DRC_WIDTH	(-711)	/* illegal input width */
-#define E_VSP_PARA_DRC_HEIGHT	(-712)	/* illegal input height */
-#define E_VSP_PARA_DRC_ADR		(-713)	/* illegal address */
-#define E_VSP_PARA_DRC_SIZE		(-714)	/* illegal size */
-#define E_VSP_PARA_DRC_CONNECT	(-715)	/* illegal connecting module */
-
 #define E_VSP_PARA_NOSRU			(-650)
 #define E_VSP_PARA_NOUDS			(-651)
 #define E_VSP_PARA_NOLUT			(-652)
@@ -251,7 +244,6 @@
 #define E_VSP_PARA_NOHGO			(-657)
 #define E_VSP_PARA_NOHGT			(-658)
 #define E_VSP_PARA_NOSHP			(-659)
-#define E_VSP_PARA_NODRC			(-720)
 
 #define E_VSP_PARA_DL_ADR			(-680)
 #define E_VSP_PARA_DL_SIZE			(-681)
@@ -272,7 +264,6 @@
 #define VSP_HGO_USE		(0x0200) /* histogram generator-one */
 #define VSP_HGT_USE		(0x0400) /* histogram generator-two */
 #define VSP_SHP_USE		(0x0800) /* sharpness */
-#define VSP_DRC_USE		(0x1000) /* dynamic range compression */
 
 /* RPF module parameter */
 /* input format */
@@ -661,7 +652,6 @@ enum {
 #define VSP_SMPPT_SRC3				2
 #define VSP_SMPPT_SRC4				3
 #define VSP_SMPPT_SRC5				4
-#define VSP_SMPPT_DRC				8
 #define VSP_SMPPT_SRU				16
 #define VSP_SMPPT_UDS				17
 #define VSP_SMPPT_LUT				22
@@ -932,13 +922,6 @@ struct vsp_shp_t {
 	unsigned long connect;		/* connection module */
 };
 
-/* DRC parameter */
-struct vsp_drc_t {
-	struct vsp_dl_t drc;
-	unsigned char fxa;			/* fixed alpha value */
-	unsigned long connect;		/* connection module */
-};
-
 struct vsp_ctrl_t {
 	struct vsp_sru_t *sru;		/* super-resolution */
 	struct vsp_uds_t *uds;		/* up down scaler */
@@ -950,7 +933,6 @@ struct vsp_ctrl_t {
 	struct vsp_hgo_t *hgo;		/* histogram generator-one */
 	struct vsp_hgt_t *hgt;		/* histogram generator-two */
 	struct vsp_shp_t *shp;		/* sharpness */
-	struct vsp_drc_t *drc;		/* dynamic range compression */
 };
 
 struct vsp_start_t {
