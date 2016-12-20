@@ -336,6 +336,8 @@
 #define VSP_HGO_EXT_HIST_DATA	(0x3360)
 #define VSP_HGO_WBUFS			(0x3364)
 #define VSP_HGO_RBUFS			(0x3368)
+#define VSP_HGO_HISTADD			(0x336C)
+#define VSP_HGO_HSWAP			(0x3370)
 #define VSP_HGO_REGRST			(0x33FC)
 
 /* HGT control registers offset */
@@ -351,6 +353,8 @@
 #define VSP_HGT_HIST_OFFSET		(0x3450)
 #define VSP_HGT_WBUFS			(0x3764)
 #define VSP_HGT_RBUFS			(0x3768)
+#define VSP_HGT_HISTADD			(0x376C)
+#define VSP_HGT_HSWAP			(0x3770)
 #define VSP_HGT_REGRST			(0x37FC)
 
 /* SHP control registers offset */
@@ -488,10 +492,12 @@
 
 #define VSP_HSI_CTRL_EN			(0x00000001)
 
+#define VSP_HGO_MODE_AUTOW		(0x00001000)
 #define VSP_HGO_MODE_STEP		(0x00000400)
 #define VSP_HGO_REGRST_RCPART	(0x00000010)
 #define VSP_HGO_REGRST_RCLEA	(0x00000001)
 
+#define VSP_HGT_MODE_AUTOW		(0x00001000)
 #define VSP_HGT_REGRST_RCPART	(0x00000010)
 #define VSP_HGT_REGRST_RCLEA	(0x00000001)
 

@@ -733,9 +733,12 @@ Returns:		void
 ******************************************************************************/
 static void vsp_ins_set_dl_for_hgo(
 	struct vsp_dl_head_info *head,
-	struct vsp_hgo_info *hgo_info,
+	struct vsp_prv_data *prv,
 	struct vsp_hgo_t *param)
 {
+	struct vsp_ch_info *ch_info = &prv->ch_info[prv->widx];
+	struct vsp_hgo_info *hgo_info = &ch_info->hgo_info;
+
 	unsigned int *body0, *body;
 
 	/* set pointer */
@@ -748,6 +751,17 @@ static void vsp_ins_set_dl_for_hgo(
 
 	/* detection window size register */
 	dlwrite32(&body, VSP_HGO_SIZE, hgo_info->val_size);
+
+	if (prv->rdata.start_reservation == 2) {
+		/* storing address register */
+		dlwrite32(&body, VSP_HGO_HISTADD, param->hard_addr);
+
+		/* swapping register */
+		dlwrite32(&body, VSP_HGO_HSWAP, 0x00000004);
+
+		/* set automatically histogram write */
+		hgo_info->val_mode |= VSP_HGO_MODE_AUTOW;
+	}
 
 	/* mode register */
 	dlwrite32(&body, VSP_HGO_MODE, hgo_info->val_mode);
@@ -774,9 +788,12 @@ Returns:		void
 ******************************************************************************/
 static void vsp_ins_set_dl_for_hgt(
 	struct vsp_dl_head_info *head,
-	struct vsp_hgt_info *hgt_info,
+	struct vsp_prv_data *prv,
 	struct vsp_hgt_t *param)
 {
+	struct vsp_ch_info *ch_info = &prv->ch_info[prv->widx];
+	struct vsp_hgt_info *hgt_info = &ch_info->hgt_info;
+
 	unsigned int *body0, *body;
 	unsigned int reg_temp;
 
@@ -791,8 +808,21 @@ static void vsp_ins_set_dl_for_hgt(
 	/* detection window size register */
 	dlwrite32(&body, VSP_HGT_SIZE, hgt_info->val_size);
 
+	if (prv->rdata.start_reservation == 2) {
+		/* storing address register */
+		dlwrite32(&body, VSP_HGT_HISTADD, param->hard_addr);
+
+		/* swapping register */
+		dlwrite32(&body, VSP_HGT_HSWAP, 0x00000004);
+
+		/* set automatically histogram write */
+		reg_temp = VSP_HGT_MODE_AUTOW;
+	} else {
+		reg_temp = 0;
+	}
+
 	/* mode register */
-	reg_temp = ((unsigned int)param->x_skip) << 2;
+	reg_temp |= ((unsigned int)param->x_skip) << 2;
 	reg_temp |= (unsigned int)param->y_skip;
 	dlwrite32(&body, VSP_HGT_MODE, reg_temp);
 
@@ -890,9 +920,10 @@ Returns:		void
 ******************************************************************************/
 static void vsp_ins_set_dl_for_module(
 	struct vsp_dl_head_info *head,
-	struct vsp_ch_info *ch_info,
+	struct vsp_prv_data *prv,
 	struct vsp_ctrl_t *ctrl_param)
 {
+	struct vsp_ch_info *ch_info = &prv->ch_info[prv->widx];
 	unsigned long module = ch_info->reserved_module;
 
 	/* set super-resolution parameter */
@@ -934,16 +965,12 @@ static void vsp_ins_set_dl_for_module(
 	}
 
 	/* set histogram generator-one dimension parameter */
-	if (module & VSP_HGO_USE) {
-		vsp_ins_set_dl_for_hgo(
-			head, &ch_info->hgo_info, ctrl_param->hgo);
-	}
+	if (module & VSP_HGO_USE)
+		vsp_ins_set_dl_for_hgo(head, prv, ctrl_param->hgo);
 
 	/* set histogram generator-two dimension parameter */
-	if (module & VSP_HGT_USE) {
-		vsp_ins_set_dl_for_hgt(
-			head, &ch_info->hgt_info, ctrl_param->hgt);
-	}
+	if (module & VSP_HGT_USE)
+		vsp_ins_set_dl_for_hgt(head, prv, ctrl_param->hgt);
 
 	/* set sharpness parameter */
 	if (module & VSP_SHP_USE) {
@@ -991,7 +1018,7 @@ static void vsp_ins_set_part_full(
 	}
 
 	/* processing module */
-	vsp_ins_set_dl_for_module(head, ch_info, st_par->ctrl_par);
+	vsp_ins_set_dl_for_module(head, prv, st_par->ctrl_par);
 
 	/* output module */
 	vsp_ins_set_dl_for_wpf(head, ch_info, st_par->dst_par);
@@ -1908,39 +1935,42 @@ static long vsp_ins_get_hgo_register(struct vsp_prv_data *prv)
 			(unsigned int)prv->ridx, prv->vsp_reg, VSP_HGO_RBUFS);
 	}
 
-	if ((hgo_info->val_mode & VSP_HGO_MODE_STEP) == 0) {
-		/* set pointer */
-		dst = hgo_info->virt_addr;
-
-		/* read value */
-		offset = VSP_HGO_R_HISTO_OFFSET;
-		for (i = 0; i < 64; i++) {
-			*dst++ = vsp_read_reg(prv->vsp_reg, offset);
-			offset += 4;
-		}
-
-		offset = VSP_HGO_G_HISTO_OFFSET;
-		for (i = 0; i < 64; i++) {
-			*dst++ = vsp_read_reg(prv->vsp_reg, offset);
-			offset += 4;
-		}
-
-		offset = VSP_HGO_B_HISTO_OFFSET;
-		for (i = 0; i < 64; i++) {
-			*dst++ = vsp_read_reg(prv->vsp_reg, offset);
-			offset += 4;
-		}
-	} else {
-		/* set pointer */
-		dst = hgo_info->virt_addr;
-
-		for (i = 0; i < 256; i++) {
-			/* set reading address */
-			vsp_write_reg(i, prv->vsp_reg, VSP_HGO_EXT_HIST_ADDR);
+	if (rdata->start_reservation < 2) {
+		if ((hgo_info->val_mode & VSP_HGO_MODE_STEP) == 0) {
+			/* set pointer */
+			dst = hgo_info->virt_addr;
 
 			/* read value */
-			*dst++ = vsp_read_reg(
-				prv->vsp_reg, VSP_HGO_EXT_HIST_DATA);
+			offset = VSP_HGO_R_HISTO_OFFSET;
+			for (i = 0; i < 64; i++) {
+				*dst++ = vsp_read_reg(prv->vsp_reg, offset);
+				offset += 4;
+			}
+
+			offset = VSP_HGO_G_HISTO_OFFSET;
+			for (i = 0; i < 64; i++) {
+				*dst++ = vsp_read_reg(prv->vsp_reg, offset);
+				offset += 4;
+			}
+
+			offset = VSP_HGO_B_HISTO_OFFSET;
+			for (i = 0; i < 64; i++) {
+				*dst++ = vsp_read_reg(prv->vsp_reg, offset);
+				offset += 4;
+			}
+		} else {
+			/* set pointer */
+			dst = hgo_info->virt_addr;
+
+			for (i = 0; i < 256; i++) {
+				/* set reading address */
+				vsp_write_reg(
+					i, prv->vsp_reg, VSP_HGO_EXT_HIST_ADDR);
+
+				/* read value */
+				*dst++ = vsp_read_reg(
+					prv->vsp_reg, VSP_HGO_EXT_HIST_DATA);
+			}
 		}
 	}
 
@@ -1969,9 +1999,11 @@ static long vsp_ins_get_hgt_register(struct vsp_prv_data *prv)
 			(unsigned int)prv->ridx, prv->vsp_reg, VSP_HGT_RBUFS);
 	}
 
-	for (i = 0; i < 192; i++) {
-		*dst++ = vsp_read_reg(prv->vsp_reg, offset);
-		offset += 4;
+	if (rdata->start_reservation < 2) {
+		for (i = 0; i < 192; i++) {
+			*dst++ = vsp_read_reg(prv->vsp_reg, offset);
+			offset += 4;
+		}
 	}
 
 	return 0;
