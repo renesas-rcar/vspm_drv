@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015 Renesas Electronics Corporation
+ Copyright (C) 2015-2017 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -92,6 +92,8 @@ struct fw_msg {
 /* basic function ID */
 #define FUNC_TASK_INIT		(short)1
 #define FUNC_TASK_QUIT		(short)2
+#define FUNC_TASK_SUSPEND	(short)3
+#define FUNC_TASK_RESUME	(short)4
 
 /* task id */
 #define TASK_VSPM	(2)

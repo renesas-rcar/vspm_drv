@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015-2016 Renesas Electronics Corporation
+ Copyright (C) 2015-2017 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -113,5 +113,7 @@ long fdp_lib_open(struct fdp_obj_t *obj);
 long fdp_lib_close(struct fdp_obj_t *obj);
 long fdp_lib_start(struct fdp_obj_t *obj, struct fdp_start_t *start_par);
 long fdp_lib_abort(struct fdp_obj_t *obj);
+long fdp_lib_suspend(struct fdp_obj_t *obj);
+long fdp_lib_resume(struct fdp_obj_t *obj);
 
 #endif

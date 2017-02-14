@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015-2016 Renesas Electronics Corporation
+ Copyright (C) 2015-2017 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -744,6 +744,7 @@ long vsp_ins_set_start_parameter(
 	struct vsp_prv_data *prv, struct vsp_start_t *param);
 void vsp_ins_start_processing(struct vsp_prv_data *prv);
 long vsp_ins_stop_processing(struct vsp_prv_data *prv);
+long vsp_ins_wait_processing(struct vsp_prv_data *prv);
 
 long vsp_ins_get_vsp_resource(struct vsp_prv_data *prv);
 

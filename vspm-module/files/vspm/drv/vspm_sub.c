@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015 Renesas Electronics Corporation
+ Copyright (C) 2015-2017 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -148,6 +148,54 @@ long vspm_quit(struct vspm_drvdata *pdrv)
 
 	/* Unregister VSPM task */
 	(void)fw_task_unregister(TASK_VSPM);
+
+	return R_VSPM_OK;
+}
+
+
+/******************************************************************************
+Function:		vspm_suspend
+Description:	Suspend the VSPM thread.
+Returns:		R_VSPM_OK/R_VSPM_NG
+******************************************************************************/
+long vspm_suspend(struct vspm_drvdata *pdrv)
+{
+	long ercd;
+
+	/* Send FUNC_TASK_SUSPEND message */
+	ercd = fw_send_function(
+		TASK_VSPM,
+		FUNC_TASK_SUSPEND,
+		sizeof(struct vspm_drvdata),
+		pdrv);
+	if (ercd != FW_OK) {
+		APRINT("failed to fw_send_function(FUNC_TASK_SUSPEND)\n");
+		return R_VSPM_NG;
+	}
+
+	return R_VSPM_OK;
+}
+
+
+/******************************************************************************
+Function:		vspm_resume
+Description:	Resume the VSPM thread.
+Returns:		R_VSPM_OK/R_VSPM_NG
+******************************************************************************/
+long vspm_resume(struct vspm_drvdata *pdrv)
+{
+	long ercd;
+
+	/* Send FUNC_TASK_RESUME message */
+	ercd = fw_send_function(
+		TASK_VSPM,
+		FUNC_TASK_RESUME,
+		sizeof(struct vspm_drvdata),
+		pdrv);
+	if (ercd != FW_OK) {
+		APRINT("failed to fw_send_function(FUNC_TASK_RESUME)\n");
+		return R_VSPM_NG;
+	}
 
 	return R_VSPM_OK;
 }

@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015 Renesas Electronics Corporation
+ Copyright (C) 2015-2017 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -83,6 +83,16 @@ static struct fw_func_tbl g_vspm_func_tbl[] = {
 		.func_id = FUNC_TASK_QUIT,
 		.msg_id	 = MSG_FUNCTION,
 		.func	 = vspm_inm_quit
+	},
+	[FUNC_TASK_SUSPEND - 1] = {
+		.func_id = FUNC_TASK_SUSPEND,
+		.msg_id	 = MSG_FUNCTION,
+		.func	 = vspm_inm_suspend
+	},
+	[FUNC_TASK_RESUME - 1] = {
+		.func_id = FUNC_TASK_RESUME,
+		.msg_id	 = MSG_FUNCTION,
+		.func	 = vspm_inm_resume
 	},
 	[FUNC_VSPM_ENTRY - 1] = {
 		.func_id = FUNCTIONID_VSPM_BASE + FUNC_VSPM_ENTRY,
@@ -172,6 +182,52 @@ long vspm_inm_quit(void *mesp, void *para)
 	ercd = vspm_ins_ctrl_quit((struct vspm_drvdata *)para);
 	if (ercd) {
 		EPRINT("%s failed to vspm_ins_ctrl_quit %ld\n", __func__, ercd);
+		return FW_NG;
+	}
+
+	return FW_OK;
+}
+
+
+/******************************************************************************
+Function:		vspm_inm_suspend
+Description:	Suspend the VSPM task.
+Returns:		FW_OK/FW_NG
+******************************************************************************/
+long vspm_inm_suspend(void *mesp, void *para)
+{
+	long ercd;
+
+	RESERVED(mesp);
+
+	/* Suspend the VSPM driver control information */
+	ercd = vspm_ins_ctrl_suspend((struct vspm_drvdata *)para);
+	if (ercd) {
+		EPRINT("%s failed to vspm_ins_ctrl_suspend %ld\n",
+			__func__, ercd);
+		return FW_NG;
+	}
+
+	return FW_OK;
+}
+
+
+/******************************************************************************
+Function:		vspm_inm_resume
+Description:	Resume the VSPM task.
+Returns:		FW_OK/FW_NG
+******************************************************************************/
+long vspm_inm_resume(void *mesp, void *para)
+{
+	long ercd;
+
+	RESERVED(mesp);
+
+	/* Resume the VSPM driver */
+	ercd = vspm_ins_ctrl_resume((struct vspm_drvdata *)para);
+	if (ercd) {
+		EPRINT("%s failed to vspm_ins_ctrl_resume %ld\n",
+			__func__, ercd);
 		return FW_NG;
 	}
 

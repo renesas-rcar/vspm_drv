@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015-2016 Renesas Electronics Corporation
+ Copyright (C) 2015-2017 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -2201,6 +2201,34 @@ long vsp_ins_stop_processing(struct vsp_prv_data *prv)
 
 
 /******************************************************************************
+Function:		vsp_ins_wait_processing
+Description:	Waiting VSP processing.
+Returns:		0
+******************************************************************************/
+long vsp_ins_wait_processing(struct vsp_prv_data *prv)
+{
+	unsigned int loop_cnt = VSP_STATUS_LOOP_CNT;
+
+	do {
+		/* sleep */
+		msleep(VSP_STATUS_LOOP_TIME);
+
+		if ((prv->ch_info[0].status != VSP_STAT_RUN) &&
+			(prv->ch_info[1].status != VSP_STAT_RUN))
+			break;
+	} while (--loop_cnt > 0);
+
+	if (loop_cnt == 0) {
+		APRINT("%s: happen to timeout!!\n", __func__);
+		vsp_ins_cb_function(prv, R_VSPM_DRIVER_ERR);
+		vsp_ins_cb_function(prv, R_VSPM_DRIVER_ERR);
+	}
+
+	return 0;
+}
+
+
+/******************************************************************************
 Function:		vsp_ins_software_reset
 Description:	Software reset of VSP and FCP.
 Returns:		void
@@ -2308,7 +2336,6 @@ long vsp_ins_enable_clock(struct vsp_prv_data *prv)
 	if (ercd < 0) {
 		EPRINT("%s: failed to pm_runtime_get_sync!! ercd=%d\n",
 			__func__, ercd);
-		pm_runtime_disable(dev);
 		return E_VSP_NO_CLK;
 	}
 

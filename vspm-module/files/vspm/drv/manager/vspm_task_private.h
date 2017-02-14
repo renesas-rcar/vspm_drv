@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015 Renesas Electronics Corporation
+ Copyright (C) 2015-2017 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -64,6 +64,8 @@
 
 long vspm_inm_init(void *mesp, void *para);
 long vspm_inm_quit(void *mesp, void *para);
+long vspm_inm_suspend(void *mesp, void *para);
+long vspm_inm_resume(void *mesp, void *para);
 long vspm_inm_entry(void *mesp, void *para);
 long vspm_inm_driver_on_complete(void *mesp, void *para);
 long vspm_inm_cancel(void *mesp, void *para);

@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015-2016 Renesas Electronics Corporation
+ Copyright (C) 2015-2017 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -248,6 +248,9 @@ long fdp_lib_start(struct fdp_obj_t *obj, struct fdp_start_t *start_par)
 	if (obj->status != FDP_STAT_READY)
 		return E_FDP_INVALID_STATE;
 
+	if (obj->fdp_reg == NULL)
+		return E_FDP_INVALID_STATE;
+
 	/* check start parameter */
 	ercd = fdp_ins_check_start_param(obj, start_par);
 	if (ercd)
@@ -276,6 +279,73 @@ long fdp_lib_abort(struct fdp_obj_t *obj)
 	/* check status */
 	if (obj->status == FDP_STAT_RUN)
 		fdp_ins_stop_processing(obj);
+
+	return 0;
+}
+
+
+/******************************************************************************
+Function:		fdp_lib_suspend
+Description:	Suspend of FDP processing
+Returns:		0
+	return of fdp_free_inth().
+	return of fdp_ins_quit_reg().
+******************************************************************************/
+long fdp_lib_suspend(struct fdp_obj_t *obj)
+{
+	long ercd;
+
+	if ((obj != NULL) &&
+		(obj->fdp_reg != NULL)) {
+		if (obj->status == FDP_STAT_RUN) {
+			/* waiting processing finish */
+			fdp_ins_wait_processing(obj);
+		}
+
+		if (obj->status == FDP_STAT_READY) {
+			/* unregistory interrupt handler */
+			ercd = fdp_free_inth(obj);
+			if (ercd)
+				return ercd;
+
+			/* finalize register */
+			ercd = fdp_ins_quit_reg(obj);
+			if (ercd)
+				return ercd;
+		}
+	}
+
+	return 0;
+}
+
+
+/******************************************************************************
+Function:		fdp_lib_resume
+Description:	Resume of FDP processing
+Returns:		0
+	return of fdp_ins_init_reg().
+	return of fdp_reg_inth().
+******************************************************************************/
+long fdp_lib_resume(struct fdp_obj_t *obj)
+{
+	long ercd;
+
+	if ((obj != NULL) &&
+		(obj->fdp_reg == NULL)) {
+		if (obj->status == FDP_STAT_READY) {
+			/* reinitialize register */
+			ercd = fdp_ins_init_reg(obj);
+			if (ercd)
+				return ercd;
+
+			/* reregistory interrupt handler */
+			ercd = fdp_reg_inth(obj);
+			if (ercd) {
+				fdp_ins_quit_reg(obj);
+				return ercd;
+			}
+		}
+	}
 
 	return 0;
 }

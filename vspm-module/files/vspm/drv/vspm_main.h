@@ -84,6 +84,7 @@ struct vspm_drvdata {
 	struct clk *fdp_clks[VSPM_FDP_IP_MAX][CLKNUM];
 	struct task_struct *task;
 	atomic_t counter;
+	atomic_t suspend;
 	struct semaphore init_sem;
 };
 
@@ -115,6 +116,8 @@ struct vspm_privdata {
 /* subroutines */
 long vspm_init(struct vspm_drvdata *pdrv);
 long vspm_quit(struct vspm_drvdata *pdrv);
+long vspm_suspend(struct vspm_drvdata *pdrv);
+long vspm_resume(struct vspm_drvdata *pdrv);
 long vspm_cancel(struct vspm_privdata *priv);
 
 #endif /* __VSPM_MAIN_H__ */

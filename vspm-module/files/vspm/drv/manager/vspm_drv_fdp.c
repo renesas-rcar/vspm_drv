@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015-2016 Renesas Electronics Corporation
+ Copyright (C) 2015-2017 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -197,6 +197,9 @@ long vspm_ins_fdp_execute(
 	if (obj->status != FDP_STAT_READY)
 		return E_FDP_INVALID_STATE;
 
+	if (obj->fdp_reg == NULL)
+		return E_FDP_INVALID_STATE;
+
 	/* set processing information */
 	obj->proc_info = proc_info;
 
@@ -320,6 +323,9 @@ long vspm_ins_fdp_execute_low_delay(
 	if (obj->status != FDP_STAT_READY)
 		return E_FDP_INVALID_STATE;
 
+	if (obj->fdp_reg == NULL)
+		return E_FDP_INVALID_STATE;
+
 	/* set processing information */
 	obj->proc_info = proc_info;
 
@@ -331,6 +337,52 @@ long vspm_ins_fdp_execute_low_delay(
 	ercd = fdp_lib_start(obj, start_par);
 	if (ercd)
 		return ercd;
+
+	return R_VSPM_OK;
+}
+
+
+/******************************************************************************
+Function:		vspm_ins_fdp_suspend
+Description:	Suspend FDP driver.
+Returns:		R_VSPM_OK
+******************************************************************************/
+long vspm_ins_fdp_suspend(void)
+{
+	unsigned char ch;
+	long ercd;
+
+	for (ch = 0; ch < VSPM_FDP_IP_MAX; ch++) {
+		/* suspend */
+		ercd = fdp_lib_suspend(g_fdp_obj[ch]);
+		if (ercd != 0) {
+			APRINT("%s: failed to suspend ch=%d\n",
+				__func__, ch);
+		}
+	}
+
+	return R_VSPM_OK;
+}
+
+
+/******************************************************************************
+Function:		vspm_ins_fdp_resume
+Description:	Resume FDP driver.
+Returns:		R_VSPM_OK
+******************************************************************************/
+long vspm_ins_fdp_resume(void)
+{
+	unsigned char ch;
+	long ercd;
+
+	for (ch = 0; ch < VSPM_FDP_IP_MAX; ch++) {
+		/* resume */
+		ercd = fdp_lib_resume(g_fdp_obj[ch]);
+		if (ercd != 0) {
+			APRINT("%s: failed to resume ch=%d\n",
+				__func__, ch);
+		}
+	}
 
 	return R_VSPM_OK;
 }

@@ -457,17 +457,38 @@ static int vspm_fdp_remove(struct platform_device *pdev)
 }
 
 
-static int vspm_runtime_nop(struct device *dev)
+static int vspm_pm_suspend(struct device *dev)
 {
-	/* Runtime PM callback shared between ->runtime_suspend()
-	 * and ->runtime_resume(). Simply returns success.
-	 *
-	 * This driver re-initializes all registers after
-	 * pm_runtime_get_sync() anyway so there is no need
-	 * to save and restore registers here.
-	 */
+	struct vspm_drvdata *pdrv = p_vspm_drvdata;
+
+	if (atomic_add_return(1, &pdrv->suspend) == 1) {
+		/* 1st suspend */
+		down(&pdrv->init_sem);
+		if (atomic_read(&pdrv->counter) != 0) {
+			/* suspend framework */
+			(void)vspm_suspend(pdrv);
+		}
+	}
+
 	return 0;
 }
+
+static int vspm_pm_resume(struct device *dev)
+{
+	struct vspm_drvdata *pdrv = p_vspm_drvdata;
+
+	if (atomic_sub_return(1, &pdrv->suspend) == 0) {
+		/* last resume */
+		if (atomic_read(&pdrv->counter) != 0) {
+			/* resume framework */
+			(void)vspm_resume(pdrv);
+		}
+		up(&pdrv->init_sem);
+	}
+
+	return 0;
+}
+
 
 static int vspm_pm_runtime_suspend(struct device *dev)
 {
@@ -501,14 +522,14 @@ static int vspm_pm_runtime_resume(struct device *dev)
 
 
 static const struct dev_pm_ops vspm_vsp_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(vspm_runtime_nop, vspm_runtime_nop)
+	SET_SYSTEM_SLEEP_PM_OPS(vspm_pm_suspend, vspm_pm_resume)
 	SET_RUNTIME_PM_OPS(
 		vspm_pm_runtime_suspend, vspm_pm_runtime_resume, NULL)
 };
 
 
 static const struct dev_pm_ops vspm_fdp_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(vspm_runtime_nop, vspm_runtime_nop)
+	SET_SYSTEM_SLEEP_PM_OPS(vspm_pm_suspend, vspm_pm_resume)
 	SET_RUNTIME_PM_OPS(
 		vspm_pm_runtime_suspend, vspm_pm_runtime_resume, NULL)
 };
@@ -600,6 +621,9 @@ static int __init vspm_module_init(void)
 
 	/* initialize open counter */
 	atomic_set(&pdrv->counter, 0);
+
+	/* initialize suspend counter */
+	atomic_set(&pdrv->suspend, 0);
 
 	/* initialize semaphore */
 	sema_init(&pdrv->init_sem, 1);/* unlock */

@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015-2016 Renesas Electronics Corporation
+ Copyright (C) 2015-2017 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -450,6 +450,52 @@ long vspm_ins_vsp_execute_low_delay(
 		entry->user_data);
 	if (ercd)
 		return ercd;
+
+	return R_VSPM_OK;
+}
+
+
+/******************************************************************************
+Function:		vspm_ins_vsp_suspend
+Description:	Suspend VSP driver.
+Returns:		R_VSPM_OK
+******************************************************************************/
+long vspm_ins_vsp_suspend(void)
+{
+	unsigned char ch;
+	long ercd;
+
+	for (ch = 0; ch < VSPM_VSP_IP_MAX; ch++) {
+		/* suspend */
+		ercd = vsp_lib_suspend(ch);
+		if (ercd != 0) {
+			APRINT("%s: failed to suspend ch=%d\n",
+				__func__, ch);
+		}
+	}
+
+	return R_VSPM_OK;
+}
+
+
+/******************************************************************************
+Function:		vspm_ins_vsp_resume
+Description:	Resume VSP driver.
+Returns:		R_VSPM_OK
+******************************************************************************/
+long vspm_ins_vsp_resume(void)
+{
+	unsigned char ch;
+	long ercd;
+
+	for (ch = 0; ch < VSPM_VSP_IP_MAX; ch++) {
+		/* resume */
+		ercd = vsp_lib_resume(ch);
+		if (ercd != 0) {
+			APRINT("%s: failed to resume ch=%d\n",
+				__func__, ch);
+		}
+	}
 
 	return R_VSPM_OK;
 }

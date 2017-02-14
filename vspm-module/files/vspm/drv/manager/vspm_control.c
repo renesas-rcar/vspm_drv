@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015 Renesas Electronics Corporation
+ Copyright (C) 2015-2017 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -222,6 +222,42 @@ long vspm_ins_ctrl_quit(struct vspm_drvdata *pdrv)
 		EPRINT("failed to vspm_ins_fdp_quit %ld\n", ercd);
 		return ercd;
 	}
+
+	return R_VSPM_OK;
+}
+
+
+/******************************************************************************
+Function:		vspm_ins_ctrl_suspend
+Description:	Pre-suspend processing.
+	This function is executing when just before suspend.
+Returns:		R_VSPM_OK
+******************************************************************************/
+long vspm_ins_ctrl_suspend(struct vspm_drvdata *pdrv)
+{
+	/* suspend VSP driver */
+	(void)vspm_ins_vsp_suspend();
+
+	/* suspend FDP driver */
+	(void)vspm_ins_fdp_suspend();
+
+	return R_VSPM_OK;
+}
+
+
+/******************************************************************************
+Function:		vspm_ins_ctrl_suspend
+Description:	Post-resume processing.
+	This function is executing when after resume.
+Returns:		R_VSPM_OK
+******************************************************************************/
+long vspm_ins_ctrl_resume(struct vspm_drvdata *pdrv)
+{
+	/* resume VSP driver */
+	(void)vspm_ins_vsp_resume();
+
+	/* resume FDP driver */
+	(void)vspm_ins_fdp_resume();
 
 	return R_VSPM_OK;
 }

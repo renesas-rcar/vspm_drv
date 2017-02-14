@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015 Renesas Electronics Corporation
+ Copyright (C) 2015-2017 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -92,6 +92,7 @@ struct fw_task_info {
 		spinlock_t lock;
 		wait_queue_head_t wait;
 	} msg;
+	struct completion suspend;
 };
 
 /* task control structure */
@@ -185,8 +186,15 @@ static int send_message(
 
 	/* Send a message */
 	spin_lock_irqsave(&task_info->msg.lock, lock_flag);
-	list_add_tail(&snd_msg->list, &task_info->msg.list);
+	if ((func_id == FUNC_TASK_SUSPEND) || (func_id == FUNC_TASK_RESUME))
+		list_add(&snd_msg->list, &task_info->msg.list);
+	else
+		list_add_tail(&snd_msg->list, &task_info->msg.list);
 	spin_unlock_irqrestore(&task_info->msg.lock, lock_flag);
+
+	/* Resume a framework */
+	if (func_id == FUNC_TASK_RESUME)
+		complete(&task_info->suspend);
 
 	wake_up(&task_info->msg.wait);
 
@@ -296,6 +304,9 @@ int fw_task_register(unsigned short tid)
 	spin_lock_init(&task_info->msg.lock);
 	init_waitqueue_head(&task_info->msg.wait);
 
+	/* Initialization for a suspend control */
+	init_completion(&task_info->suspend);
+
 	/* Register a task-information */
 	spin_lock_irqsave(&task_ctl.lock, lock_flag);
 	list_add_tail(&task_info->list, &task_ctl.list);
@@ -398,6 +409,8 @@ int fw_execute(unsigned short tid, struct fw_func_tbl *func_tbl)
 
 		if (func_id == FUNC_TASK_QUIT)
 			break;
+		else if (func_id == FUNC_TASK_SUSPEND)
+			wait_for_completion(&task_info->suspend);
 	}
 
 	/* Do exit kthread */

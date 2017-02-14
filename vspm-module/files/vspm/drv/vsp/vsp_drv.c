@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015-2016 Renesas Electronics Corporation
+ Copyright (C) 2015-2017 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -333,6 +333,9 @@ long vsp_lib_start(
 	if (ch_info->status != VSP_STAT_READY)
 		return E_VSP_INVALID_STATE;
 
+	if (prv->vsp_reg == NULL)
+		return E_VSP_INVALID_STATE;
+
 	/* update status */
 	ch_info->status = VSP_STAT_RUN;
 
@@ -431,6 +434,92 @@ long vsp_lib_get_status(unsigned char ch, struct vsp_status_t *status)
 	status->rpf_bits = prv->rdata.usable_rpf;
 	status->rpf_clut_bits = prv->rdata.usable_rpf_clut;
 	status->wpf_rot_bits = prv->rdata.usable_wpf_rot;
+
+	return 0;
+}
+
+
+/******************************************************************************
+Function:		vsp_lib_suspend
+Description:	Suspend of VSP processing
+Returns:		0
+	return of vsp_ins_unreg_ih().
+	return of vsp_ins_quit_reg().
+******************************************************************************/
+long vsp_lib_suspend(unsigned char ch)
+{
+	struct vsp_prv_data *prv;
+
+	long ercd;
+
+	/* check channel parameter */
+	if (ch >= VSP_IP_MAX)
+		return E_VSP_PARA_CH;
+
+	prv = g_vsp_obj[ch];
+
+	if ((prv != NULL) &&
+		(prv->vsp_reg != NULL)) {
+		if ((prv->ch_info[0].status == VSP_STAT_RUN) ||
+			(prv->ch_info[1].status == VSP_STAT_RUN)) {
+			/* waiting processing finish */
+			(void)vsp_ins_wait_processing(prv);
+		}
+
+		if ((prv->ch_info[0].status == VSP_STAT_READY) &&
+			(prv->ch_info[1].status == VSP_STAT_READY)) {
+			/* unregistory interrupt handler */
+			ercd = vsp_ins_unreg_ih(prv);
+			if (ercd)
+				return ercd;
+
+			/* finalize register */
+			ercd = vsp_ins_quit_reg(prv);
+			if (ercd)
+				return ercd;
+		}
+	}
+
+	return 0;
+}
+
+
+/******************************************************************************
+Function:		vsp_lib_resume
+Description:	Resume of VSP processing
+Returns:		0
+	return of vsp_ins_init_reg().
+	return of vsp_ins_reg_ih().
+******************************************************************************/
+long vsp_lib_resume(unsigned char ch)
+{
+	struct vsp_prv_data *prv;
+
+	long ercd;
+
+	/* check channel parameter */
+	if (ch >= VSP_IP_MAX)
+		return E_VSP_PARA_CH;
+
+	prv = g_vsp_obj[ch];
+
+	if ((prv != NULL) &&
+		(prv->vsp_reg == NULL)) {
+		if ((prv->ch_info[0].status == VSP_STAT_READY) &&
+			(prv->ch_info[1].status == VSP_STAT_READY)) {
+			/* reinitialize register */
+			ercd = vsp_ins_init_reg(prv);
+			if (ercd)
+				return ercd;
+
+			/* reregister interrupt handler */
+			ercd = vsp_ins_reg_ih(prv);
+			if (ercd) {
+				(void)vsp_ins_quit_reg(prv);
+				return ercd;
+			}
+		}
+	}
 
 	return 0;
 }

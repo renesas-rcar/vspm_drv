@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015-2016 Renesas Electronics Corporation
+ Copyright (C) 2015-2017 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -68,6 +68,7 @@ long fdp_ins_check_start_param(
 void fdp_ins_start_processing(
 	struct fdp_obj_t *obj, struct fdp_start_t *start_par);
 void fdp_ins_stop_processing(struct fdp_obj_t *obj);
+void fdp_ins_wait_processing(struct fdp_obj_t *obj);
 
 long fdp_ins_get_resource(struct fdp_obj_t *obj);
 long fdp_ins_init_reg(struct fdp_obj_t *obj);

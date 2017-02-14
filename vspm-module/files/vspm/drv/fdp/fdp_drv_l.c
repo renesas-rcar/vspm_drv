@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015-2016 Renesas Electronics Corporation
+ Copyright (C) 2015-2017 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -1264,6 +1264,40 @@ void fdp_ins_stop_processing(struct fdp_obj_t *obj)
 	obj->status = FDP_STAT_READY;
 }
 
+
+/******************************************************************************
+Function:		fdp_ins_wait_processing
+Description:	Waiting FDP processing.
+Returns:		void
+******************************************************************************/
+void fdp_ins_wait_processing(struct fdp_obj_t *obj)
+{
+	unsigned int loop_cnt = FDP_STATUS_LOOP_CNT;
+	struct fdp_cb_info_t cb_info;
+
+	do {
+		/* sleep */
+		msleep(FDP_STATUS_LOOP_TIME);
+	} while ((obj->status == FDP_STAT_RUN) && (--loop_cnt > 0));
+
+	if (loop_cnt == 0) {
+		APRINT("%s: happen to timeout!!\n", __func__);
+
+		/* save callback information */
+		cb_info = obj->cb_info;
+
+		/* update status */
+		obj->status = FDP_STAT_READY;
+
+		/* execute callback2 */
+		if (cb_info.fdp_cb2 != NULL) {
+			cb_info.fdp_cb2(
+				0, R_VSPM_DRIVER_ERR, cb_info.userdata2);
+		}
+	}
+}
+
+
 /******************************************************************************
 Function:		fdp_ins_software_reset
 Description:	Software reset of FDP and FCP.
@@ -1656,7 +1690,6 @@ long fdp_ins_enable_clock(struct fdp_obj_t *obj)
 	if (ercd < 0) {
 		EPRINT("%s: failed to pm_runtime_get_sync!! ercd=%d\n",
 			__func__, ercd);
-		pm_runtime_disable(dev);
 		return E_FDP_NO_CLK;
 	}
 

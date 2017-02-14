@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015 Renesas Electronics Corporation
+ Copyright (C) 2015-2017 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -64,7 +64,7 @@
 
 /* Function ID of VSP manager */
 enum VSPM_FUNCTION_ID {
-	FUNC_VSPM_ENTRY = FUNC_TASK_QUIT + 1,
+	FUNC_VSPM_ENTRY = FUNC_TASK_RESUME + 1,
 	EVENT_VSPM_DRIVER_ON_COMPLETE,
 	FUNC_VSPM_CANCEL,
 	FUNC_VSPM_FORCED_CANCEL,
@@ -152,6 +152,8 @@ struct vspm_ctrl_info {
 /* control functions */
 long vspm_ins_ctrl_initialize(struct vspm_drvdata *pdrv);
 long vspm_ins_ctrl_quit(struct vspm_drvdata *pdrv);
+long vspm_ins_ctrl_suspend(struct vspm_drvdata *pdrv);
+long vspm_ins_ctrl_resume(struct vspm_drvdata *pdrv);
 long vspm_ins_ctrl_set_mode(struct vspm_api_param_mode *mode);
 long vspm_ins_ctrl_regist_entry(struct vspm_api_param_entry *entry);
 long vspm_ins_ctrl_exec_entry(struct vspm_api_param_entry *entry);
@@ -236,6 +238,8 @@ long vspm_ins_vsp_quit(struct vspm_usable_res_info *usable);
 long vspm_ins_vsp_execute_low_delay(
 	unsigned short module_id,
 	struct vspm_api_param_entry *entry);
+long vspm_ins_vsp_suspend(void);
+long vspm_ins_vsp_resume(void);
 
 /* FDP control functions */
 long vspm_ins_fdp_ch(unsigned short module_id, unsigned char *ch);
@@ -251,5 +255,7 @@ long vspm_ins_fdp_quit(struct vspm_usable_res_info *usable);
 long vspm_ins_fdp_execute_low_delay(
 	unsigned short module_id,
 	struct vspm_api_param_entry *entry);
+long vspm_ins_fdp_suspend(void);
+long vspm_ins_fdp_resume(void);
 
 #endif /* __VSPM_COMMON_H__ */
