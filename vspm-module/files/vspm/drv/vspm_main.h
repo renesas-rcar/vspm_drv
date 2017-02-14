@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015-2016 Renesas Electronics Corporation
+ Copyright (C) 2015-2017 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -64,16 +64,24 @@
 
 #include <linux/cdev.h>
 #include <linux/fs.h>
+#include <linux/clk.h>
 
 #define DEVNAME				"vspm"
 #define DEVNUM				1
 #define THREADNAME			DEVNAME
 #define DRVNAME				DEVNAME
 
+#define VSP_CLK_NAME		"vsp"
+#define FDP_CLK_NAME		"fdp"
+#define FCP_CLK_NAME		"fcp"
+#define CLKNUM				2
+
 /* vspm driver data structure */
 struct vspm_drvdata {
 	struct platform_device *vsp_pdev[VSPM_VSP_IP_MAX];
+	struct clk *vsp_clks[VSPM_VSP_IP_MAX][CLKNUM];
 	struct platform_device *fdp_pdev[VSPM_FDP_IP_MAX];
+	struct clk *fdp_clks[VSPM_FDP_IP_MAX][CLKNUM];
 	struct task_struct *task;
 	atomic_t counter;
 	struct semaphore init_sem;

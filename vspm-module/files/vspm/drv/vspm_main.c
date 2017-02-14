@@ -1,7 +1,7 @@
 /*************************************************************************/ /*
  VSPM
 
- Copyright (C) 2015-2016 Renesas Electronics Corporation
+ Copyright (C) 2015-2017 Renesas Electronics Corporation
 
  License        Dual MIT/GPLv2
 
@@ -303,7 +303,10 @@ static int vspm_vsp_probe(struct platform_device *pdev)
 {
 	struct vspm_drvdata *pdrv = p_vspm_drvdata;
 	struct device_node *np = pdev->dev.of_node;
+	char *clk_names[CLKNUM] = {VSP_CLK_NAME, FCP_CLK_NAME};
+	struct clk *clk;
 
+	int i;
 	int ch;
 
 	/* get channel */
@@ -323,8 +326,22 @@ static int vspm_vsp_probe(struct platform_device *pdev)
 		return -1;
 	}
 
+	/* set clocks */
+	for (i = 0; i < CLKNUM; i++) {
+		clk = devm_clk_get(&pdev->dev, clk_names[i]);
+		if (IS_ERR(clk)) {
+			APRINT("Cannot get %s clock!! ch=%d\n",
+				clk_names[i], ch);
+			for (; i > 0; i--)
+				pdrv->vsp_clks[ch][i-1] = NULL;
+			return -1;
+		} else {
+			pdrv->vsp_clks[ch][i] = clk;
+		}
+	}
+
 	/* set driver data */
-	platform_set_drvdata(pdev, pdrv);
+	platform_set_drvdata(pdev, &pdrv->vsp_clks[ch]);
 	pdrv->vsp_pdev[ch] = pdev;
 
 	/* set runtime PM */
@@ -340,6 +357,7 @@ static int vspm_vsp_remove(struct platform_device *pdev)
 	struct vspm_drvdata *pdrv = p_vspm_drvdata;
 	struct device_node *np = pdev->dev.of_node;
 
+	int i;
 	int ch;
 
 	/* unset runtime PM */
@@ -352,6 +370,10 @@ static int vspm_vsp_remove(struct platform_device *pdev)
 	platform_set_drvdata(pdev, NULL);
 	pdrv->vsp_pdev[ch] = NULL;
 
+	/* unset clocks */
+	for (i = 0; i < CLKNUM; i++)
+		pdrv->vsp_clks[ch][i] = NULL;
+
 	return 0;
 }
 
@@ -360,7 +382,10 @@ static int vspm_fdp_probe(struct platform_device *pdev)
 {
 	struct vspm_drvdata *pdrv = p_vspm_drvdata;
 	struct device_node *np = pdev->dev.of_node;
+	char *clk_names[CLKNUM] = {FDP_CLK_NAME, FCP_CLK_NAME};
+	struct clk *clk;
 
+	int i;
 	int ch;
 
 	/* get channel */
@@ -380,8 +405,22 @@ static int vspm_fdp_probe(struct platform_device *pdev)
 		return -1;
 	}
 
+	/* set clocks */
+	for (i = 0; i < CLKNUM; i++) {
+		clk = devm_clk_get(&pdev->dev, clk_names[i]);
+		if (IS_ERR(clk)) {
+			APRINT("Cannot get %s clock!! ch=%d\n",
+				clk_names[i], ch);
+			for (; i > 0; i--)
+				pdrv->fdp_clks[ch][i-1] = NULL;
+			return -1;
+		} else {
+			pdrv->fdp_clks[ch][i] = clk;
+		}
+	}
+
 	/* set driver data */
-	platform_set_drvdata(pdev, pdrv);
+	platform_set_drvdata(pdev, &pdrv->fdp_clks[ch]);
 	pdrv->fdp_pdev[ch] = pdev;
 
 	/* set runtime PM */
@@ -397,6 +436,7 @@ static int vspm_fdp_remove(struct platform_device *pdev)
 	struct vspm_drvdata *pdrv = p_vspm_drvdata;
 	struct device_node *np = pdev->dev.of_node;
 
+	int i;
 	int ch;
 
 	/* unset runtime PM */
@@ -408,6 +448,10 @@ static int vspm_fdp_remove(struct platform_device *pdev)
 	/* unset driver data */
 	platform_set_drvdata(pdev, NULL);
 	pdrv->fdp_pdev[ch] = NULL;
+
+	/* unset clocks */
+	for (i = 0; i < CLKNUM; i++)
+		pdrv->fdp_clks[ch][i] = NULL;
 
 	return 0;
 }
@@ -425,20 +469,48 @@ static int vspm_runtime_nop(struct device *dev)
 	return 0;
 }
 
+static int vspm_pm_runtime_suspend(struct device *dev)
+{
+	struct platform_device *pdev = to_platform_device(dev);
+	struct clk **clk = platform_get_drvdata(pdev);
+
+	int i;
+
+	for (i = 0; i < CLKNUM; i++) {
+		if (clk[i])
+			clk_disable_unprepare(clk[i]);
+	}
+
+	return 0;
+}
+
+static int vspm_pm_runtime_resume(struct device *dev)
+{
+	struct platform_device *pdev = to_platform_device(dev);
+	struct clk **clk = platform_get_drvdata(pdev);
+
+	int i;
+
+	for (i = 0; i < CLKNUM; i++) {
+		if (clk[i])
+			clk_prepare_enable(clk[i]);
+	}
+
+	return 0;
+}
+
 
 static const struct dev_pm_ops vspm_vsp_pm_ops = {
-	.runtime_suspend = vspm_runtime_nop,
-	.runtime_resume = vspm_runtime_nop,
-	.suspend = vspm_runtime_nop,
-	.resume = vspm_runtime_nop,
+	SET_SYSTEM_SLEEP_PM_OPS(vspm_runtime_nop, vspm_runtime_nop)
+	SET_RUNTIME_PM_OPS(
+		vspm_pm_runtime_suspend, vspm_pm_runtime_resume, NULL)
 };
 
 
 static const struct dev_pm_ops vspm_fdp_pm_ops = {
-	.runtime_suspend = vspm_runtime_nop,
-	.runtime_resume = vspm_runtime_nop,
-	.suspend = vspm_runtime_nop,
-	.resume = vspm_runtime_nop,
+	SET_SYSTEM_SLEEP_PM_OPS(vspm_runtime_nop, vspm_runtime_nop)
+	SET_RUNTIME_PM_OPS(
+		vspm_pm_runtime_suspend, vspm_pm_runtime_resume, NULL)
 };
 
 static const struct of_device_id vspm_vsp_of_match[] = {
