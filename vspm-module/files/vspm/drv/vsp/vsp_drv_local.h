@@ -232,7 +232,7 @@
 #define VSP_RPF_SRCM_ADDR_C0	(0x0040)
 #define VSP_RPF_SRCM_ADDR_C1	(0x0044)
 #define VSP_RPF_SRCM_ADDR_AI	(0x0048)
-#define VSP_RPF_CHPRI_CTRL		(0x0050)
+#define VSP_RPF_BAC				(0x0050)
 #define VSP_RPF_MULT_ALPHA		(0x006C)
 
 #define VSP_RPF0_CLUT_OFFSET	(0x4000)
@@ -400,6 +400,9 @@
 #define VSP_RPF_CKEY_CTRL_CV	(0x00000010)
 #define VSP_RPF_CKEY_CTRL_SAPE1	(0x00000002)
 #define VSP_RPF_CKEY_CTRL_SAPE0	(0x00000001)
+
+#define VSP_RPF_BAC_B256P		(0x00000000)
+#define VSP_RPF_BAC_B512P		(0x00010000)
 
 #define VSP_WPF_HSZCLIP_HCEN	(0x10000000)
 #define VSP_WPF_VSZCLIP_VCEN	(0x10000000)
@@ -726,6 +729,7 @@ struct vsp_prv_data {
 		unsigned int usable_module;
 		unsigned int read_outstanding;
 		unsigned int start_reservation;
+		unsigned int burst_access;
 	} rdata;
 
 	struct vsp_ch_info ch_info[2];
