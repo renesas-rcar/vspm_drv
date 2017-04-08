@@ -71,7 +71,7 @@
 #include "vspm_lib_public.h"
 #include "vspm_common.h"
 
-struct vspm_ctrl_info g_vspm_ctrl_info;
+static struct vspm_ctrl_info g_vspm_ctrl_info;
 
 /******************************************************************************
 Function:		vspm_ins_mask_low_bits

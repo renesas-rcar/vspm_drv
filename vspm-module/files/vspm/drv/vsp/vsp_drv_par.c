@@ -67,7 +67,7 @@
 #include "vsp_drv_local.h"
 
 /* BRU module route table */
-const unsigned int vsp_tbl_bru_route[VSP_BRU_IN_MAX] = {
+static const unsigned int vsp_tbl_bru_route[VSP_BRU_IN_MAX] = {
 	VSP_DPR_ROUTE_BRU0,
 	VSP_DPR_ROUTE_BRU1,
 	VSP_DPR_ROUTE_BRU2,

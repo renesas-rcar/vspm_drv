@@ -77,7 +77,7 @@
 #include "vsp_drv_local.h"
 
 /* RPF register offset table */
-const unsigned short vsp_tbl_rpf_reg_offset[VSP_RPF_MAX][VSP_REG_MAX] = {
+static const unsigned short vsp_tbl_rpf_reg_offset[VSP_RPF_MAX][VSP_REG_MAX] = {
 	{	/* RPF0 */
 		VSP_RPF0_OFFSET,		/* CTRL */
 		VSP_RPF0_CLUT_OFFSET,	/* CLUT TABLE */
@@ -106,7 +106,7 @@ const unsigned short vsp_tbl_rpf_reg_offset[VSP_RPF_MAX][VSP_REG_MAX] = {
 };
 
 /* SRU parameter table */
-const unsigned int vsp_tbl_sru_param[VSP_SCL_LEVEL_MAX][3] = {
+static const unsigned int vsp_tbl_sru_param[VSP_SCL_LEVEL_MAX][3] = {
 /*   CTRL0,      CTRL1       CTRL2 */
 	{0x01000400, 0x000007FF, 0x001828FF},	/* level1(weak) */
 	{0x01000400, 0x000007FF, 0x000810FF},	/* level2 */
@@ -2370,7 +2370,7 @@ Function:		vsp_ins_init_vsp_reg
 Description:	Initialize VSP hardware.
 Returns:		0
 ******************************************************************************/
-long vsp_ins_init_vsp_reg(struct vsp_prv_data *prv)
+static long vsp_ins_init_vsp_reg(struct vsp_prv_data *prv)
 {
 	struct vsp_res_data *rdata = &prv->rdata;
 	unsigned int reg_temp;
@@ -2426,7 +2426,7 @@ Function:		vsp_ins_init_fcp_reg
 Description:	Initialize FCP hardware.
 Returns:		0
 ******************************************************************************/
-long vsp_ins_init_fcp_reg(struct vsp_prv_data *prv)
+static long vsp_ins_init_fcp_reg(struct vsp_prv_data *prv)
 {
 	/* set configuration register */
 	vsp_write_reg(

@@ -1343,7 +1343,7 @@ Function:		fdp_int_hdr
 Description:	Interrupt handler (sub routine)
 Returns:		void
 ******************************************************************************/
-void fdp_int_hdr(struct fdp_obj_t *obj)
+static void fdp_int_hdr(struct fdp_obj_t *obj)
 {
 	struct fdp_cb_info_t cb_info;
 

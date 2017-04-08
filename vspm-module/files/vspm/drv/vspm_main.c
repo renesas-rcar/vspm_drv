@@ -75,7 +75,7 @@
 #include "vspm_lib_public.h"
 #include "vsp_drv_public.h"
 
-struct vspm_drvdata *p_vspm_drvdata;
+static struct vspm_drvdata *p_vspm_drvdata;
 
 /******************************************************************************
 Function:		vspm_init_driver
