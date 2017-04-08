@@ -96,8 +96,7 @@ enum {
 
 /* judgment macro */
 #define IS_VSP_CH(ch) \
-	(((ch) >= VSPM_VSP_CH_OFFSET) && \
-	 ((ch) < (VSPM_VSP_CH_NUM + VSPM_VSP_CH_OFFSET)))
+	((ch) < (VSPM_VSP_CH_NUM + VSPM_VSP_CH_OFFSET))
 
 #define IS_FDP_CH(ch) \
 	(((ch) >= VSPM_FDP_CH_OFFSET) && \
