@@ -1190,8 +1190,6 @@ Returns:		void
 ******************************************************************************/
 void fdp_ins_stop_processing(struct fdp_obj_t *obj)
 {
-	volatile unsigned int dmy;
-
 	unsigned int status;
 	unsigned int loop_cnt;
 
@@ -1202,8 +1200,8 @@ void fdp_ins_stop_processing(struct fdp_obj_t *obj)
 	fdp_write_reg(0, P_FDP, FD1_CTL_IRQSTA);
 
 	/* dummy read */
-	dmy = fdp_read_reg(P_FDP, FD1_CTL_IRQSTA);
-	dmy = fdp_read_reg(P_FDP, FD1_CTL_IRQSTA);
+	fdp_read_reg(P_FDP, FD1_CTL_IRQSTA);
+	fdp_read_reg(P_FDP, FD1_CTL_IRQSTA);
 
 	/* init loop counter */
 	loop_cnt = FDP_STATUS_LOOP_CNT;

@@ -2119,8 +2119,6 @@ Returns:		0
 ******************************************************************************/
 long vsp_ins_stop_processing(struct vsp_prv_data *prv)
 {
-	volatile unsigned int dmy;
-
 	unsigned int status;
 	unsigned int loop_cnt;
 
@@ -2131,8 +2129,8 @@ long vsp_ins_stop_processing(struct vsp_prv_data *prv)
 	vsp_write_reg(0, prv->vsp_reg, VSP_WPF0_IRQ_STA);
 
 	/* dummy read */
-	dmy = vsp_read_reg(prv->vsp_reg, VSP_WPF0_IRQ_STA);
-	dmy = vsp_read_reg(prv->vsp_reg, VSP_WPF0_IRQ_STA);
+	vsp_read_reg(prv->vsp_reg, VSP_WPF0_IRQ_STA);
+	vsp_read_reg(prv->vsp_reg, VSP_WPF0_IRQ_STA);
 
 	/* init loop counter */
 	loop_cnt = VSP_STATUS_LOOP_CNT;
@@ -2575,7 +2573,6 @@ static irqreturn_t vsp_ins_ih(int irq, void *dev)
 	struct vsp_prv_data *prv = (struct vsp_prv_data *)dev;
 	struct vsp_ch_info *ch_info;
 
-	volatile unsigned int dmy;
 	unsigned int tmp;
 
 	/* check finished channel */
@@ -2589,8 +2586,8 @@ static irqreturn_t vsp_ins_ih(int irq, void *dev)
 			vsp_write_reg(0, prv->vsp_reg, VSP_WPF0_IRQ_STA);
 
 			/* dummy read */
-			dmy = vsp_read_reg(prv->vsp_reg, VSP_WPF0_IRQ_STA);
-			dmy = vsp_read_reg(prv->vsp_reg, VSP_WPF0_IRQ_STA);
+			vsp_read_reg(prv->vsp_reg, VSP_WPF0_IRQ_STA);
+			vsp_read_reg(prv->vsp_reg, VSP_WPF0_IRQ_STA);
 
 			/* callback function */
 			vsp_ins_cb_function(prv, R_VSPM_OK);
