@@ -1583,13 +1583,13 @@ long fdp_ins_quit_reg(struct fdp_obj_t *obj)
 	/* unmap an I/O register of FCP */
 	if (obj->fcp_reg) {
 		iounmap(obj->fcp_reg);
-		obj->fcp_reg = 0;
+		obj->fcp_reg = NULL;
 	}
 
 	/* unmap an I/O register of FDP */
 	if (obj->fdp_reg) {
 		iounmap(obj->fdp_reg);
-		obj->fdp_reg = 0;
+		obj->fdp_reg = NULL;
 	}
 
 	return 0;

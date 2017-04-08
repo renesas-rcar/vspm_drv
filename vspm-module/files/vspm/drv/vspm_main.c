@@ -86,7 +86,7 @@ Returns:		R_VSPM_OK/R_VSPM_NG
 ******************************************************************************/
 long vspm_init_driver(void **handle, struct vspm_init_t *param)
 {
-	struct vspm_privdata *priv = 0;
+	struct vspm_privdata *priv = NULL;
 	struct vspm_drvdata *pdrv = p_vspm_drvdata;
 	int cnt;
 
@@ -600,7 +600,7 @@ static void vspm_platform_driver_unregister(void)
 
 static int __init vspm_module_init(void)
 {
-	struct vspm_drvdata *pdrv = 0;
+	struct vspm_drvdata *pdrv = NULL;
 	int ercd = 0;
 
 	/* allocate vspm driver data area */

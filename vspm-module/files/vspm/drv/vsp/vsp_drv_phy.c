@@ -2503,13 +2503,13 @@ long vsp_ins_quit_reg(struct vsp_prv_data *prv)
 	/* unmap an I/O register of FCP */
 	if (prv->fcp_reg) {
 		iounmap(prv->fcp_reg);
-		prv->fcp_reg = 0;
+		prv->fcp_reg = NULL;
 	}
 
 	/* unmap an I/O register of VSP */
 	if (prv->vsp_reg) {
 		iounmap(prv->vsp_reg);
-		prv->vsp_reg = 0;
+		prv->vsp_reg = NULL;
 	}
 
 	return 0;
@@ -2627,7 +2627,7 @@ long vsp_ins_reg_ih(struct vsp_prv_data *prv)
 	if (ercd) {
 		EPRINT("%s: failed to request irq!! ercd=%d, irq=%d\n",
 			__func__, ercd, (int)prv->irq->start);
-		prv->irq = 0;
+		prv->irq = NULL;
 		return E_VSP_DEF_INH;
 	}
 
