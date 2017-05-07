@@ -1543,7 +1543,7 @@ static long vsp_ins_recalculate_wpf_addr(
 
 			temp_c = vsp_ins_get_bpp_chroma(
 				dst_par->format, dst_par->width);
-			temp_c = VSP_ROUND_UP(temp_y, 256) * 256;
+			temp_c = VSP_ROUND_UP(temp_c, 256) * 256;
 			temp_c -= vsp_ins_get_bpp_chroma(dst_par->format, 16);
 		} else {
 			/* disable FCNL compression */
