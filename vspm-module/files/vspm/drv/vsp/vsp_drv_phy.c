@@ -2314,10 +2314,9 @@ long vsp_ins_get_vsp_resource(struct vsp_prv_data *prv)
 		&rdata->start_reservation);
 
 	/* bus access control value */
-	of_property_read_u32(
-		np,
-		"renesas,#burst_access",
-		&rdata->burst_access);
+	rdata->burst_enable = !of_property_read_u32(np,
+						    "renesas,#burst_access",
+						    &rdata->burst_access);
 
 	return 0;
 }
@@ -2377,30 +2376,32 @@ static long vsp_ins_init_vsp_reg(struct vsp_prv_data *prv)
 	vsp_write_reg(0x00000808, prv->vsp_reg, VSP_CLK_DCSWT);
 
 	/* initialize bus access control register */
-	if (rdata->burst_access == 1)
-		reg_temp = VSP_RPF_BAC_B512P;
-	else
-		reg_temp = VSP_RPF_BAC_B256P;
+	if (rdata->burst_enable) {
+		if (rdata->burst_access == 1)
+			reg_temp = VSP_RPF_BAC_B512P;
+		else
+			reg_temp = VSP_RPF_BAC_B256P;
 
-	if (rdata->usable_rpf & VSP_RPF0_USE)
-		vsp_write_reg(
-			reg_temp, prv->vsp_reg, VSP_RPF0_OFFSET + VSP_RPF_BAC);
+		if (rdata->usable_rpf & VSP_RPF0_USE)
+			vsp_write_reg(reg_temp, prv->vsp_reg,
+				      VSP_RPF0_OFFSET + VSP_RPF_BAC);
 
-	if (rdata->usable_rpf & VSP_RPF1_USE)
-		vsp_write_reg(
-			reg_temp, prv->vsp_reg, VSP_RPF1_OFFSET + VSP_RPF_BAC);
+		if (rdata->usable_rpf & VSP_RPF1_USE)
+			vsp_write_reg(reg_temp, prv->vsp_reg,
+				      VSP_RPF1_OFFSET + VSP_RPF_BAC);
 
-	if (rdata->usable_rpf & VSP_RPF2_USE)
-		vsp_write_reg(
-			reg_temp, prv->vsp_reg, VSP_RPF2_OFFSET + VSP_RPF_BAC);
+		if (rdata->usable_rpf & VSP_RPF2_USE)
+			vsp_write_reg(reg_temp, prv->vsp_reg,
+				      VSP_RPF2_OFFSET + VSP_RPF_BAC);
 
-	if (rdata->usable_rpf & VSP_RPF3_USE)
-		vsp_write_reg(
-			reg_temp, prv->vsp_reg, VSP_RPF3_OFFSET + VSP_RPF_BAC);
+		if (rdata->usable_rpf & VSP_RPF3_USE)
+			vsp_write_reg(reg_temp, prv->vsp_reg,
+				      VSP_RPF3_OFFSET + VSP_RPF_BAC);
 
-	if (rdata->usable_rpf & VSP_RPF4_USE)
-		vsp_write_reg(
-			reg_temp, prv->vsp_reg, VSP_RPF4_OFFSET + VSP_RPF_BAC);
+		if (rdata->usable_rpf & VSP_RPF4_USE)
+			vsp_write_reg(reg_temp, prv->vsp_reg,
+				      VSP_RPF4_OFFSET + VSP_RPF_BAC);
+	}
 
 	/* initialize DL control register */
 	vsp_write_reg(

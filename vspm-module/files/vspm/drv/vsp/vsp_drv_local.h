@@ -730,6 +730,7 @@ struct vsp_prv_data {
 		unsigned int read_outstanding;
 		unsigned int start_reservation;
 		unsigned int burst_access;
+		bool burst_enable;
 	} rdata;
 
 	struct vsp_ch_info ch_info[2];
