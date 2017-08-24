@@ -770,10 +770,14 @@ static void vsp_ins_set_dl_for_hgo(
 	dlwrite32(&body, VSP_DPR_HGO_SMPPT, hgo_info->val_dpr);
 
 	/* reset */
-	dlwrite32(
-		&body,
-		VSP_HGO_REGRST,
-		VSP_HGO_REGRST_RCPART | VSP_HGO_REGRST_RCLEA);
+	if (hgo_info->val_dpr == VSP_DPR_SMPPT_NOT_USE) {
+		dlwrite32(&body, VSP_HGO_REGRST, VSP_HGO_REGRST_RCPART);
+	} else {
+		dlwrite32(&body, VSP_HGO_REGRST, hgo_info->val_regrst);
+
+		/* set register reset (2nd or more partition) */
+		hgo_info->val_regrst = VSP_HGO_REGRST_RCPART;
+	}
 
 	/* add size */
 	head->body_info[0].size +=
@@ -855,10 +859,14 @@ static void vsp_ins_set_dl_for_hgt(
 	dlwrite32(&body, VSP_DPR_HGT_SMPPT, hgt_info->val_dpr);
 
 	/* reset */
-	dlwrite32(
-		&body,
-		VSP_HGT_REGRST,
-		VSP_HGT_REGRST_RCPART | VSP_HGT_REGRST_RCLEA);
+	if (hgt_info->val_dpr == VSP_DPR_SMPPT_NOT_USE) {
+		dlwrite32(&body, VSP_HGT_REGRST, VSP_HGT_REGRST_RCPART);
+	} else {
+		dlwrite32(&body, VSP_HGT_REGRST, hgt_info->val_regrst);
+
+		/* set register reset (2nd or more partition) */
+		hgt_info->val_regrst = VSP_HGT_REGRST_RCPART;
+	}
 
 	/* add size */
 	head->body_info[0].size +=
@@ -1113,7 +1121,17 @@ static void vsp_ins_set_part_diff(
 		dlwrite32(&body, VSP_DPR_HGO_SMPPT, ch_info->hgo_info.val_dpr);
 
 		/* reset */
-		dlwrite32(&body, VSP_HGO_REGRST, VSP_HGO_REGRST_RCPART);
+		if (ch_info->hgo_info.val_dpr == VSP_DPR_SMPPT_NOT_USE) {
+			dlwrite32(&body, VSP_HGO_REGRST, VSP_HGO_REGRST_RCPART);
+		} else {
+			dlwrite32(
+				&body,
+				VSP_HGO_REGRST,
+				ch_info->hgo_info.val_regrst);
+
+			/* set register reset (2nd or more partition) */
+			ch_info->hgo_info.val_regrst = VSP_HGO_REGRST_RCPART;
+		}
 	}
 
 	/* set HGT parameter */
@@ -1128,7 +1146,17 @@ static void vsp_ins_set_part_diff(
 		dlwrite32(&body, VSP_DPR_HGT_SMPPT, ch_info->hgt_info.val_dpr);
 
 		/* reset */
-		dlwrite32(&body, VSP_HGT_REGRST, VSP_HGT_REGRST_RCPART);
+		if (ch_info->hgt_info.val_dpr == VSP_DPR_SMPPT_NOT_USE) {
+			dlwrite32(&body, VSP_HGT_REGRST, VSP_HGT_REGRST_RCPART);
+		} else {
+			dlwrite32(
+				&body,
+				VSP_HGT_REGRST,
+				ch_info->hgt_info.val_regrst);
+
+			/* set register reset (2nd or more partition) */
+			ch_info->hgt_info.val_regrst = VSP_HGT_REGRST_RCPART;
+		}
 	}
 
 	/* finalize DL header */

@@ -2652,6 +2652,9 @@ static long vsp_ins_check_hgo_param(
 			return E_VSP_PARA_HGO_YSKIP;
 	hgo_info->val_mode |= (unsigned int)hgo_param->y_skip;
 
+	/* set register reset (1st partition) */
+	hgo_info->val_regrst = VSP_HGO_REGRST_RCPART | VSP_HGO_REGRST_RCLEA;
+
 	/* check sampling point */
 	hgo_info->val_dpr = vsp_ins_get_dpr_smppt(
 		ch_info, (unsigned int)hgo_param->sampling);
@@ -2762,6 +2765,9 @@ static long vsp_ins_check_hgt_param(
 		(hgt_param->y_skip != VSP_SKIP_1_4)) {
 		return E_VSP_PARA_HGO_YSKIP;
 	}
+
+	/* set register reset (1st partition) */
+	hgt_info->val_regrst = VSP_HGT_REGRST_RCPART | VSP_HGT_REGRST_RCLEA;
 
 	/* check sampling point */
 	hgt_info->val_dpr = vsp_ins_get_dpr_smppt(

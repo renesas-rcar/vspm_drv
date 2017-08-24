@@ -638,6 +638,7 @@ struct vsp_hgo_info {
 	unsigned int val_offset;
 	unsigned int val_size;
 	unsigned int val_mode;
+	unsigned int val_regrst;
 	unsigned int val_dpr;
 };
 
@@ -647,6 +648,7 @@ struct vsp_hgt_info {
 	unsigned int val_hard_addr;
 	unsigned int val_offset;
 	unsigned int val_size;
+	unsigned int val_regrst;
 	unsigned int val_dpr;
 };
 
