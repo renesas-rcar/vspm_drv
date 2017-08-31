@@ -102,6 +102,7 @@
 #define VSP_RPF_MAX				(5)
 #define VSP_WPF_MAX				(1)
 #define VSP_BRU_IN_MAX			(5)
+#define VSP_BRS_IN_MAX			(2)
 
 /* define status */
 #define VSP_STAT_NOT_INIT		0
@@ -127,6 +128,7 @@
 	 VSP_CLU_USE|	\
 	 VSP_HST_USE|	\
 	 VSP_BRU_USE|	\
+	 VSP_BRS_USE|	\
 	 VSP_SHP_USE)
 
 #define VSP_SRU_USABLE_DPR \
@@ -184,6 +186,8 @@
 #define VSP_BRU_USABLE_DPR \
 	(VSP_LUT_USE|	\
 	 VSP_CLU_USE)
+
+#define VSP_BRS_USABLE_DPR	0
 
 /* define register offset */
 #define VSP_WPF0_CMD			(0x0000)
@@ -271,6 +275,7 @@
 #define VSP_DPR_HST_ROUTE		(0x2044)
 #define VSP_DPR_HSI_ROUTE		(0x2048)
 #define VSP_DPR_BRU_ROUTE		(0x204C)
+#define VSP_DPR_BRS_ROUTE		(0x2050)
 #define VSP_DPR_HGO_SMPPT		(0x2054)
 #define VSP_DPR_HGT_SMPPT		(0x2058)
 #define VSP_DPR_SHP_ROUTE		(0x2060)
@@ -357,6 +362,16 @@
 #define VSP_HGT_HSWAP			(0x3770)
 #define VSP_HGT_REGRST			(0x37FC)
 
+/* BRS control registers offset */
+#define VSP_BRS_INCTRL			(0x3900)
+#define VSP_BRS_VIRRPF_SIZE		(0x3904)
+#define VSP_BRS_VIRRPF_LOC		(0x3908)
+#define VSP_BRS_VIRRPF_COL		(0x390C)
+#define VSP_BRSA_CTRL			(0x3910)
+#define VSP_BRSA_BLD			(0x3914)
+#define VSP_BRSB_CTRL			(0x3918)
+#define VSP_BRSB_BLD			(0x391C)
+
 /* SHP control registers offset */
 #define VSP_SHP_CTRL0			(0x3E00)
 #define VSP_SHP_CTRL1			(0x3E04)
@@ -440,8 +455,11 @@
 #define VSP_DPR_ROUTE_BRU2		(0x00000019)
 #define VSP_DPR_ROUTE_BRU3		(0x0000001A)
 #define VSP_DPR_ROUTE_BRU4		(0x00000031)
+#define VSP_DPR_ROUTE_BRS0		(0x00000026)
+#define VSP_DPR_ROUTE_BRS1		(0x00000027)
 #define VSP_DPR_ROUTE_WPF0		(0x00000038)
 #define VSP_DPR_ROUTE_NOT_USE	(0x0000003F)
+#define VSP_DPR_ROUTE_BRSSEL		(0x10000000)
 
 #define VSP_DPR_SMPPT_RPF0		(0x00000000)
 #define VSP_DPR_SMPPT_RPF1		(0x00000001)
@@ -524,6 +542,13 @@ enum {
 	VSP_BROP_SRC_D,
 	VSP_BROP_SRC_E,
 	VSP_BROP_MAX
+};
+
+enum {
+	VSP_BRS_DST_A = 0,
+	VSP_BRS_SRC_A,
+	VSP_BRS_SRC_B,
+	VSP_BRS_MAX
 };
 
 /* Display list information structure */
@@ -631,6 +656,20 @@ struct vsp_bru_info {
 	unsigned int val_dpr;
 };
 
+/* BRS information structure */
+struct vsp_brs_info {
+	unsigned int val_inctrl;
+
+	unsigned int val_vir_loc;
+	unsigned int val_vir_color;
+	unsigned int val_vir_size;
+
+	unsigned int val_ctrl[2];
+	unsigned int val_bld[2];
+
+	unsigned int val_dpr;
+};
+
 /* HGO information structure */
 struct vsp_hgo_info {
 	unsigned int *virt_addr;
@@ -700,6 +739,7 @@ struct vsp_ch_info {
 
 	unsigned char wpf_cnt;
 	unsigned char bru_cnt;
+	unsigned char brs_cnt;
 
 	unsigned int next_dl_addr;
 
@@ -713,6 +753,7 @@ struct vsp_ch_info {
 	struct vsp_bru_info bru_info;
 	struct vsp_hgo_info hgo_info;
 	struct vsp_hgt_info hgt_info;
+	struct vsp_brs_info brs_info;
 	struct vsp_shp_info shp_info;
 	struct vsp_wpf_info wpf_info;
 };

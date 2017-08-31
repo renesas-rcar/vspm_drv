@@ -162,6 +162,17 @@ static unsigned int vsp_ins_get_dpr_route(
 		}
 		ch_info->bru_cnt++;
 		break;
+	case VSP_BRS_USE:
+		if (ch_info->brs_cnt < 1) {
+			route |= VSP_DPR_ROUTE_BRS0;
+		} else if (ch_info->brs_cnt < 2) {
+			route |= VSP_DPR_ROUTE_BRS1;
+		} else {
+			/* BRS channel empty */
+			route = VSP_DPR_ROUTE_NOT_USE;
+		}
+		ch_info->brs_cnt++;
+		break;
 	default:
 		route = VSP_DPR_ROUTE_NOT_USE;
 		break;
@@ -311,6 +322,38 @@ static long vsp_ins_check_input_color_space_of_bru(struct vsp_ch_info *ch_info)
 
 
 /******************************************************************************
+Function:		vsp_ins_check_input_color_space_of_brs
+Description:	Check input color space of brs.
+Returns:		0/E_VSP_PARA_BRS_INHSV/E_VSP_PARA_BRS_INCOLOR
+******************************************************************************/
+static long vsp_ins_check_input_color_space_of_brs(struct vsp_ch_info *ch_info)
+{
+	struct vsp_src_info *src_info;
+	unsigned char base_color;
+	unsigned char i;
+
+	if (ch_info->src_cnt > 0) {
+		src_info = &ch_info->src_info[0];
+
+		/* set base color space */
+		base_color = src_info->color;
+
+		for (i = 0; i < ch_info->src_cnt; i++) {
+			if (src_info->color == VSP_COLOR_HSV)
+				return E_VSP_PARA_BRS_INHSV;
+
+			if (src_info->color != base_color)
+				return E_VSP_PARA_BRS_INCOLOR;
+
+			src_info++;
+		}
+	}
+
+	return 0;
+}
+
+
+/******************************************************************************
 Function:		vsp_ins_check_master_layer
 Description:	Check master layer.
 Returns:		0/E_VSP_PARA_NOINPUT/E_VSP_PARA_NOPARENT
@@ -364,7 +407,8 @@ static long vsp_ins_check_master_layer(struct vsp_ch_info *ch_info)
 		if (i != master_idx) {
 			if (src_info->x_position >=
 					ch_info->src_info[master_idx].width) {
-				if (src_info->rpf_ch == 14)
+				if ((src_info->rpf_ch == 14) ||
+				    (src_info->rpf_ch == 12))
 					return E_VSP_PARA_VIR_XPOSI;
 				else
 					return E_VSP_PARA_IN_XPOSI;
@@ -372,7 +416,8 @@ static long vsp_ins_check_master_layer(struct vsp_ch_info *ch_info)
 
 			if (src_info->y_position >=
 					ch_info->src_info[master_idx].height) {
-				if (src_info->rpf_ch == 14)
+				if ((src_info->rpf_ch == 14) ||
+				    (src_info->rpf_ch == 12))
 					return E_VSP_PARA_VIR_YPOSI;
 				else
 					return E_VSP_PARA_IN_YPOSI;
@@ -2246,6 +2291,63 @@ static long vsp_ins_check_blend_virtual_param(
 
 
 /******************************************************************************
+Function:		vsp_ins_check_brs_virtual_param
+Description:	Check virtual parameter of BRS.
+Returns:		0/E_VSP_PARA_VIR_ADR/E_VSP_PARA_VIR_WIDTH
+				E_VSP_PARA_VIR_HEIGHT/E_VSP_PARA_VIR_PWD
+******************************************************************************/
+static long vsp_ins_check_brs_virtual_param(
+	struct vsp_ch_info *ch_info, struct vsp_bld_vir_t *vir_param)
+{
+	struct vsp_src_info *src_info = &ch_info->src_info[ch_info->src_idx];
+	struct vsp_brs_info *brs_info = &ch_info->brs_info;
+	unsigned int x_pos, y_pos;
+
+	/* check pointer */
+	if (vir_param == NULL)
+		return E_VSP_PARA_VIR_ADR;
+
+	/* check width */
+	if ((vir_param->width < 1) || (vir_param->width > 8190))
+		return E_VSP_PARA_VIR_WIDTH;
+
+	/* check height */
+	if ((vir_param->height < 1) || (vir_param->height > 8190))
+		return E_VSP_PARA_VIR_HEIGHT;
+
+	brs_info->val_vir_size = ((unsigned int)vir_param->width) << 16;
+	brs_info->val_vir_size |= (unsigned int)vir_param->height;
+	brs_info->val_vir_color = (unsigned int)vir_param->color;
+
+	/* check pwd */
+	if (vir_param->pwd == VSP_LAYER_PARENT) {
+		x_pos = 0;
+		y_pos = 0;
+	} else if (vir_param->pwd == VSP_LAYER_CHILD) {
+		x_pos = (unsigned int)vir_param->x_position;
+		y_pos = (unsigned int)vir_param->y_position;
+	} else {
+		return E_VSP_PARA_VIR_PWD;
+	}
+	brs_info->val_vir_loc = (x_pos << 16) | y_pos;
+
+	src_info->color = VSP_COLOR_NO;
+	src_info->master = (unsigned int)vir_param->pwd;
+	src_info->width = (unsigned int)vir_param->width;
+	src_info->height = (unsigned int)vir_param->height;
+	src_info->x_position = x_pos;
+	src_info->y_position = y_pos;
+
+	/* update source counter */
+	src_info->rpf_ch = 12;		/* virtual source in BRS */
+	ch_info->src_idx++;
+	ch_info->src_cnt++;
+
+	return 0;
+}
+
+
+/******************************************************************************
 Function:		vsp_ins_check_blend_control_param
 Description:	Check blend control parameter of BRU.
 Returns:		0/E_VSP_PARA_BLEND_RBC/E_VSP_PARA_BLEND_CROP
@@ -2573,6 +2675,159 @@ static long vsp_ins_check_bru_param(
 
 
 /******************************************************************************
+Function:		vsp_ins_check_brs_param
+Description:	Check module parameter of BRS.
+Returns:		0/E_VSP_PARA_NOBRS/E_VSP_PARA_BRS_LAYORDER
+	E_VSP_PARA_BRS_ADIV/E_VSP_PARA_BRS_DITH_BPP/E_VSP_PARA_BRS_DITH_MODE
+	E_VSP_PARA_BRS_CONNECT
+	return of vsp_ins_check_input_color_space_of_brs()
+	return of vsp_ins_check_brs_virtual_param()
+	return of vsp_ins_check_blend_control_param()
+******************************************************************************/
+static long vsp_ins_check_brs_param(
+	struct vsp_ch_info *ch_info, struct vsp_brs_t *brs_param)
+{
+	struct vsp_brs_info *brs_info = &ch_info->brs_info;
+
+	unsigned long order_tmp;
+	unsigned long order_bit;
+	unsigned char layer[VSP_BRS_MAX];
+
+	struct vsp_bld_dither_t **dith_unit;
+
+	unsigned char i;
+	long ercd;
+
+	/* initialise */
+	brs_info->val_inctrl = 0;
+
+	brs_info->val_vir_loc = 0;
+	brs_info->val_vir_color = 0;
+	brs_info->val_vir_size = 0;
+
+	/* check pointer */
+	if (brs_param == NULL)
+		return E_VSP_PARA_NOBRS;
+
+	/* check input color space */
+	ercd = vsp_ins_check_input_color_space_of_brs(ch_info);
+	if (ercd)
+		return ercd;
+
+	/* check lay_order */
+	order_tmp = brs_param->lay_order;
+	order_bit = 0;
+	for (i = 0; i < VSP_BRS_MAX; i++) {
+		layer[i] = (unsigned char)(order_tmp & 0xf);
+		order_bit |= (0x00000001UL << layer[i]); /* layer max 15 */
+
+		order_tmp >>= 4;
+	}
+	order_bit >>= 1;
+
+	if ((order_bit & 0xf) !=
+			((0x00000001UL << ch_info->brs_cnt) - 1))
+		return E_VSP_PARA_BRS_LAYORDER;
+
+	if (layer[VSP_BRS_DST_A] == VSP_LAY_NO)
+		return E_VSP_PARA_BRS_LAYORDER;
+
+	/* check adiv */
+	if ((brs_param->adiv != VSP_DIVISION_OFF) &&
+		(brs_param->adiv != VSP_DIVISION_ON))
+		return E_VSP_PARA_BRS_ADIV;
+
+	brs_info->val_inctrl = ((unsigned int)brs_param->adiv) << 28;
+
+	/* set dithering parameter */
+	dith_unit = &brs_param->dither_unit[0];
+	for (i = 0; i < ch_info->brs_cnt; i++) {
+		if (*dith_unit == NULL) {
+			/* disable dither unit */
+			/* no check */
+		} else {
+			/* enable dither unit */
+			if ((*dith_unit)->mode == VSP_DITH_COLOR_REDUCTION) {
+				if (((*dith_unit)->bpp != VSP_DITH_OFF) &&
+					((*dith_unit)->bpp != VSP_DITH_18BPP) &&
+					((*dith_unit)->bpp != VSP_DITH_16BPP) &&
+					((*dith_unit)->bpp != VSP_DITH_15BPP) &&
+					((*dith_unit)->bpp != VSP_DITH_12BPP) &&
+					((*dith_unit)->bpp != VSP_DITH_8BPP)) {
+					return E_VSP_PARA_BRS_DITH_BPP;
+				}
+				/* set color reduction dither */
+				brs_info->val_inctrl |= (0x1 << (i + 16));
+			} else if ((*dith_unit)->mode ==
+					VSP_DITH_ORDERED_DITHER) {
+				if ((*dith_unit)->bpp != VSP_DITH_18BPP)
+					return E_VSP_PARA_BRS_DITH_BPP;
+
+				/* set ordered dither */
+				brs_info->val_inctrl |=
+					(0x8 << (i * 4));
+			} else {
+				return E_VSP_PARA_BRS_DITH_MODE;
+			}
+
+			/* set number of color after dithering */
+			brs_info->val_inctrl |=
+				(((unsigned int)
+					(*dith_unit)->bpp) << (i * 4));
+		}
+
+		dith_unit++;
+	}
+
+	/* check blend virtual parameter */
+	if (order_bit & 0x10) {
+		ercd = vsp_ins_check_brs_virtual_param(
+			ch_info, brs_param->blend_virtual);
+		if (ercd)
+			return ercd;
+	}
+
+	/* check blend control UNIT A parameter */
+	ercd = vsp_ins_check_blend_control_param(
+		&brs_info->val_ctrl[0],
+		&brs_info->val_bld[0],
+		layer[VSP_BRS_DST_A],
+		layer[VSP_BRS_SRC_A],
+		brs_param->blend_unit_a
+	);
+	if (ercd)
+		return ercd;
+
+	/* check blend control UNIT B parameter */
+	ercd = vsp_ins_check_blend_control_param(
+		&brs_info->val_ctrl[1],
+		&brs_info->val_bld[1],
+		VSP_LAY_NO,
+		layer[VSP_BRS_SRC_B],
+		brs_param->blend_unit_b
+	);
+	if (ercd)
+		return ercd;
+
+
+	/* check connect parameter */
+	if (brs_param->connect & ~VSP_BRS_USABLE_DPR)
+		return E_VSP_PARA_BRS_CONNECT;
+
+	/* check connect parameter */
+	brs_info->val_dpr =
+		vsp_ins_get_dpr_route(ch_info, brs_param->connect, 0);
+	if (brs_info->val_dpr == VSP_DPR_ROUTE_NOT_USE)
+		return E_VSP_PARA_BRS_CONNECT;
+
+	/* add BRSSEL */
+	brs_info->val_dpr |= VSP_DPR_ROUTE_BRSSEL;
+
+	return 0;
+}
+
+
+/******************************************************************************
 Function:		vsp_ins_check_hgo_param
 Description:	Check module parameter of HGO.
 Returns:		0/E_VSP_PARA_NOHGO/E_VSP_PARA_HGO_ADR
@@ -2875,7 +3130,8 @@ static long vsp_ins_check_module_param(
 		processing_module = ch_info->next_module;
 
 		/* check duplicate */
-		if (processing_module != VSP_BRU_USE) {
+		if ((processing_module != VSP_BRU_USE) &&
+		    (processing_module != VSP_BRS_USE)) {
 			if (ch_info->reserved_module & processing_module)
 				return E_VSP_PARA_CONNECT;
 		}
@@ -3015,8 +3271,9 @@ static long vsp_ins_check_connection_module_from_rpf(
 
 /******************************************************************************
 Function:		vsp_ins_check_connection_module_from_bru
-Description:	Check connection module parameter from BRU.
+Description:	Check connection module parameter from BRU or BRS.
 Returns:		0/E_VSP_PARA_CONNECT
+	return of vsp_ins_check_brs_param()
 	return of vsp_ins_check_bru_param()
 	return of vsp_ins_check_master_layer()
 	return of vsp_ins_check_module_param()
@@ -3031,6 +3288,15 @@ static long vsp_ins_check_connection_module_from_bru(
 
 	/* check module parameter pointer */
 	/* already checked */
+
+	if (param->use_module & VSP_BRS_USE) {
+		/* check BRS parameter */
+		ercd = vsp_ins_check_brs_param(ch_info, param->ctrl_par->brs);
+		if (ercd)
+			return ercd;
+
+		ch_info->reserved_module |= VSP_BRS_USE;
+	}
 
 	if (param->use_module & VSP_BRU_USE) {
 		/* check BRU parameter */
@@ -3211,6 +3477,7 @@ long vsp_ins_check_start_parameter(
 	/* initialise */
 	ch_info->wpf_cnt = 0;
 	ch_info->bru_cnt = 0;
+	ch_info->brs_cnt = 0;
 
 	ch_info->reserved_rpf = 0;
 	ch_info->reserved_module = 0;

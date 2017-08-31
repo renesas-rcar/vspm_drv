@@ -241,6 +241,10 @@ static void vsp_ins_set_dl_for_dpr(
 	if (rdata->usable_module & VSP_BRU_USE)
 		dlwrite32(&body, VSP_DPR_BRU_ROUTE, VSP_DPR_ROUTE_NOT_USE);
 
+	/* blend ROP sub */
+	if (rdata->usable_module & VSP_BRS_USE)
+		dlwrite32(&body, VSP_DPR_BRS_ROUTE, VSP_DPR_ROUTE_NOT_USE);
+
 	/* histogram generator-one dimension */
 	if (rdata->usable_module & VSP_HGO_USE)
 		dlwrite32(&body, VSP_DPR_HGO_SMPPT, VSP_DPR_SMPPT_NOT_USE);
@@ -727,6 +731,52 @@ static void vsp_ins_set_dl_for_bru(
 
 
 /******************************************************************************
+Function:		vsp_ins_set_dl_for_brs
+Description:	Set BRS register value to display list.
+Returns:		void
+******************************************************************************/
+static void vsp_ins_set_dl_for_brs(
+	struct vsp_dl_head_info *head,
+	struct vsp_brs_info *brs_info,
+	struct vsp_brs_t *param)
+{
+	unsigned int *body0, *body;
+
+	/* set pointer */
+	body = (unsigned int *)head;
+	body += ((head->body_info[0].size + VSP_DL_HEAD_SIZE) >> 2);
+	body0 = body;
+
+	/* input control register */
+	dlwrite32(&body, VSP_BRS_INCTRL, brs_info->val_inctrl);
+
+	/* input virtual address */
+	dlwrite32(&body, VSP_BRS_VIRRPF_SIZE, brs_info->val_vir_size);
+
+	/* display location register */
+	dlwrite32(&body, VSP_BRS_VIRRPF_LOC, brs_info->val_vir_loc);
+
+	/* color information register */
+	dlwrite32(&body, VSP_BRS_VIRRPF_COL, brs_info->val_vir_color);
+
+	/* Blend/ROP UNIT A control register */
+	dlwrite32(&body, VSP_BRSA_CTRL, brs_info->val_ctrl[0]);
+	dlwrite32(&body, VSP_BRSA_BLD, brs_info->val_bld[0]);
+
+	/* Blend/ROP UNIT B control register */
+	dlwrite32(&body, VSP_BRSB_CTRL, brs_info->val_ctrl[1]);
+	dlwrite32(&body, VSP_BRSB_BLD, brs_info->val_bld[1]);
+
+	/* routing register */
+	dlwrite32(&body, VSP_DPR_BRS_ROUTE, brs_info->val_dpr);
+
+	/* add size */
+	head->body_info[0].size +=
+		(unsigned int)((unsigned long)(body) - (unsigned long)(body0));
+}
+
+
+/******************************************************************************
 Function:		vsp_ins_set_dl_for_hgo
 Description:	Set HGO register value to display list.
 Returns:		void
@@ -970,6 +1020,12 @@ static void vsp_ins_set_dl_for_module(
 	if (module & VSP_BRU_USE) {
 		vsp_ins_set_dl_for_bru(
 			head, &ch_info->bru_info, ctrl_param->bru);
+	}
+
+	/* set blend ROP sub parameter */
+	if (module & VSP_BRS_USE) {
+		vsp_ins_set_dl_for_brs(
+			head, &ch_info->brs_info, ctrl_param->brs);
 	}
 
 	/* set histogram generator-one dimension parameter */
@@ -2316,6 +2372,9 @@ long vsp_ins_get_vsp_resource(struct vsp_prv_data *prv)
 
 	if (of_property_read_bool(np, "renesas,has-bru"))
 		rdata->usable_module |= VSP_BRU_USE;
+
+	if (of_property_read_bool(np, "renesas,has-brs"))
+		rdata->usable_module |= VSP_BRS_USE;
 
 	if (of_property_read_bool(np, "renesas,has-hgo"))
 		rdata->usable_module |= VSP_HGO_USE;

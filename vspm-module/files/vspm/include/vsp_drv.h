@@ -191,6 +191,14 @@
 #define E_VSP_PARA_UDS_INWIDTH		(-360)	/* illegal input width */
 #define E_VSP_PARA_UDS_INHEIGHT		(-361)	/* illegal input height */
 
+#define E_VSP_PARA_BRS_LAYORDER		(-370)
+#define E_VSP_PARA_BRS_ADIV		(-371)
+#define E_VSP_PARA_BRS_DITH_MODE	(-372)	/* illegal dithering mode */
+#define E_VSP_PARA_BRS_DITH_BPP		(-373)	/* illegal dithering format */
+#define E_VSP_PARA_BRS_CONNECT		(-374)
+#define E_VSP_PARA_BRS_INHSV		(-375)	/* illegal input color space */
+#define E_VSP_PARA_BRS_INCOLOR		(-376)	/* different color space */
+
 #define E_VSP_PARA_LUT_ADR			(-600)	/* illegal DL address */
 #define E_VSP_PARA_LUT_SIZE			(-601)	/* illegal DL size */
 #define E_VSP_PARA_LUT_CONNECT		(-602)	/* illegal connecting module */
@@ -251,6 +259,8 @@
 #define E_VSP_BUSY_RPF_OVER			(-700)
 #define E_VSP_BUSY_MODULE_OVER		(-701)
 
+#define E_VSP_PARA_NOBRS			(-710)
+
 #define E_VSP_PARA_FCNL				(-740)
 
 /* struct vsp_start_t.use_module */
@@ -264,6 +274,7 @@
 #define VSP_HGO_USE		(0x0200) /* histogram generator-one */
 #define VSP_HGT_USE		(0x0400) /* histogram generator-two */
 #define VSP_SHP_USE		(0x0800) /* sharpness */
+#define VSP_BRS_USE		(0x1000) /* blend rop sub */
 
 /* RPF module parameter */
 /* input format */
@@ -864,6 +875,17 @@ struct vsp_bru_t {
 	unsigned long connect;
 };
 
+/* BRS parameter */
+struct vsp_brs_t {
+	unsigned long lay_order;
+	unsigned char adiv;
+	struct vsp_bld_dither_t *dither_unit[2];
+	struct vsp_bld_vir_t *blend_virtual;
+	struct vsp_bld_ctrl_t *blend_unit_a;
+	struct vsp_bld_ctrl_t *blend_unit_b;
+	unsigned long connect;
+};
+
 /* HGO parameter */
 struct vsp_hgo_t {
 	/* histogram detection window */
@@ -930,6 +952,7 @@ struct vsp_ctrl_t {
 	struct vsp_hst_t *hst;		/* hue saturation value transform */
 	struct vsp_hsi_t *hsi;		/* hue saturation value inverse */
 	struct vsp_bru_t *bru;		/* blend rop */
+	struct vsp_brs_t *brs;		/* blend rop sub */
 	struct vsp_hgo_t *hgo;		/* histogram generator-one */
 	struct vsp_hgt_t *hgt;		/* histogram generator-two */
 	struct vsp_shp_t *shp;		/* sharpness */
