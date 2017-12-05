@@ -237,7 +237,6 @@ static long fdp_ins_check_pic_param_for_pulldown(
 		switch (in_pic->picture_structure) {
 		case 0:
 			return E_FDP_PARA_REPEATTOP;
-			break;
 		case 1:
 		case 2:
 			if (in_pic->progressive_frame == 1)
@@ -257,7 +256,6 @@ static long fdp_ins_check_pic_param_for_pulldown(
 		case 1:
 		case 2:
 			return E_FDP_PARA_REPEATTOP;
-			break;
 		case 3:
 			if ((in_pic->repeat_first_field == 0) &&
 				(in_pic->top_field_first == 1))

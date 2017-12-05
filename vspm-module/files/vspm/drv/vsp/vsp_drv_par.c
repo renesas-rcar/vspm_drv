@@ -657,7 +657,6 @@ static long vsp_ins_check_rpf_format(
 			break;
 		default:
 			return E_VSP_PARA_IN_FORMAT;
-			break;
 		}
 	} else {	/* src_par->vir == VSP_VIR */
 		if ((src_par->format != VSP_IN_ARGB8888) &&
@@ -736,7 +735,6 @@ static long vsp_ins_check_ckey_unit_param(
 			break;
 		default:
 			return E_VSP_PARA_ALPHA_CKEY;
-			break;
 		}
 		rpf_info->val_ckey_set[0] = (unsigned int)ckey->color1;
 		rpf_info->val_ckey_set[1] = (unsigned int)ckey->color2;
@@ -1362,7 +1360,6 @@ static long vsp_ins_check_wpf_format(
 		break;
 	default:
 		return E_VSP_PARA_OUT_FORMAT;
-		break;
 	}
 
 	/* set format parameter */
@@ -1543,7 +1540,6 @@ static long vsp_ins_check_wpf_fcnl(
 				break;
 			default:
 				return E_VSP_PARA_OUT_ROTATION;
-				break;
 			}
 
 			/* check swap */
@@ -2142,7 +2138,6 @@ static long vsp_ins_check_clu_param(
 		break;
 	default:
 		return E_VSP_PARA_CLU_MODE;
-		break;
 	}
 
 	/* check connect parameter */

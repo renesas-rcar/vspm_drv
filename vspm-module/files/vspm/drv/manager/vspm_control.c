@@ -742,7 +742,6 @@ long vspm_ins_ctrl_entry_param_check(struct vspm_api_param_entry *entry)
 		EPRINT("%s Illegal type 0x%04x\n",
 			__func__, ip_par->type);
 		return R_VSPM_PARAERR;
-		break;
 	}
 
 	/* pre assign channel */
