@@ -159,7 +159,7 @@ static int send_message(
 	}
 
 	/* Allocate the send-message area */
-	snd_msg = kzalloc(sizeof(*snd_msg) , GFP_ATOMIC);
+	snd_msg = kzalloc(sizeof(*snd_msg), GFP_ATOMIC);
 	if (!snd_msg) {
 		EPRINT("failed to allocate memory!!\n");
 		return FW_NG;
@@ -172,7 +172,7 @@ static int send_message(
 	snd_msg->size = size;
 	if ((size) && (para)) {
 		/* Allocate the parameter area */
-		msg_para = kzalloc(size , GFP_ATOMIC);
+		msg_para = kzalloc(size, GFP_ATOMIC);
 		if (!msg_para) {
 			EPRINT("failed to allocate memory!!\n");
 			kfree(snd_msg);
