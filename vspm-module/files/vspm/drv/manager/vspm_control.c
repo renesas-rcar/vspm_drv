@@ -172,7 +172,7 @@ long vspm_ins_ctrl_initialize(struct vspm_drvdata *pdrv)
 
 	/* initialize the queue information table */
 	ercd = vspm_inc_sort_queue_initialize(&g_vspm_ctrl_info.queue_info);
-	if (R_VSPM_OK != ercd) {
+	if (ercd != R_VSPM_OK) {
 		EPRINT("failed to vspm_inc_sort_queue_initialize %ld\n", ercd);
 		return ercd;
 	}
@@ -352,7 +352,7 @@ long vspm_ins_ctrl_regist_entry(struct vspm_api_param_entry *entry)
 	/* Add a job information to the queue */
 	ercd = vspm_inc_sort_queue_entry(
 		&g_vspm_ctrl_info.queue_info, job_info);
-	if (R_VSPM_OK != ercd) {
+	if (ercd != R_VSPM_OK) {
 		/* Remove a job */
 		vspm_ins_job_remove(job_info);
 		EPRINT("failed to vspm_inc_sort_queue_entry %ld\n", ercd);
