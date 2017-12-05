@@ -1,63 +1,63 @@
 /*************************************************************************/ /*
- VSPM
-
- Copyright (C) 2015-2017 Renesas Electronics Corporation
-
- License        Dual MIT/GPLv2
-
- The contents of this file are subject to the MIT license as set out below.
-
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
-
- The above copyright notice and this permission notice shall be included in
- all copies or substantial portions of the Software.
-
- Alternatively, the contents of this file may be used under the terms of
- the GNU General Public License Version 2 ("GPL") in which case the provisions
- of GPL are applicable instead of those above.
-
- If you wish to allow use of your version of this file only under the terms of
- GPL, and not to allow others to use your version of this file under the terms
- of the MIT license, indicate your decision by deleting the provisions above
- and replace them with the notice and other provisions required by GPL as set
- out in the file called "GPL-COPYING" included in this distribution. If you do
- not delete the provisions above, a recipient may use your version of this file
- under the terms of either the MIT license or GPL.
-
- This License is also included in this distribution in the file called
- "MIT-COPYING".
-
- EXCEPT AS OTHERWISE STATED IN A NEGOTIATED AGREEMENT: (A) THE SOFTWARE IS
- PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
- BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
- PURPOSE AND NONINFRINGEMENT; AND (B) IN NO EVENT SHALL THE AUTHORS OR
- COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
- GPLv2:
- If you wish to use this file under the terms of GPL, following terms are
- effective.
-
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; version 2 of the License.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software
- Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/ /*************************************************************************/
+ * VSPM
+ *
+ * Copyright (C) 2015-2017 Renesas Electronics Corporation
+ *
+ * License        Dual MIT/GPLv2
+ *
+ * The contents of this file are subject to the MIT license as set out below.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * the GNU General Public License Version 2 ("GPL") in which case the provisions
+ * of GPL are applicable instead of those above.
+ *
+ * If you wish to allow use of your version of this file only under the terms of
+ * GPL, and not to allow others to use your version of this file under the terms
+ * of the MIT license, indicate your decision by deleting the provisions above
+ * and replace them with the notice and other provisions required by GPL as set
+ * out in the file called "GPL-COPYING" included in this distribution. If you do
+ * not delete the provisions above, a recipient may use your version of this
+ * file under the terms of either the MIT license or GPL.
+ *
+ * This License is also included in this distribution in the file called
+ * "MIT-COPYING".
+ *
+ * EXCEPT AS OTHERWISE STATED IN A NEGOTIATED AGREEMENT: (A) THE SOFTWARE IS
+ * PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT; AND (B) IN NO EVENT SHALL THE AUTHORS
+ * OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+ * IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *
+ * GPLv2:
+ * If you wish to use this file under the terms of GPL, following terms are
+ * effective.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */ /*************************************************************************/
 
 #include <linux/platform_device.h>
 #include <linux/of.h>
@@ -117,10 +117,10 @@ static const unsigned int vsp_tbl_sru_param[VSP_SCL_LEVEL_MAX][3] = {
 };
 
 /******************************************************************************
-Function:		vsp_write_reg
-Description:	Write to register
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_write_reg
+ * Description:	Write to register
+ * Returns:		void
+ ******************************************************************************/
 inline void vsp_write_reg(
 	unsigned int data, void __iomem *base, unsigned int offset)
 {
@@ -132,10 +132,10 @@ inline void vsp_write_reg(
 
 
 /******************************************************************************
-Function:		vsp_read_reg
-Description:	Read from register
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_read_reg
+ * Description:	Read from register
+ * Returns:		void
+ ******************************************************************************/
 inline unsigned int vsp_read_reg(void __iomem *base, unsigned int offset)
 {
 	unsigned int __iomem *reg =
@@ -146,10 +146,10 @@ inline unsigned int vsp_read_reg(void __iomem *base, unsigned int offset)
 
 
 /******************************************************************************
-Function:		dlwrite32
-Description:	Set register offset and data to display list
-Returns:		void
-******************************************************************************/
+ * Function:		dlwrite32
+ * Description:	Set register offset and data to display list
+ * Returns:		void
+ ******************************************************************************/
 inline void dlwrite32(
 	unsigned int **data, unsigned int reg_offset, unsigned int reg_data)
 {
@@ -158,10 +158,10 @@ inline void dlwrite32(
 }
 
 /******************************************************************************
-Function:		dlrewrite32_lut
-Description:	Rewirte CLUT table for LUT/RPF to display list.
-Returns:		void
-******************************************************************************/
+ * Function:		dlrewrite32_lut
+ * Description:	Rewirte CLUT table for LUT/RPF to display list.
+ * Returns:		void
+ ******************************************************************************/
 static void dlrewrite32_lut(struct vsp_dl_t *clut, unsigned int reg_offset)
 {
 	unsigned int *data = (unsigned int *)(clut->virt_addr);
@@ -178,10 +178,10 @@ static void dlrewrite32_lut(struct vsp_dl_t *clut, unsigned int reg_offset)
 
 
 /******************************************************************************
-Function:		vsp_ins_set_dl_for_dpr
-Description:	Set DPR register value to display list.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_set_dl_for_dpr
+ * Description:	Set DPR register value to display list.
+ * Returns:		void
+ ******************************************************************************/
 static void vsp_ins_set_dl_for_dpr(
 	struct vsp_dl_head_info *head, struct vsp_prv_data *prv)
 {
@@ -264,10 +264,10 @@ static void vsp_ins_set_dl_for_dpr(
 
 
 /******************************************************************************
-Function:		vsp_ins_set_dl_for_rpf
-Description:	Set RPF register value to display list.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_set_dl_for_rpf
+ * Description:	Set RPF register value to display list.
+ * Returns:		void
+ ******************************************************************************/
 static void vsp_ins_set_dl_for_rpf(
 	struct vsp_dl_head_info *head,
 	struct vsp_ch_info *ch_info,
@@ -367,10 +367,10 @@ static void vsp_ins_set_dl_for_rpf(
 
 
 /******************************************************************************
-Function:		vsp_ins_set_dl_for_wpf
-Description:	Set WPF register value to display list.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_set_dl_for_wpf
+ * Description:	Set WPF register value to display list.
+ * Returns:		void
+ ******************************************************************************/
 static void vsp_ins_set_dl_for_wpf(
 	struct vsp_dl_head_info *head,
 	struct vsp_ch_info *ch_info,
@@ -437,10 +437,10 @@ static void vsp_ins_set_dl_for_wpf(
 
 
 /******************************************************************************
-Function:		vsp_ins_set_dl_for_sru
-Description:	Set SRU register value to display list.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_set_dl_for_sru
+ * Description:	Set SRU register value to display list.
+ * Returns:		void
+ ******************************************************************************/
 static void vsp_ins_set_dl_for_sru(
 	struct vsp_dl_head_info *head,
 	struct vsp_sru_info *sru_info,
@@ -479,10 +479,10 @@ static void vsp_ins_set_dl_for_sru(
 
 
 /******************************************************************************
-Function:		vsp_ins_set_dl_for_uds
-Description:	Set UDS register value to display list.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_set_dl_for_uds
+ * Description:	Set UDS register value to display list.
+ * Returns:		void
+ ******************************************************************************/
 static void vsp_ins_set_dl_for_uds(
 	struct vsp_dl_head_info *head,
 	struct vsp_uds_info *uds_info,
@@ -540,10 +540,10 @@ static void vsp_ins_set_dl_for_uds(
 
 
 /******************************************************************************
-Function:		vsp_ins_set_dl_for_lut
-Description:	Set LUT register value to display list.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_set_dl_for_lut
+ * Description:	Set LUT register value to display list.
+ * Returns:		void
+ ******************************************************************************/
 static void vsp_ins_set_dl_for_lut(
 	struct vsp_dl_head_info *head,
 	struct vsp_lut_info *lut_info,
@@ -575,10 +575,10 @@ static void vsp_ins_set_dl_for_lut(
 
 
 /******************************************************************************
-Function:		vsp_ins_set_dl_for_clu
-Description:	Set CLU register value to display list.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_set_dl_for_clu
+ * Description:	Set CLU register value to display list.
+ * Returns:		void
+ ******************************************************************************/
 static void vsp_ins_set_dl_for_clu(
 	struct vsp_dl_head_info *head,
 	struct vsp_clu_info *clu_info,
@@ -616,10 +616,10 @@ static void vsp_ins_set_dl_for_clu(
 
 
 /******************************************************************************
-Function:		vsp_ins_set_dl_for_hst
-Description:	Set HST register value to display list.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_set_dl_for_hst
+ * Description:	Set HST register value to display list.
+ * Returns:		void
+ ******************************************************************************/
 static void vsp_ins_set_dl_for_hst(
 	struct vsp_dl_head_info *head, struct vsp_hst_info *hst_info)
 {
@@ -643,10 +643,10 @@ static void vsp_ins_set_dl_for_hst(
 
 
 /******************************************************************************
-Function:		vsp_ins_set_dl_for_hsi
-Description:	Set HSI register value to display list.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_set_dl_for_hsi
+ * Description:	Set HSI register value to display list.
+ * Returns:		void
+ ******************************************************************************/
 static void vsp_ins_set_dl_for_hsi(
 	struct vsp_dl_head_info *head, struct vsp_hsi_info *hsi_info)
 {
@@ -670,10 +670,10 @@ static void vsp_ins_set_dl_for_hsi(
 
 
 /******************************************************************************
-Function:		vsp_ins_set_dl_for_bru
-Description:	Set BRU register value to display list.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_set_dl_for_bru
+ * Description:	Set BRU register value to display list.
+ * Returns:		void
+ ******************************************************************************/
 static void vsp_ins_set_dl_for_bru(
 	struct vsp_dl_head_info *head,
 	struct vsp_bru_info *bru_info,
@@ -731,10 +731,10 @@ static void vsp_ins_set_dl_for_bru(
 
 
 /******************************************************************************
-Function:		vsp_ins_set_dl_for_brs
-Description:	Set BRS register value to display list.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_set_dl_for_brs
+ * Description:	Set BRS register value to display list.
+ * Returns:		void
+ ******************************************************************************/
 static void vsp_ins_set_dl_for_brs(
 	struct vsp_dl_head_info *head,
 	struct vsp_brs_info *brs_info,
@@ -777,10 +777,10 @@ static void vsp_ins_set_dl_for_brs(
 
 
 /******************************************************************************
-Function:		vsp_ins_set_dl_for_hgo
-Description:	Set HGO register value to display list.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_set_dl_for_hgo
+ * Description:	Set HGO register value to display list.
+ * Returns:		void
+ ******************************************************************************/
 static void vsp_ins_set_dl_for_hgo(
 	struct vsp_dl_head_info *head,
 	struct vsp_prv_data *prv,
@@ -836,10 +836,10 @@ static void vsp_ins_set_dl_for_hgo(
 
 
 /******************************************************************************
-Function:		vsp_ins_set_dl_for_hgt
-Description:	Set HGT register value to display list.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_set_dl_for_hgt
+ * Description:	Set HGT register value to display list.
+ * Returns:		void
+ ******************************************************************************/
 static void vsp_ins_set_dl_for_hgt(
 	struct vsp_dl_head_info *head,
 	struct vsp_prv_data *prv,
@@ -924,10 +924,10 @@ static void vsp_ins_set_dl_for_hgt(
 }
 
 /******************************************************************************
-Function:		vsp_ins_set_dl_for_shp
-Description:	Set SHP register value to display list.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_set_dl_for_shp
+ * Description:	Set SHP register value to display list.
+ * Returns:		void
+ ******************************************************************************/
 static void vsp_ins_set_dl_for_shp(
 	struct vsp_dl_head_info *head,
 	struct vsp_shp_info *shp_info,
@@ -972,10 +972,10 @@ static void vsp_ins_set_dl_for_shp(
 
 
 /******************************************************************************
-Function:		vsp_ins_set_dl_for_module
-Description:	Set modules register value to display list.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_set_dl_for_module
+ * Description:	Set modules register value to display list.
+ * Returns:		void
+ ******************************************************************************/
 static void vsp_ins_set_dl_for_module(
 	struct vsp_dl_head_info *head,
 	struct vsp_prv_data *prv,
@@ -1045,10 +1045,10 @@ static void vsp_ins_set_dl_for_module(
 
 
 /******************************************************************************
-Function:		vsp_ins_set_part_full
-Description:	Set all registers value to display list.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_set_part_full
+ * Description:	Set all registers value to display list.
+ * Returns:		void
+ ******************************************************************************/
 static void vsp_ins_set_part_full(
 	struct vsp_prv_data *prv, struct vsp_start_t *st_par)
 {
@@ -1095,10 +1095,10 @@ static void vsp_ins_set_part_full(
 
 
 /******************************************************************************
-Function:		vsp_ins_set_part_diff
-Description:	Set diff registers value to display list.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_set_part_diff
+ * Description:	Set diff registers value to display list.
+ * Returns:		void
+ ******************************************************************************/
 static void vsp_ins_set_part_diff(
 	struct vsp_ch_info *ch_info, struct vsp_start_t *st_par)
 {
@@ -1225,10 +1225,10 @@ static void vsp_ins_set_part_diff(
 
 
 /******************************************************************************
-Function:		vsp_ins_get_bpp_luma
-Description:	Get byte per pixel of RGB/Y.
-Returns:		byte per pixel.
-******************************************************************************/
+ * Function:		vsp_ins_get_bpp_luma
+ * Description:	Get byte per pixel of RGB/Y.
+ * Returns:		byte per pixel.
+ ******************************************************************************/
 unsigned int vsp_ins_get_bpp_luma(
 	unsigned short format, unsigned short offset)
 {
@@ -1266,10 +1266,10 @@ unsigned int vsp_ins_get_bpp_luma(
 
 
 /******************************************************************************
-Function:		vsp_ins_get_bpp_chroma
-Description:	Get byte per pixel of choroma.
-Returns:		byte per pixel.
-******************************************************************************/
+ * Function:		vsp_ins_get_bpp_chroma
+ * Description:	Get byte per pixel of choroma.
+ * Returns:		byte per pixel.
+ ******************************************************************************/
 unsigned int vsp_ins_get_bpp_chroma(
 	unsigned short format, unsigned short offset)
 {
@@ -1301,10 +1301,10 @@ unsigned int vsp_ins_get_bpp_chroma(
 
 
 /******************************************************************************
-Function:		vsp_ins_get_line_luma
-Description:	Get byte per line of RGB/Y.
-Returns:		byte per line.
-******************************************************************************/
+ * Function:		vsp_ins_get_line_luma
+ * Description:	Get byte per line of RGB/Y.
+ * Returns:		byte per line.
+ ******************************************************************************/
 unsigned int vsp_ins_get_line_luma(
 	unsigned short format, unsigned short offset)
 {
@@ -1316,10 +1316,10 @@ unsigned int vsp_ins_get_line_luma(
 
 
 /******************************************************************************
-Function:		vsp_ins_get_line_chroma
-Description:	Get byte per line of chroma.
-Returns:		byte per line.
-******************************************************************************/
+ * Function:		vsp_ins_get_line_chroma
+ * Description:	Get byte per line of chroma.
+ * Returns:		byte per line.
+ ******************************************************************************/
 unsigned int vsp_ins_get_line_chroma(
 	unsigned short format, unsigned short offset)
 {
@@ -1333,10 +1333,10 @@ unsigned int vsp_ins_get_line_chroma(
 
 
 /******************************************************************************
-Function:		vsp_ins_replace_part_src_addr
-Description:	Replace source address of partition.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_replace_part_src_addr
+ * Description:	Replace source address of partition.
+ * Returns:		void
+ ******************************************************************************/
 static void vsp_ins_replace_part_src_addr(
 	struct vsp_part_info *part_info,
 	struct vsp_rpf_info *rpf_info,
@@ -1365,10 +1365,10 @@ static void vsp_ins_replace_part_src_addr(
 
 
 /******************************************************************************
-Function:		vsp_ins_replace_part_dst_addr
-Description:	Replace destination address of partition.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_replace_part_dst_addr
+ * Description:	Replace destination address of partition.
+ * Returns:		void
+ ******************************************************************************/
 static void vsp_ins_replace_part_dst_addr(
 	struct vsp_ch_info *ch_info,
 	struct vsp_dst_t *dst_par,
@@ -1424,10 +1424,10 @@ static void vsp_ins_replace_part_dst_addr(
 
 
 /******************************************************************************
-Function:		vsp_ins_replace_part_uds_module
-Description:	Replace UDS module of partition.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_replace_part_uds_module
+ * Description:	Replace UDS module of partition.
+ * Returns:		void
+ ******************************************************************************/
 static void vsp_ins_replace_part_uds_module(
 	struct vsp_ch_info *ch_info,
 	struct vsp_start_t *st_par,
@@ -1496,10 +1496,10 @@ static void vsp_ins_replace_part_uds_module(
 
 
 /******************************************************************************
-Function:		vsp_ins_replace_part_rpf_module
-Description:	Replace RPF module of partition.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_replace_part_rpf_module
+ * Description:	Replace RPF module of partition.
+ * Returns:		void
+ ******************************************************************************/
 static void vsp_ins_replace_part_rpf_module(
 	struct vsp_ch_info *ch_info,
 	struct vsp_start_t *st_par,
@@ -1561,10 +1561,10 @@ static void vsp_ins_replace_part_rpf_module(
 
 
 /******************************************************************************
-Function:		vsp_ins_replace_part_connection_module
-Description:	Replace connecting module of partition.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_replace_part_connection_module
+ * Description:	Replace connecting module of partition.
+ * Returns:		void
+ ******************************************************************************/
 static void vsp_ins_replace_part_connection_module(
 	struct vsp_ch_info *ch_info,
 	struct vsp_start_t *st_par,
@@ -1617,10 +1617,10 @@ static void vsp_ins_replace_part_connection_module(
 
 
 /******************************************************************************
-Function:		vsp_ins_get_part_offset
-Description:	Get source offset value of partition.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_get_part_offset
+ * Description:	Get source offset value of partition.
+ * Returns:		void
+ ******************************************************************************/
 static void vsp_ins_get_part_offset(
 	struct vsp_ch_info *ch_info,
 	struct vsp_start_t *st_par,
@@ -1667,10 +1667,10 @@ static void vsp_ins_get_part_offset(
 
 
 /******************************************************************************
-Function:		vsp_ins_get_part_sampling_offset
-Description:	Get sampling offset of partition.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_get_part_sampling_offset
+ * Description:	Get sampling offset of partition.
+ * Returns:		void
+ ******************************************************************************/
 static void vsp_ins_get_part_sampling_offset(
 	struct vsp_start_t *st_par,
 	unsigned long sampling,
@@ -1753,10 +1753,10 @@ static void vsp_ins_get_part_sampling_offset(
 
 
 /******************************************************************************
-Function:		vsp_ins_replace_part_window_of_hgo
-Description:	Replace HGO detect window of partition.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_replace_part_window_of_hgo
+ * Description:	Replace HGO detect window of partition.
+ * Returns:		void
+ ******************************************************************************/
 static void vsp_ins_replace_part_window_of_hgo(
 	struct vsp_ch_info *ch_info,
 	struct vsp_start_t *st_par,
@@ -1801,10 +1801,10 @@ static void vsp_ins_replace_part_window_of_hgo(
 
 
 /******************************************************************************
-Function:		vsp_ins_replace_part_window_of_hgt
-Description:	Replace HGT detect window of partition.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_replace_part_window_of_hgt
+ * Description:	Replace HGT detect window of partition.
+ * Returns:		void
+ ******************************************************************************/
 static void vsp_ins_replace_part_window_of_hgt(
 	struct vsp_ch_info *ch_info,
 	struct vsp_start_t *st_par,
@@ -1849,10 +1849,10 @@ static void vsp_ins_replace_part_window_of_hgt(
 
 
 /******************************************************************************
-Function:		vsp_ins_replace_part_independent_module
-Description:	Replace independent module of partition.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_replace_part_independent_module
+ * Description:	Replace independent module of partition.
+ * Returns:		void
+ ******************************************************************************/
 static void vsp_ins_replace_part_independent_module(
 	struct vsp_ch_info *ch_info,
 	struct vsp_start_t *st_par,
@@ -1921,10 +1921,10 @@ static void vsp_ins_replace_part_independent_module(
 
 
 /******************************************************************************
-Function:		vsp_ins_set_part_parameter
-Description:	Set partition parameter.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_set_part_parameter
+ * Description:	Set partition parameter.
+ * Returns:		void
+ ******************************************************************************/
 static void vsp_ins_set_part_parameter(
 	struct vsp_prv_data *prv, struct vsp_start_t *st_par)
 {
@@ -1998,10 +1998,10 @@ static void vsp_ins_set_part_parameter(
 
 
 /******************************************************************************
-Function:		vsp_ins_get_hgo_register
-Description:	Get histogram from HGO register.
-Returns:		0
-******************************************************************************/
+ * Function:		vsp_ins_get_hgo_register
+ * Description:	Get histogram from HGO register.
+ * Returns:		0
+ ******************************************************************************/
 static long vsp_ins_get_hgo_register(struct vsp_prv_data *prv)
 {
 	struct vsp_res_data *rdata = &prv->rdata;
@@ -2063,10 +2063,10 @@ static long vsp_ins_get_hgo_register(struct vsp_prv_data *prv)
 
 
 /******************************************************************************
-Function:		vsp_ins_get_hgt_register
-Description:	Get histogram from HGT register.
-Returns:		0
-******************************************************************************/
+ * Function:		vsp_ins_get_hgt_register
+ * Description:	Get histogram from HGT register.
+ * Returns:		0
+ ******************************************************************************/
 static long vsp_ins_get_hgt_register(struct vsp_prv_data *prv)
 {
 	struct vsp_res_data *rdata = &prv->rdata;
@@ -2095,12 +2095,12 @@ static long vsp_ins_get_hgt_register(struct vsp_prv_data *prv)
 
 
 /******************************************************************************
-Function:		vsp_ins_get_module_register
-Description:	Get module register value.
-Returns:		0
-	return of vsp_ins_get_hgo_register()
-	return of vsp_ins_get_hgt_register()
-******************************************************************************/
+ * Function:		vsp_ins_get_module_register
+ * Description:	Get module register value.
+ * Returns:		0
+ *	return of vsp_ins_get_hgo_register()
+ *	return of vsp_ins_get_hgt_register()
+ ******************************************************************************/
 static long vsp_ins_get_module_register(
 	struct vsp_prv_data *prv, unsigned long module)
 {
@@ -2125,10 +2125,10 @@ static long vsp_ins_get_module_register(
 
 
 /******************************************************************************
-Function:		vsp_ins_set_start_parameter
-Description:	Set vsp_start_t parameter.
-Returns:		0
-******************************************************************************/
+ * Function:		vsp_ins_set_start_parameter
+ * Description:	Set vsp_start_t parameter.
+ * Returns:		0
+ ******************************************************************************/
 long vsp_ins_set_start_parameter(
 	struct vsp_prv_data *prv, struct vsp_start_t *param)
 {
@@ -2150,10 +2150,10 @@ long vsp_ins_set_start_parameter(
 
 
 /******************************************************************************
-Function:		vsp_ins_start_processing
-Description:	Start VSP processing.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_start_processing
+ * Description:	Start VSP processing.
+ * Returns:		void
+ ******************************************************************************/
 void vsp_ins_start_processing(struct vsp_prv_data *prv)
 {
 	struct vsp_res_data *rdata = &prv->rdata;
@@ -2197,10 +2197,10 @@ void vsp_ins_start_processing(struct vsp_prv_data *prv)
 
 
 /******************************************************************************
-Function:		vsp_ins_stop_processing
-Description:	Forced stop VSP processing.
-Returns:		0
-******************************************************************************/
+ * Function:		vsp_ins_stop_processing
+ * Description:	Forced stop VSP processing.
+ * Returns:		0
+ ******************************************************************************/
 long vsp_ins_stop_processing(struct vsp_prv_data *prv)
 {
 	unsigned int status;
@@ -2283,10 +2283,10 @@ long vsp_ins_stop_processing(struct vsp_prv_data *prv)
 
 
 /******************************************************************************
-Function:		vsp_ins_wait_processing
-Description:	Waiting VSP processing.
-Returns:		0
-******************************************************************************/
+ * Function:		vsp_ins_wait_processing
+ * Description:	Waiting VSP processing.
+ * Returns:		0
+ ******************************************************************************/
 long vsp_ins_wait_processing(struct vsp_prv_data *prv)
 {
 	unsigned int loop_cnt = VSP_STATUS_LOOP_CNT;
@@ -2311,10 +2311,10 @@ long vsp_ins_wait_processing(struct vsp_prv_data *prv)
 
 
 /******************************************************************************
-Function:		vsp_ins_software_reset
-Description:	Software reset of VSP and FCP.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_software_reset
+ * Description:	Software reset of VSP and FCP.
+ * Returns:		void
+ ******************************************************************************/
 static void vsp_ins_software_reset(struct vsp_prv_data *prv)
 {
 	/* Forced stop the VSP processing */
@@ -2323,10 +2323,10 @@ static void vsp_ins_software_reset(struct vsp_prv_data *prv)
 
 
 /******************************************************************************
-Function:		vsp_ins_get_vsp_resource
-Description:	Get VSP resource.
-Returns:		0/E_VSP_PARA_INPAR
-******************************************************************************/
+ * Function:		vsp_ins_get_vsp_resource
+ * Description:	Get VSP resource.
+ * Returns:		0/E_VSP_PARA_INPAR
+ ******************************************************************************/
 long vsp_ins_get_vsp_resource(struct vsp_prv_data *prv)
 {
 	struct device_node *np = prv->pdev->dev.of_node;
@@ -2410,10 +2410,10 @@ long vsp_ins_get_vsp_resource(struct vsp_prv_data *prv)
 
 
 /******************************************************************************
-Function:		vsp_ins_enable_clock
-Description:	Enable VSP/FCP clock supply.
-Returns:		0/E_VSP_NO_CLK
-******************************************************************************/
+ * Function:		vsp_ins_enable_clock
+ * Description:	Enable VSP/FCP clock supply.
+ * Returns:		0/E_VSP_NO_CLK
+ ******************************************************************************/
 long vsp_ins_enable_clock(struct vsp_prv_data *prv)
 {
 	struct platform_device *pdev = prv->pdev;
@@ -2434,10 +2434,10 @@ long vsp_ins_enable_clock(struct vsp_prv_data *prv)
 
 
 /******************************************************************************
-Function:		vsp_ins_disable_clock
-Description:	Disable VSP/FCP clock supply.
-Returns:		0
-******************************************************************************/
+ * Function:		vsp_ins_disable_clock
+ * Description:	Disable VSP/FCP clock supply.
+ * Returns:		0
+ ******************************************************************************/
 long vsp_ins_disable_clock(struct vsp_prv_data *prv)
 {
 	struct platform_device *pdev = prv->pdev;
@@ -2450,10 +2450,10 @@ long vsp_ins_disable_clock(struct vsp_prv_data *prv)
 
 
 /******************************************************************************
-Function:		vsp_ins_init_vsp_reg
-Description:	Initialize VSP hardware.
-Returns:		0
-******************************************************************************/
+ * Function:		vsp_ins_init_vsp_reg
+ * Description:	Initialize VSP hardware.
+ * Returns:		0
+ ******************************************************************************/
 static long vsp_ins_init_vsp_reg(struct vsp_prv_data *prv)
 {
 	struct vsp_res_data *rdata = &prv->rdata;
@@ -2508,10 +2508,10 @@ static long vsp_ins_init_vsp_reg(struct vsp_prv_data *prv)
 }
 
 /******************************************************************************
-Function:		vsp_ins_init_fcp_reg
-Description:	Initialize FCP hardware.
-Returns:		0
-******************************************************************************/
+ * Function:		vsp_ins_init_fcp_reg
+ * Description:	Initialize FCP hardware.
+ * Returns:		0
+ ******************************************************************************/
 static long vsp_ins_init_fcp_reg(struct vsp_prv_data *prv)
 {
 	/* set configuration register */
@@ -2523,12 +2523,12 @@ static long vsp_ins_init_fcp_reg(struct vsp_prv_data *prv)
 
 
 /******************************************************************************
-Function:		vsp_ins_init_reg
-Description:	Initialize hardware register.
-Returns:		0/E_VSP_DEF_REG
-	return of vsp_ins_init_vsp_reg()
-	return of vsp_ins_init_fcp_reg()
-******************************************************************************/
+ * Function:		vsp_ins_init_reg
+ * Description:	Initialize hardware register.
+ * Returns:		0/E_VSP_DEF_REG
+ *	return of vsp_ins_init_vsp_reg()
+ *	return of vsp_ins_init_fcp_reg()
+ ******************************************************************************/
 long vsp_ins_init_reg(struct vsp_prv_data *prv)
 {
 	struct resource *res;
@@ -2580,10 +2580,10 @@ long vsp_ins_init_reg(struct vsp_prv_data *prv)
 
 
 /******************************************************************************
-Function:		vsp_ins_quit_reg
-Description:	Finalize VSP hardware.
-Returns:		0
-******************************************************************************/
+ * Function:		vsp_ins_quit_reg
+ * Description:	Finalize VSP hardware.
+ * Returns:		0
+ ******************************************************************************/
 long vsp_ins_quit_reg(struct vsp_prv_data *prv)
 {
 	/* unmap an I/O register of FCP */
@@ -2603,10 +2603,10 @@ long vsp_ins_quit_reg(struct vsp_prv_data *prv)
 
 
 /******************************************************************************
-Function:		vsp_ins_cb_function
-Description:	Callback function processing.
-Returns:		void
-******************************************************************************/
+ * Function:		vsp_ins_cb_function
+ * Description:	Callback function processing.
+ * Returns:		void
+ ******************************************************************************/
 void vsp_ins_cb_function(struct vsp_prv_data *prv, long ercd)
 {
 	struct vsp_ch_info *ch_info;
@@ -2652,10 +2652,10 @@ void vsp_ins_cb_function(struct vsp_prv_data *prv, long ercd)
 
 
 /******************************************************************************
-Function:		vsp_ins_ih
-Description:	Interrupt handler.
-Returns:		IRQ_HANDLED
-******************************************************************************/
+ * Function:		vsp_ins_ih
+ * Description:	Interrupt handler.
+ * Returns:		IRQ_HANDLED
+ ******************************************************************************/
 static irqreturn_t vsp_ins_ih(int irq, void *dev)
 {
 	struct vsp_prv_data *prv = (struct vsp_prv_data *)dev;
@@ -2687,10 +2687,10 @@ static irqreturn_t vsp_ins_ih(int irq, void *dev)
 
 
 /******************************************************************************
-Function:		vsp_ins_reg_ih
-Description:	Registory interrupt handler.
-Returns:		0/E_VSP_DEF_INH
-******************************************************************************/
+ * Function:		vsp_ins_reg_ih
+ * Description:	Registory interrupt handler.
+ * Returns:		0/E_VSP_DEF_INH
+ ******************************************************************************/
 long vsp_ins_reg_ih(struct vsp_prv_data *prv)
 {
 	int ercd;
@@ -2721,10 +2721,10 @@ long vsp_ins_reg_ih(struct vsp_prv_data *prv)
 
 
 /******************************************************************************
-Function:		vsp_ins_unreg_ih
-Description:	Unregistory interrupt handler.
-Returns:		0
-******************************************************************************/
+ * Function:		vsp_ins_unreg_ih
+ * Description:	Unregistory interrupt handler.
+ * Returns:		0
+ ******************************************************************************/
 long vsp_ins_unreg_ih(struct vsp_prv_data *prv)
 {
 	/* release interrupt handler */

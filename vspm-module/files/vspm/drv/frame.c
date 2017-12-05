@@ -1,63 +1,63 @@
 /*************************************************************************/ /*
- VSPM
-
- Copyright (C) 2015-2017 Renesas Electronics Corporation
-
- License        Dual MIT/GPLv2
-
- The contents of this file are subject to the MIT license as set out below.
-
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
-
- The above copyright notice and this permission notice shall be included in
- all copies or substantial portions of the Software.
-
- Alternatively, the contents of this file may be used under the terms of
- the GNU General Public License Version 2 ("GPL") in which case the provisions
- of GPL are applicable instead of those above.
-
- If you wish to allow use of your version of this file only under the terms of
- GPL, and not to allow others to use your version of this file under the terms
- of the MIT license, indicate your decision by deleting the provisions above
- and replace them with the notice and other provisions required by GPL as set
- out in the file called "GPL-COPYING" included in this distribution. If you do
- not delete the provisions above, a recipient may use your version of this file
- under the terms of either the MIT license or GPL.
-
- This License is also included in this distribution in the file called
- "MIT-COPYING".
-
- EXCEPT AS OTHERWISE STATED IN A NEGOTIATED AGREEMENT: (A) THE SOFTWARE IS
- PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
- BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
- PURPOSE AND NONINFRINGEMENT; AND (B) IN NO EVENT SHALL THE AUTHORS OR
- COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
- GPLv2:
- If you wish to use this file under the terms of GPL, following terms are
- effective.
-
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; version 2 of the License.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software
- Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/ /*************************************************************************/
+ * VSPM
+ *
+ * Copyright (C) 2015-2017 Renesas Electronics Corporation
+ *
+ * License        Dual MIT/GPLv2
+ *
+ * The contents of this file are subject to the MIT license as set out below.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * the GNU General Public License Version 2 ("GPL") in which case the provisions
+ * of GPL are applicable instead of those above.
+ *
+ * If you wish to allow use of your version of this file only under the terms of
+ * GPL, and not to allow others to use your version of this file under the terms
+ * of the MIT license, indicate your decision by deleting the provisions above
+ * and replace them with the notice and other provisions required by GPL as set
+ * out in the file called "GPL-COPYING" included in this distribution. If you do
+ * not delete the provisions above, a recipient may use your version of this
+ * file under the terms of either the MIT license or GPL.
+ *
+ * This License is also included in this distribution in the file called
+ * "MIT-COPYING".
+ *
+ * EXCEPT AS OTHERWISE STATED IN A NEGOTIATED AGREEMENT: (A) THE SOFTWARE IS
+ * PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT; AND (B) IN NO EVENT SHALL THE AUTHORS
+ * OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+ * IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *
+ * GPLv2:
+ * If you wish to use this file under the terms of GPL, following terms are
+ * effective.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */ /*************************************************************************/
 
 #include <linux/slab.h>
 #include <linux/sched.h>
@@ -105,10 +105,10 @@ struct fw_task_ctl {
 static struct fw_task_ctl task_ctl;
 
 /******************************************************************************
-Function:		get_task_info
-Description:	get a task information.
-Returns:		Pointer to a task information
-******************************************************************************/
+ * Function:		get_task_info
+ * Description:	get a task information.
+ * Returns:		Pointer to a task information
+ ******************************************************************************/
 static struct fw_task_info *get_task_info(unsigned short tid)
 {
 	struct fw_task_info *task_info = NULL;
@@ -133,10 +133,10 @@ static struct fw_task_info *get_task_info(unsigned short tid)
 
 
 /******************************************************************************
-Function:		send_message
-Description:	send a message.
-Returns:		FW_OK/FW_NG
-******************************************************************************/
+ * Function:		send_message
+ * Description:	send a message.
+ * Returns:		FW_OK/FW_NG
+ ******************************************************************************/
 static int send_message(
 	unsigned short tid,
 	short msg_id,
@@ -206,10 +206,10 @@ static int send_message(
 
 
 /******************************************************************************
-Function:		recieve_message
-Description:	wait to receive a message.
-Returns:		FW_OK/FW_NG
-******************************************************************************/
+ * Function:		recieve_message
+ * Description:	wait to receive a message.
+ * Returns:		FW_OK/FW_NG
+ ******************************************************************************/
 static int recieve_message(
 	struct fw_task_info *task_info, struct fw_msg_info **p_rcv_msg)
 {
@@ -235,10 +235,10 @@ static int recieve_message(
 
 
 /******************************************************************************
-Function:		get_function
-Description:	get a function address.
-Returns:		Pointer to function address.
-******************************************************************************/
+ * Function:		get_function
+ * Description:	get a function address.
+ * Returns:		Pointer to function address.
+ ******************************************************************************/
 static void *get_function(
 	struct fw_func_tbl *func_tbl, short msg_id, short func_id)
 {
@@ -260,10 +260,10 @@ static void *get_function(
 
 
 /******************************************************************************
-Function:		fw_initialize
-Description:	the framework initialization.
-Returns:		void
-******************************************************************************/
+ * Function:		fw_initialize
+ * Description:	the framework initialization.
+ * Returns:		void
+ ******************************************************************************/
 void fw_initialize(void)
 {
 	INIT_LIST_HEAD(&task_ctl.list);
@@ -272,10 +272,10 @@ void fw_initialize(void)
 
 
 /******************************************************************************
-Function:		fw_task_register
-Description:	register a task information.
-Returns:		FW_OK/FW_NG
-******************************************************************************/
+ * Function:		fw_task_register
+ * Description:	register a task information.
+ * Returns:		FW_OK/FW_NG
+ ******************************************************************************/
 int fw_task_register(unsigned short tid)
 {
 	struct fw_task_info *task_info;
@@ -317,10 +317,10 @@ int fw_task_register(unsigned short tid)
 
 
 /******************************************************************************
-Function:		fw_task_unregister
-Description:	unregister a task information.
-Returns:		FW_OK/FW_NG
-******************************************************************************/
+ * Function:		fw_task_unregister
+ * Description:	unregister a task information.
+ * Returns:		FW_OK/FW_NG
+ ******************************************************************************/
 int fw_task_unregister(unsigned short tid)
 {
 	struct fw_task_info *task_info;
@@ -344,10 +344,10 @@ int fw_task_unregister(unsigned short tid)
 
 
 /******************************************************************************
-Function:		fw_execute
-Description:	start the processing framework.
-Returns:		FW_OK/FW_NG
-******************************************************************************/
+ * Function:		fw_execute
+ * Description:	start the processing framework.
+ * Returns:		FW_OK/FW_NG
+ ******************************************************************************/
 int fw_execute(unsigned short tid, struct fw_func_tbl *func_tbl)
 {
 	struct fw_task_info *task_info;
@@ -420,10 +420,10 @@ int fw_execute(unsigned short tid, struct fw_func_tbl *func_tbl)
 
 
 /******************************************************************************
-Function:		fw_send_event
-Description:	send a event message.
-Returns:		FW_OK/FW_NG
-******************************************************************************/
+ * Function:		fw_send_event
+ * Description:	send a event message.
+ * Returns:		FW_OK/FW_NG
+ ******************************************************************************/
 long fw_send_event(unsigned short tid, short func_id, size_t size, void *para)
 {
 	/* Send a message */
@@ -435,10 +435,10 @@ long fw_send_event(unsigned short tid, short func_id, size_t size, void *para)
 
 
 /******************************************************************************
-Function:		fw_send_function
-Description:	send a function message.
-Returns:		FW_OK/FW_NG
-******************************************************************************/
+ * Function:		fw_send_function
+ * Description:	send a function message.
+ * Returns:		FW_OK/FW_NG
+ ******************************************************************************/
 long fw_send_function(
 	unsigned short tid, short func_id, size_t size, void *para)
 {

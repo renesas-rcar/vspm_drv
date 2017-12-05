@@ -1,63 +1,63 @@
 /*************************************************************************/ /*
- VSPM
-
- Copyright (C) 2015-2017 Renesas Electronics Corporation
-
- License        Dual MIT/GPLv2
-
- The contents of this file are subject to the MIT license as set out below.
-
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
-
- The above copyright notice and this permission notice shall be included in
- all copies or substantial portions of the Software.
-
- Alternatively, the contents of this file may be used under the terms of
- the GNU General Public License Version 2 ("GPL") in which case the provisions
- of GPL are applicable instead of those above.
-
- If you wish to allow use of your version of this file only under the terms of
- GPL, and not to allow others to use your version of this file under the terms
- of the MIT license, indicate your decision by deleting the provisions above
- and replace them with the notice and other provisions required by GPL as set
- out in the file called "GPL-COPYING" included in this distribution. If you do
- not delete the provisions above, a recipient may use your version of this file
- under the terms of either the MIT license or GPL.
-
- This License is also included in this distribution in the file called
- "MIT-COPYING".
-
- EXCEPT AS OTHERWISE STATED IN A NEGOTIATED AGREEMENT: (A) THE SOFTWARE IS
- PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
- BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
- PURPOSE AND NONINFRINGEMENT; AND (B) IN NO EVENT SHALL THE AUTHORS OR
- COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
- GPLv2:
- If you wish to use this file under the terms of GPL, following terms are
- effective.
-
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; version 2 of the License.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software
- Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/ /*************************************************************************/
+ * VSPM
+ *
+ * Copyright (C) 2015-2017 Renesas Electronics Corporation
+ *
+ * License        Dual MIT/GPLv2
+ *
+ * The contents of this file are subject to the MIT license as set out below.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * the GNU General Public License Version 2 ("GPL") in which case the provisions
+ * of GPL are applicable instead of those above.
+ *
+ * If you wish to allow use of your version of this file only under the terms of
+ * GPL, and not to allow others to use your version of this file under the terms
+ * of the MIT license, indicate your decision by deleting the provisions above
+ * and replace them with the notice and other provisions required by GPL as set
+ * out in the file called "GPL-COPYING" included in this distribution. If you do
+ * not delete the provisions above, a recipient may use your version of this
+ * file under the terms of either the MIT license or GPL.
+ *
+ * This License is also included in this distribution in the file called
+ * "MIT-COPYING".
+ *
+ * EXCEPT AS OTHERWISE STATED IN A NEGOTIATED AGREEMENT: (A) THE SOFTWARE IS
+ * PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT; AND (B) IN NO EVENT SHALL THE AUTHORS
+ * OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+ * IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *
+ * GPLv2:
+ * If you wish to use this file under the terms of GPL, following terms are
+ * effective.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */ /*************************************************************************/
 
 #include <linux/slab.h>
 
@@ -71,11 +71,11 @@
 static struct vsp_prv_data *g_vsp_obj[VSP_IP_MAX] = {NULL};
 
 /******************************************************************************
-Function:		vsp_lib_init
-Description:	Initialize VSP driver
-Returns:		0/E_VSP_NO_MEM
-	return of vsp_ins_check_init_parameter()
-******************************************************************************/
+ * Function:		vsp_lib_init
+ * Description:	Initialize VSP driver
+ * Returns:		0/E_VSP_NO_MEM
+ *	return of vsp_ins_check_init_parameter()
+ ******************************************************************************/
 long vsp_lib_init(struct vsp_init_t *param)
 {
 	struct vsp_prv_data *prv;
@@ -117,12 +117,12 @@ err_exit:
 
 
 /******************************************************************************
-Function:		vsp_lib_quit
-Description:	Finalize VSP driver
-Returns:		0
-	return of vsp_lib_abort()
-	return of vsp_lib_close()
-******************************************************************************/
+ * Function:		vsp_lib_quit
+ * Description:	Finalize VSP driver
+ * Returns:		0
+ *	return of vsp_lib_abort()
+ *	return of vsp_lib_close()
+ ******************************************************************************/
 long vsp_lib_quit(void)
 {
 	struct vsp_prv_data **prv = &g_vsp_obj[0];
@@ -161,14 +161,14 @@ long vsp_lib_quit(void)
 
 
 /******************************************************************************
-Function:		vsp_lib_open
-Description:	Initialize FDP channel.
-Returns:		0/E_VSP_PARA_CH/E_VSP_NO_INIT/E_VSP_INVALID_STATE
-	return of vsp_ins_get_pdata()
-	return of vsp_ins_enable_clock()
-	return of vsp_ins_init_reg()
-	return of vsp_ins_reg_ih()
-******************************************************************************/
+ * Function:		vsp_lib_open
+ * Description:	Initialize FDP channel.
+ * Returns:		0/E_VSP_PARA_CH/E_VSP_NO_INIT/E_VSP_INVALID_STATE
+ *	return of vsp_ins_get_pdata()
+ *	return of vsp_ins_enable_clock()
+ *	return of vsp_ins_init_reg()
+ *	return of vsp_ins_reg_ih()
+ ******************************************************************************/
 long vsp_lib_open(unsigned char ch, struct vsp_open_t *param)
 {
 	struct vsp_prv_data *prv;
@@ -239,13 +239,13 @@ err_exit1:
 
 
 /******************************************************************************
-Function:		vsp_lib_close
-Description:	Finalize FDP channel.
-Returns:		0/E_VSP_PARA_CH/E_VSP_NO_INIT/E_VSP_INVALID_STATE
-	return of vsp_ins_unreg_ih()
-	return of vsp_ins_quit_reg()
-	return of vsp_ins_disable_clock()
-******************************************************************************/
+ * Function:		vsp_lib_close
+ * Description:	Finalize FDP channel.
+ * Returns:		0/E_VSP_PARA_CH/E_VSP_NO_INIT/E_VSP_INVALID_STATE
+ *	return of vsp_ins_unreg_ih()
+ *	return of vsp_ins_quit_reg()
+ *	return of vsp_ins_disable_clock()
+ ******************************************************************************/
 long vsp_lib_close(unsigned char ch)
 {
 	struct vsp_prv_data *prv;
@@ -290,13 +290,13 @@ long vsp_lib_close(unsigned char ch)
 
 
 /******************************************************************************
-Function:		vsp_lib_start
-Description:	Start VSP processing
-Returns:		0/E_VSP_PARA_CB/E_VSP_PARA_INPAR/E_VSP_PARA_CH
-	E_VSP_NO_INIT/E_VSP_INVALID_STATE
-	return of vsp_ins_check_start_parameter()
-	return of vsp_ins_set_start_parameter()
-******************************************************************************/
+ * Function:		vsp_lib_start
+ * Description:	Start VSP processing
+ * Returns:		0/E_VSP_PARA_CB/E_VSP_PARA_INPAR/E_VSP_PARA_CH
+ *	E_VSP_NO_INIT/E_VSP_INVALID_STATE
+ *	return of vsp_ins_check_start_parameter()
+ *	return of vsp_ins_set_start_parameter()
+ ******************************************************************************/
 long vsp_lib_start(
 	unsigned char ch,
 	void *callback,
@@ -369,11 +369,11 @@ long vsp_lib_start(
 
 
 /******************************************************************************
-Function:		vsp_lib_abort
-Description:	Forced stop of VSP processing
-Returns:		0/E_VSP_PARA_CH/E_VSP_NO_INIT
-	return of vsp_ins_stop_processing().
-******************************************************************************/
+ * Function:		vsp_lib_abort
+ * Description:	Forced stop of VSP processing
+ * Returns:		0/E_VSP_PARA_CH/E_VSP_NO_INIT
+ *	return of vsp_ins_stop_processing().
+ ******************************************************************************/
 long vsp_lib_abort(unsigned char ch)
 {
 	struct vsp_prv_data *prv;
@@ -403,11 +403,11 @@ long vsp_lib_abort(unsigned char ch)
 
 
 /******************************************************************************
-Function:		vsp_lib_get_status
-Description:	Get status of VSP processing
-Returns:		0/E_VSP_PARA_INPAR/E_VSP_PARA_CH/E_VSP_NO_INIT/
-	E_VSP_INVALID_STATE
-******************************************************************************/
+ * Function:		vsp_lib_get_status
+ * Description:	Get status of VSP processing
+ * Returns:		0/E_VSP_PARA_INPAR/E_VSP_PARA_CH/E_VSP_NO_INIT/
+ *	E_VSP_INVALID_STATE
+ ******************************************************************************/
 long vsp_lib_get_status(unsigned char ch, struct vsp_status_t *status)
 {
 	struct vsp_prv_data *prv;
@@ -440,12 +440,12 @@ long vsp_lib_get_status(unsigned char ch, struct vsp_status_t *status)
 
 
 /******************************************************************************
-Function:		vsp_lib_suspend
-Description:	Suspend of VSP processing
-Returns:		0
-	return of vsp_ins_unreg_ih().
-	return of vsp_ins_quit_reg().
-******************************************************************************/
+ * Function:		vsp_lib_suspend
+ * Description:	Suspend of VSP processing
+ * Returns:		0
+ *	return of vsp_ins_unreg_ih().
+ *	return of vsp_ins_quit_reg().
+ ******************************************************************************/
 long vsp_lib_suspend(unsigned char ch)
 {
 	struct vsp_prv_data *prv;
@@ -485,12 +485,12 @@ long vsp_lib_suspend(unsigned char ch)
 
 
 /******************************************************************************
-Function:		vsp_lib_resume
-Description:	Resume of VSP processing
-Returns:		0
-	return of vsp_ins_init_reg().
-	return of vsp_ins_reg_ih().
-******************************************************************************/
+ * Function:		vsp_lib_resume
+ * Description:	Resume of VSP processing
+ * Returns:		0
+ *	return of vsp_ins_init_reg().
+ *	return of vsp_ins_reg_ih().
+ ******************************************************************************/
 long vsp_lib_resume(unsigned char ch)
 {
 	struct vsp_prv_data *prv;

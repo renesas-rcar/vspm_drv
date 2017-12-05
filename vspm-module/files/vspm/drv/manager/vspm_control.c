@@ -1,63 +1,63 @@
 /*************************************************************************/ /*
- VSPM
-
- Copyright (C) 2015-2017 Renesas Electronics Corporation
-
- License        Dual MIT/GPLv2
-
- The contents of this file are subject to the MIT license as set out below.
-
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
-
- The above copyright notice and this permission notice shall be included in
- all copies or substantial portions of the Software.
-
- Alternatively, the contents of this file may be used under the terms of
- the GNU General Public License Version 2 ("GPL") in which case the provisions
- of GPL are applicable instead of those above.
-
- If you wish to allow use of your version of this file only under the terms of
- GPL, and not to allow others to use your version of this file under the terms
- of the MIT license, indicate your decision by deleting the provisions above
- and replace them with the notice and other provisions required by GPL as set
- out in the file called "GPL-COPYING" included in this distribution. If you do
- not delete the provisions above, a recipient may use your version of this file
- under the terms of either the MIT license or GPL.
-
- This License is also included in this distribution in the file called
- "MIT-COPYING".
-
- EXCEPT AS OTHERWISE STATED IN A NEGOTIATED AGREEMENT: (A) THE SOFTWARE IS
- PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
- BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
- PURPOSE AND NONINFRINGEMENT; AND (B) IN NO EVENT SHALL THE AUTHORS OR
- COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
- GPLv2:
- If you wish to use this file under the terms of GPL, following terms are
- effective.
-
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; version 2 of the License.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software
- Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/ /*************************************************************************/
+ * VSPM
+ *
+ * Copyright (C) 2015-2017 Renesas Electronics Corporation
+ *
+ * License        Dual MIT/GPLv2
+ *
+ * The contents of this file are subject to the MIT license as set out below.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * the GNU General Public License Version 2 ("GPL") in which case the provisions
+ * of GPL are applicable instead of those above.
+ *
+ * If you wish to allow use of your version of this file only under the terms of
+ * GPL, and not to allow others to use your version of this file under the terms
+ * of the MIT license, indicate your decision by deleting the provisions above
+ * and replace them with the notice and other provisions required by GPL as set
+ * out in the file called "GPL-COPYING" included in this distribution. If you do
+ * not delete the provisions above, a recipient may use your version of this
+ * file under the terms of either the MIT license or GPL.
+ *
+ * This License is also included in this distribution in the file called
+ * "MIT-COPYING".
+ *
+ * EXCEPT AS OTHERWISE STATED IN A NEGOTIATED AGREEMENT: (A) THE SOFTWARE IS
+ * PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT; AND (B) IN NO EVENT SHALL THE AUTHORS
+ * OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+ * IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *
+ * GPLv2:
+ * If you wish to use this file under the terms of GPL, following terms are
+ * effective.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */ /*************************************************************************/
 
 #include <linux/string.h>
 
@@ -74,10 +74,10 @@
 static struct vspm_ctrl_info g_vspm_ctrl_info;
 
 /******************************************************************************
-Function:		vspm_ins_mask_low_bits
-Description:	Mask low bits.
-Returns:		void
-******************************************************************************/
+ * Function:		vspm_ins_mask_low_bits
+ * Description:	Mask low bits.
+ * Returns:		void
+ ******************************************************************************/
 static void vspm_ins_mask_low_bits(unsigned int *bits, unsigned int num)
 {
 	unsigned int mask_bits = 0;
@@ -93,10 +93,10 @@ static void vspm_ins_mask_low_bits(unsigned int *bits, unsigned int num)
 
 
 /******************************************************************************
-Function:		vspm_ins_ctrl_get_ch_lsb
-Description:	Get channel from LSB.
-Returns:		channel number/On error is VSPM_CH_MAX
-******************************************************************************/
+ * Function:		vspm_ins_ctrl_get_ch_lsb
+ * Description:	Get channel from LSB.
+ * Returns:		channel number/On error is VSPM_CH_MAX
+ ******************************************************************************/
 static unsigned short vspm_ins_ctrl_get_ch_lsb(unsigned int bits)
 {
 	unsigned short cnt = 0;
@@ -120,10 +120,10 @@ static unsigned short vspm_ins_ctrl_get_ch_lsb(unsigned int bits)
 
 
 /******************************************************************************
-Function:		vspm_ins_ctrl_get_ch_msb
-Description:	Get channel from MSB.
-Returns:		channel number/On error is VSPM_CH_MAX
-******************************************************************************/
+ * Function:		vspm_ins_ctrl_get_ch_msb
+ * Description:	Get channel from MSB.
+ * Returns:		channel number/On error is VSPM_CH_MAX
+ ******************************************************************************/
 static unsigned short vspm_ins_ctrl_get_ch_msb(unsigned int bits)
 {
 	unsigned short cnt = 0;
@@ -151,13 +151,13 @@ static unsigned short vspm_ins_ctrl_get_ch_msb(unsigned int bits)
 
 
 /******************************************************************************
-Function:		vspm_ins_ctrl_initialize
-Description:	Initialize VSP Manager.
-Returns:		R_VSPM_OK/R_VSPM_NG
-	return of vspm_inc_sort_queue_initialize()
-	return of vspm_ins_vsp_initialize()
-	return of vspm_ins_fdp_initialize()
-******************************************************************************/
+ * Function:		vspm_ins_ctrl_initialize
+ * Description:	Initialize VSP Manager.
+ * Returns:		R_VSPM_OK/R_VSPM_NG
+ *	return of vspm_inc_sort_queue_initialize()
+ *	return of vspm_ins_vsp_initialize()
+ *	return of vspm_ins_fdp_initialize()
+ ******************************************************************************/
 long vspm_ins_ctrl_initialize(struct vspm_drvdata *pdrv)
 {
 	struct vspm_usable_res_info *usable = &g_vspm_ctrl_info.usable_info;
@@ -198,12 +198,12 @@ long vspm_ins_ctrl_initialize(struct vspm_drvdata *pdrv)
 
 
 /******************************************************************************
-Function:		vspm_ins_ctrl_quit
-Description:	Finalize VSP Manager.
-Returns:		R_VSPM_OK/R_VSPM_NG
-	return of vspm_ins_vsp_quit()
-	return of vspm_ins_fdp_quit()
-******************************************************************************/
+ * Function:		vspm_ins_ctrl_quit
+ * Description:	Finalize VSP Manager.
+ * Returns:		R_VSPM_OK/R_VSPM_NG
+ *	return of vspm_ins_vsp_quit()
+ *	return of vspm_ins_fdp_quit()
+ ******************************************************************************/
 long vspm_ins_ctrl_quit(struct vspm_drvdata *pdrv)
 {
 	struct vspm_usable_res_info *usable = &g_vspm_ctrl_info.usable_info;
@@ -228,11 +228,11 @@ long vspm_ins_ctrl_quit(struct vspm_drvdata *pdrv)
 
 
 /******************************************************************************
-Function:		vspm_ins_ctrl_suspend
-Description:	Pre-suspend processing.
-	This function is executing when just before suspend.
-Returns:		R_VSPM_OK
-******************************************************************************/
+ * Function:		vspm_ins_ctrl_suspend
+ * Description:	Pre-suspend processing.
+ *	This function is executing when just before suspend.
+ * Returns:		R_VSPM_OK
+ ******************************************************************************/
 long vspm_ins_ctrl_suspend(struct vspm_drvdata *pdrv)
 {
 	/* suspend VSP driver */
@@ -246,11 +246,11 @@ long vspm_ins_ctrl_suspend(struct vspm_drvdata *pdrv)
 
 
 /******************************************************************************
-Function:		vspm_ins_ctrl_suspend
-Description:	Post-resume processing.
-	This function is executing when after resume.
-Returns:		R_VSPM_OK
-******************************************************************************/
+ * Function:		vspm_ins_ctrl_suspend
+ * Description:	Post-resume processing.
+ *	This function is executing when after resume.
+ * Returns:		R_VSPM_OK
+ ******************************************************************************/
 long vspm_ins_ctrl_resume(struct vspm_drvdata *pdrv)
 {
 	/* resume VSP driver */
@@ -264,11 +264,11 @@ long vspm_ins_ctrl_resume(struct vspm_drvdata *pdrv)
 
 
 /******************************************************************************
-Function:		vspm_ins_ctrl_set_mode
-Description:	Set operation mode.
-Returns:		R_VSPM_OK/R_VSPM_NG
-	return of vspm_ins_ctrl_mode_param_check()
-******************************************************************************/
+ * Function:		vspm_ins_ctrl_set_mode
+ * Description:	Set operation mode.
+ * Returns:		R_VSPM_OK/R_VSPM_NG
+ *	return of vspm_ins_ctrl_mode_param_check()
+ ******************************************************************************/
 long vspm_ins_ctrl_set_mode(struct vspm_api_param_mode *mode)
 {
 	struct vspm_usable_res_info *usable = &g_vspm_ctrl_info.usable_info;
@@ -332,10 +332,10 @@ long vspm_ins_ctrl_set_mode(struct vspm_api_param_mode *mode)
 
 
 /******************************************************************************
-Function:		vspm_ins_ctrl_regist_entry
-Description:	Registory entry parameter.
-Returns:		R_VSPM_OK/R_VSPM_NG/R_VSPM_QUE_FULL
-******************************************************************************/
+ * Function:		vspm_ins_ctrl_regist_entry
+ * Description:	Registory entry parameter.
+ * Returns:		R_VSPM_OK/R_VSPM_NG/R_VSPM_QUE_FULL
+ ******************************************************************************/
 long vspm_ins_ctrl_regist_entry(struct vspm_api_param_entry *entry)
 {
 	struct vspm_job_info *job_info;
@@ -367,12 +367,12 @@ long vspm_ins_ctrl_regist_entry(struct vspm_api_param_entry *entry)
 
 
 /******************************************************************************
-Function:		vspm_ins_ctrl_exec_entry
-Description:	Execute entry parameter.
-Returns:		R_VSPM_OK/R_VSPM_NG
-	return of vspm_ins_vsp_execute_low_delay()
-	return of vspm_ins_fdp_execute_low_delay()
-******************************************************************************/
+ * Function:		vspm_ins_ctrl_exec_entry
+ * Description:	Execute entry parameter.
+ * Returns:		R_VSPM_OK/R_VSPM_NG
+ *	return of vspm_ins_vsp_execute_low_delay()
+ *	return of vspm_ins_fdp_execute_low_delay()
+ ******************************************************************************/
 long vspm_ins_ctrl_exec_entry(struct vspm_api_param_entry *entry)
 {
 	struct vspm_request_res_info *request = &entry->priv->request_info;
@@ -403,12 +403,12 @@ long vspm_ins_ctrl_exec_entry(struct vspm_api_param_entry *entry)
 
 
 /******************************************************************************
-Function:		vspm_ins_ctrl_on_complete
-Description:	Complete a job.
-Returns:		R_VSPM_OK/R_VSPM_PARAERR
-	return of vspm_ins_exec_complete()
-	return of vspm_ins_job_execute_complete()
-******************************************************************************/
+ * Function:		vspm_ins_ctrl_on_complete
+ * Description:	Complete a job.
+ * Returns:		R_VSPM_OK/R_VSPM_PARAERR
+ *	return of vspm_ins_exec_complete()
+ *	return of vspm_ins_job_execute_complete()
+v******************************************************************************/
 long vspm_ins_ctrl_on_complete(unsigned short module_id, long result)
 {
 	struct vspm_job_info *job_info;
@@ -459,10 +459,10 @@ dispatch:
 
 
 /******************************************************************************
-Function:		vspm_ins_ctrl_get_status
-Description:	Get status of entry jobs.
-Returns:		VSPM_STATUS_NO_ENTRY/VSPM_STATUS_WAIT/VSPM_STATUS_ACTIVE
-******************************************************************************/
+ * Function:		vspm_ins_ctrl_get_status
+ * Description:	Get status of entry jobs.
+ * Returns:		VSPM_STATUS_NO_ENTRY/VSPM_STATUS_WAIT/VSPM_STATUS_ACTIVE
+ ******************************************************************************/
 long vspm_ins_ctrl_get_status(unsigned long job_id)
 {
 	struct vspm_job_info *job_info;
@@ -487,10 +487,10 @@ long vspm_ins_ctrl_get_status(unsigned long job_id)
 
 
 /******************************************************************************
-Function:		vspm_ins_ctrl_queue_cancel
-Description:	Cancel a job.
-Returns:		R_VSPM_OK/VSPM_STATUS_NO_ENTRY/VSPM_STATUS_ACTIVE
-******************************************************************************/
+ * Function:		vspm_ins_ctrl_queue_cancel
+ * Description:	Cancel a job.
+ * Returns:		R_VSPM_OK/VSPM_STATUS_NO_ENTRY/VSPM_STATUS_ACTIVE
+ ******************************************************************************/
 long vspm_ins_ctrl_queue_cancel(unsigned long job_id)
 {
 	struct vspm_job_info *job_info;
@@ -529,11 +529,11 @@ long vspm_ins_ctrl_queue_cancel(unsigned long job_id)
 
 
 /******************************************************************************
-Function:		vspm_ins_ctrl_forced_cancel
-Description:	Forced cancel a job.
-Returns:		R_VSPM_OK
-	return of vspm_ins_exec_cancel()
-******************************************************************************/
+ * Function:		vspm_ins_ctrl_forced_cancel
+ * Description:	Forced cancel a job.
+ * Returns:		R_VSPM_OK
+ *	return of vspm_ins_exec_cancel()
+ ******************************************************************************/
 long vspm_ins_ctrl_forced_cancel(struct vspm_api_param_forced_cancel *cancel)
 {
 	struct vspm_job_info *job_info;
@@ -592,12 +592,12 @@ long vspm_ins_ctrl_forced_cancel(struct vspm_api_param_forced_cancel *cancel)
 
 
 /******************************************************************************
-Function:		vspm_ins_ctrl_cancel_entry
-Description:	Cancel entry parameter.
-Returns:		R_VSPM_OK/R_VSPM_NG
-	return of vspm_ins_vsp_cancel()
-	return of vspm_ins_fdp_cancel()
-******************************************************************************/
+ * Function:		vspm_ins_ctrl_cancel_entry
+ * Description:	Cancel entry parameter.
+ * Returns:		R_VSPM_OK/R_VSPM_NG
+ *	return of vspm_ins_vsp_cancel()
+ *	return of vspm_ins_fdp_cancel()
+ ******************************************************************************/
 long vspm_ins_ctrl_cancel_entry(struct vspm_privdata *priv)
 {
 	struct vspm_request_res_info *request = &priv->request_info;
@@ -624,10 +624,10 @@ long vspm_ins_ctrl_cancel_entry(struct vspm_privdata *priv)
 
 
 /******************************************************************************
-Function:		vspm_ins_ctrl_mode_param_check
-Description:	Check operaton mode.
-Returns:		R_VSPM_OK/R_VSPM_PARAERR/R_VSPM_ALREADY_USED
-******************************************************************************/
+ * Function:		vspm_ins_ctrl_mode_param_check
+ * Description:	Check operaton mode.
+ * Returns:		R_VSPM_OK/R_VSPM_PARAERR/R_VSPM_ALREADY_USED
+ ******************************************************************************/
 long vspm_ins_ctrl_mode_param_check(
 	unsigned int *use_bits, struct vspm_api_param_mode *mode)
 {
@@ -688,11 +688,11 @@ long vspm_ins_ctrl_mode_param_check(
 
 
 /******************************************************************************
-Function:		vspm_ins_ctrl_entry_param_check
-Description:	Check entry parameter.
-Returns:		R_VSPM_OK/R_VSPM_PARAERR
-	return of vspm_ins_ctrl_assign_channel()
-******************************************************************************/
+ * Function:		vspm_ins_ctrl_entry_param_check
+ * Description:	Check entry parameter.
+ * Returns:		R_VSPM_OK/R_VSPM_PARAERR
+ *	return of vspm_ins_ctrl_assign_channel()
+ ******************************************************************************/
 long vspm_ins_ctrl_entry_param_check(struct vspm_api_param_entry *entry)
 {
 	struct vspm_job_t *ip_par;
@@ -762,10 +762,10 @@ long vspm_ins_ctrl_entry_param_check(struct vspm_api_param_entry *entry)
 
 
 /******************************************************************************
-Function:		vspm_ins_ctrl_dispatch
-Description:	Execute the scheduling and processing.
-Returns:		void
-******************************************************************************/
+ * Function:		vspm_ins_ctrl_dispatch
+ * Description:	Execute the scheduling and processing.
+ * Returns:		void
+ ******************************************************************************/
 void vspm_ins_ctrl_dispatch(void)
 {
 	struct vspm_usable_res_info usable;
@@ -845,10 +845,10 @@ void vspm_ins_ctrl_dispatch(void)
 
 
 /******************************************************************************
-Function:		vspm_ins_ctrl_assign_channel
-Description:	Assignment channel.
-Returns:		R_VSPM_OK/R_VSPM_PARAERR/R_VSPM_OCCUPY_CH
-******************************************************************************/
+ * Function:		vspm_ins_ctrl_assign_channel
+ * Description:	Assignment channel.
+ * Returns:		R_VSPM_OK/R_VSPM_PARAERR/R_VSPM_OCCUPY_CH
+ ******************************************************************************/
 long vspm_ins_ctrl_assign_channel(
 	struct vspm_job_t *ip_par,
 	struct vspm_request_res_info *request,
@@ -905,10 +905,10 @@ long vspm_ins_ctrl_assign_channel(
 
 
 /******************************************************************************
-Function:		vspm_ins_ctrl_count_bits
-Description:	Get bit count of 1.
-Returns:		bit count
-******************************************************************************/
+ * Function:		vspm_ins_ctrl_count_bits
+ * Description:	Get bit count of 1.
+ * Returns:		bit count
+ ******************************************************************************/
 static unsigned char vspm_ins_ctrl_count_bits(unsigned int bits)
 {
 	unsigned char cnt = 0;
@@ -924,10 +924,10 @@ static unsigned char vspm_ins_ctrl_count_bits(unsigned int bits)
 
 
 /******************************************************************************
-Function:		vspm_ins_ctrl_get_req_clut_count
-Description:	Get request clut count of RPF.
-Returns:		clut count
-******************************************************************************/
+ * Function:		vspm_ins_ctrl_get_req_clut_count
+ * Description:	Get request clut count of RPF.
+ * Returns:		clut count
+ ******************************************************************************/
 static unsigned char vspm_ins_ctrl_get_req_clut_count(
 	struct vsp_start_t *vsp_par)
 {
@@ -951,10 +951,10 @@ static unsigned char vspm_ins_ctrl_get_req_clut_count(
 }
 
 /******************************************************************************
-Function:		vspm_ins_ctrl_get_usable_vsp_ch_bits
-Description:	Get usable VSP channel bits.
-Returns:		usable RPF channel count.
-******************************************************************************/
+ * Function:		vspm_ins_ctrl_get_usable_vsp_ch_bits
+ * Description:	Get usable VSP channel bits.
+ * Returns:		usable RPF channel count.
+ ******************************************************************************/
 unsigned int vspm_ins_ctrl_get_usable_vsp_ch_bits(
 	struct vsp_start_t *vsp_par, struct vspm_usable_res_info *usable)
 {
@@ -1010,10 +1010,10 @@ unsigned int vspm_ins_ctrl_get_usable_vsp_ch_bits(
 
 
 /******************************************************************************
-Function:		vspm_inc_ctrl_on_driver_complete
-Description:	Complete processing.
-Returns:		void
-******************************************************************************/
+ * Function:		vspm_inc_ctrl_on_driver_complete
+ * Description:	Complete processing.
+ * Returns:		void
+ ******************************************************************************/
 void vspm_inc_ctrl_on_driver_complete(unsigned short module_id, long result)
 {
 	struct vspm_api_param_on_complete api_param;

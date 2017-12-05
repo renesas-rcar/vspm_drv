@@ -1,63 +1,63 @@
 /*************************************************************************/ /*
- VSPM
-
- Copyright (C) 2015-2017 Renesas Electronics Corporation
-
- License        Dual MIT/GPLv2
-
- The contents of this file are subject to the MIT license as set out below.
-
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
-
- The above copyright notice and this permission notice shall be included in
- all copies or substantial portions of the Software.
-
- Alternatively, the contents of this file may be used under the terms of
- the GNU General Public License Version 2 ("GPL") in which case the provisions
- of GPL are applicable instead of those above.
-
- If you wish to allow use of your version of this file only under the terms of
- GPL, and not to allow others to use your version of this file under the terms
- of the MIT license, indicate your decision by deleting the provisions above
- and replace them with the notice and other provisions required by GPL as set
- out in the file called "GPL-COPYING" included in this distribution. If you do
- not delete the provisions above, a recipient may use your version of this file
- under the terms of either the MIT license or GPL.
-
- This License is also included in this distribution in the file called
- "MIT-COPYING".
-
- EXCEPT AS OTHERWISE STATED IN A NEGOTIATED AGREEMENT: (A) THE SOFTWARE IS
- PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
- BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
- PURPOSE AND NONINFRINGEMENT; AND (B) IN NO EVENT SHALL THE AUTHORS OR
- COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
- GPLv2:
- If you wish to use this file under the terms of GPL, following terms are
- effective.
-
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; version 2 of the License.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software
- Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/ /*************************************************************************/
+ * VSPM
+ *
+ * Copyright (C) 2015-2017 Renesas Electronics Corporation
+ *
+ * License        Dual MIT/GPLv2
+ *
+ * The contents of this file are subject to the MIT license as set out below.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * the GNU General Public License Version 2 ("GPL") in which case the provisions
+ * of GPL are applicable instead of those above.
+ *
+ * If you wish to allow use of your version of this file only under the terms of
+ * GPL, and not to allow others to use your version of this file under the terms
+ * of the MIT license, indicate your decision by deleting the provisions above
+ * and replace them with the notice and other provisions required by GPL as set
+ * out in the file called "GPL-COPYING" included in this distribution. If you do
+ * not delete the provisions above, a recipient may use your version of this
+ * file under the terms of either the MIT license or GPL.
+ *
+ * This License is also included in this distribution in the file called
+ * "MIT-COPYING".
+ *
+ * EXCEPT AS OTHERWISE STATED IN A NEGOTIATED AGREEMENT: (A) THE SOFTWARE IS
+ * PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT; AND (B) IN NO EVENT SHALL THE AUTHORS
+ * OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+ * IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *
+ * GPLv2:
+ * If you wish to use this file under the terms of GPL, following terms are
+ * effective.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */ /*************************************************************************/
 
 #include <linux/platform_device.h>
 #include <linux/of.h>
@@ -80,11 +80,11 @@
 #include "fdp_drv_tbl.h"
 
 /******************************************************************************
-Function:		fdp_ins_check_seq_param
-Description:	Check sequence parameter.
-Returns:		0/E_FDP_PARA_INHEIGHT/E_FDP_PARA_INWIDTH
-	E_FDP_PARA_SEQMODE/E_FDP_PARA_INTERPOLATED/E_FDP_PARA_TELECINEMODE
-******************************************************************************/
+ * Function:		fdp_ins_check_seq_param
+ * Description:	Check sequence parameter.
+ * Returns:		0/E_FDP_PARA_INHEIGHT/E_FDP_PARA_INWIDTH
+ *	E_FDP_PARA_SEQMODE/E_FDP_PARA_INTERPOLATED/E_FDP_PARA_TELECINEMODE
+ ******************************************************************************/
 static long fdp_ins_check_seq_param(
 	struct fdp_obj_t *obj,
 	struct fdp_fproc_t *fproc_par,
@@ -167,10 +167,10 @@ static long fdp_ins_check_seq_param(
 }
 
 /******************************************************************************
-Function:		fdp_ins_check_pic_param
-Description:	Check picture information parameter.
-Returns:		0/E_FDP_PARA_INPIC/E_FDP_PARA_CHROMA
-******************************************************************************/
+ * Function:		fdp_ins_check_pic_param
+ * Description:	Check picture information parameter.
+ * Returns:		0/E_FDP_PARA_INPIC/E_FDP_PARA_CHROMA
+ ******************************************************************************/
 static long fdp_ins_check_pic_param(
 	struct fdp_obj_t *obj, struct fdp_pic_t *in_pic)
 {
@@ -212,11 +212,11 @@ static long fdp_ins_check_pic_param(
 }
 
 /******************************************************************************
-Function:		fdp_ins_check_pic_param_for_pulldown
-Description:	Check picture information parameter.
-Returns:		0/E_FDP_PARA_PICWIDTH/E_FDP_PARA_PICHEIGHT
-	E_FDP_PARA_PROGSEQ/E_FDP_PARA_REPEATTOP/E_FDP_PARA_PICSTRUCT
-******************************************************************************/
+ * Function:		fdp_ins_check_pic_param_for_pulldown
+ * Description:	Check picture information parameter.
+ * Returns:		0/E_FDP_PARA_PICWIDTH/E_FDP_PARA_PICHEIGHT
+ *	E_FDP_PARA_PROGSEQ/E_FDP_PARA_REPEATTOP/E_FDP_PARA_PICSTRUCT
+ ******************************************************************************/
 static long fdp_ins_check_pic_param_for_pulldown(
 	struct fdp_pic_t *in_pic, struct fdp_seq_t *seq_par)
 {
@@ -283,12 +283,12 @@ static long fdp_ins_check_pic_param_for_pulldown(
 	return 0;
 }
 /******************************************************************************
-Function:		fdp_ins_check_dstbuf_param
-Description:	Check destination parameter.
-Returns:		0/E_FDP_PARA_OUTBUF
-	E_FDP_PARA_DST_ADDR/E_FDP_PARA_DST_ADDR_C0/E_FDP_PARA_DST_ADDR_C1
-	E_FDP_PARA_DST_STRIDE/E_FDP_PARA_DST_STRIDE_C
-******************************************************************************/
+ * Function:		fdp_ins_check_dstbuf_param
+ * Description:	Check destination parameter.
+ * Returns:		0/E_FDP_PARA_OUTBUF
+ *	E_FDP_PARA_DST_ADDR/E_FDP_PARA_DST_ADDR_C0/E_FDP_PARA_DST_ADDR_C1
+ *	E_FDP_PARA_DST_STRIDE/E_FDP_PARA_DST_STRIDE_C
+ ******************************************************************************/
 static long fdp_ins_check_dstbuf_param(
 	struct fdp_fproc_t *fproc_par, struct fdp_seq_t *seq_par)
 {
@@ -342,12 +342,12 @@ static long fdp_ins_check_dstbuf_param(
 }
 
 /******************************************************************************
-Function:		fdp_ins_check_refbuf_param
-Description:	Check reference buffer parameter.
-Returns:		0/E_FDP_PARA_REFBUF
-	E_FDP_PARA_BUFREFRD1/E_FDP_PARA_SRC_ADDR/E_FDP_PARA_SRC_ADDR_C0
-	E_FDP_PARA_SRC_ADDR_C1/E_FDP_PARA_SRC_STRIDE/E_FDP_PARA_SRC_STRIDE_C
-******************************************************************************/
+ * Function:		fdp_ins_check_refbuf_param
+ * Description:	Check reference buffer parameter.
+ * Returns:		0/E_FDP_PARA_REFBUF
+ *	E_FDP_PARA_BUFREFRD1/E_FDP_PARA_SRC_ADDR/E_FDP_PARA_SRC_ADDR_C0
+ *	E_FDP_PARA_SRC_ADDR_C1/E_FDP_PARA_SRC_STRIDE/E_FDP_PARA_SRC_STRIDE_C
+ ******************************************************************************/
 static long fdp_ins_check_refbuf_param(
 	struct fdp_obj_t *obj,
 	struct fdp_fproc_t *fproc_par,
@@ -421,14 +421,14 @@ static long fdp_ins_check_refbuf_param(
 }
 
 /******************************************************************************
-Function:		fdp_ins_check_fcp_param
-Description:	Check frame compression processer parameter.
-Returns:		0/E_FDP_PARA_OUTFORMAT/E_FDP_PARA_DST_ADDR
-	E_FDP_PARA_DST_ADDR_C0/E_FDP_PARA_DST_ADDR_C1
-	E_FDP_PARA_CHROMA/E_FDP_PARA_SRC_STRIDE/E_FDP_PARA_SRC_STRIDE_C
-	E_FDP_PARA_FCNL/E_FDP_PARA_FCP_POS/E_FDP_PARA_FCP_STRIDE
-	E_FDP_PARA_BA_REF/E_FDP_PARA_TLEN/E_FDP_PARA_BA_ANC
-******************************************************************************/
+ * Function:		fdp_ins_check_fcp_param
+ * Description:	Check frame compression processer parameter.
+ * Returns:		0/E_FDP_PARA_OUTFORMAT/E_FDP_PARA_DST_ADDR
+ *	E_FDP_PARA_DST_ADDR_C0/E_FDP_PARA_DST_ADDR_C1
+ *	E_FDP_PARA_CHROMA/E_FDP_PARA_SRC_STRIDE/E_FDP_PARA_SRC_STRIDE_C
+ *	E_FDP_PARA_FCNL/E_FDP_PARA_FCP_POS/E_FDP_PARA_FCP_STRIDE
+ *	E_FDP_PARA_BA_REF/E_FDP_PARA_TLEN/E_FDP_PARA_BA_ANC
+ ******************************************************************************/
 static long fdp_ins_check_fcp_param(
 	struct fdp_obj_t *obj, struct fdp_fproc_t *fproc_par)
 {
@@ -553,11 +553,11 @@ static long fdp_ins_check_fcp_param(
 }
 
 /******************************************************************************
-Function:		fdp_ins_check_aux_buffer_param
-Description:	Check auxiliary buffer parameter.
-Returns:		0/E_FDP_PARA_BUFREFRD0/E_FDP_PARA_BUFREFRD2
-	E_FDP_PARA_BA_REF/E_FDP_PARA_BA_ANC
-******************************************************************************/
+ * Function:		fdp_ins_check_aux_buffer_param
+ * Description:	Check auxiliary buffer parameter.
+ * Returns:		0/E_FDP_PARA_BUFREFRD0/E_FDP_PARA_BUFREFRD2
+ *	E_FDP_PARA_BA_REF/E_FDP_PARA_BA_ANC
+ ******************************************************************************/
 static long fdp_ins_check_aux_buffer_param(
 	struct fdp_obj_t *obj,
 	struct fdp_fproc_t *fproc_par,
@@ -641,10 +641,10 @@ static long fdp_ins_check_aux_buffer_param(
 }
 
 /******************************************************************************
-Function:		fdp_ins_set_chact
-Description:	Set channel activation register value.
-Returns:		void
-******************************************************************************/
+ * Function:		fdp_ins_set_chact
+ * Description:	Set channel activation register value.
+ *vReturns:		void
+ ******************************************************************************/
 static void fdp_ins_set_chact(
 	struct fdp_obj_t *obj,
 	struct fdp_fproc_t *fproc_par,
@@ -710,19 +710,19 @@ static void fdp_ins_set_chact(
 }
 
 /******************************************************************************
-Function:		fdp_ins_check_fproc_param
-Description:	Check processing parameter.
-Returns:		0/E_FDP_PARA_FPROCPAR/E_FDP_PARA_SEQPAR
-	E_FDP_PARA_STLMSK_ADDR/E_FDP_PARA_LASTSTART/E_FDP_PARA_CF
-	E_FDP_PARA_OUTFORMAT
-	return of fdp_ins_check_seq_param()
-	return of fdp_ins_check_pic_param()
-	return of fdp_ins_check_pic_param_for_pulldown()
-	return of fdp_ins_check_dstbuf_param()
-	return of fdp_ins_check_refbuf_param()
-	return of fdp_ins_check_fcp_param()
-	return of fdp_ins_check_aux_buffer_param()
-******************************************************************************/
+ * Function:		fdp_ins_check_fproc_param
+ * Description:	Check processing parameter.
+ * Returns:		0/E_FDP_PARA_FPROCPAR/E_FDP_PARA_SEQPAR
+ *	E_FDP_PARA_STLMSK_ADDR/E_FDP_PARA_LASTSTART/E_FDP_PARA_CF
+ *	E_FDP_PARA_OUTFORMAT
+ *	return of fdp_ins_check_seq_param()
+ *	return of fdp_ins_check_pic_param()
+ *	return of fdp_ins_check_pic_param_for_pulldown()
+ *	return of fdp_ins_check_dstbuf_param()
+ *	return of fdp_ins_check_refbuf_param()
+ *	return of fdp_ins_check_fcp_param()
+ *	return of fdp_ins_check_aux_buffer_param()
+ ******************************************************************************/
 static long fdp_ins_check_fproc_param(
 	struct fdp_obj_t *obj, struct fdp_fproc_t *fproc_par)
 {
@@ -844,10 +844,10 @@ static long fdp_ins_check_fproc_param(
 }
 
 /******************************************************************************
-Function:		fdp_ins_update_proc_info
-Description:	Update processing information.
-Returns:		void
-******************************************************************************/
+ * Function:		fdp_ins_update_proc_info
+ * Description:	Update processing information.
+ * Returns:		void
+ ******************************************************************************/
 static void fdp_ins_update_proc_info(
 	struct fdp_obj_t *obj, struct fdp_fproc_t *fproc_par)
 {
@@ -867,11 +867,11 @@ static void fdp_ins_update_proc_info(
 }
 
 /******************************************************************************
-Function:		fdp_ins_check_start_param
-Description:	Check fdp_start_t parameter.
-Returns:		0/E_FDP_PARA_STARTPAR/E_FDP_PARA_FDPGO
-	return of fdp_ins_check_fproc_param()
-******************************************************************************/
+ * Function:		fdp_ins_check_start_param
+ * Description:	Check fdp_start_t parameter.
+ * Returns:		0/E_FDP_PARA_STARTPAR/E_FDP_PARA_FDPGO
+ *	return of fdp_ins_check_fproc_param()
+ ******************************************************************************/
 long fdp_ins_check_start_param(
 	struct fdp_obj_t *obj, struct fdp_start_t *start_par)
 {
@@ -900,10 +900,10 @@ long fdp_ins_check_start_param(
 }
 
 /******************************************************************************
-Function:		fdp_ins_set_ctrl_reg
-Description:	Set control register.
-Returns:		void
-******************************************************************************/
+ * Function:		fdp_ins_set_ctrl_reg
+ * Description:	Set control register.
+ * Returns:		void
+ ******************************************************************************/
 static void fdp_ins_set_ctrl_reg(struct fdp_obj_t *obj)
 {
 	/* operation mode register */
@@ -914,10 +914,10 @@ static void fdp_ins_set_ctrl_reg(struct fdp_obj_t *obj)
 }
 
 /******************************************************************************
-Function:		fdp_ins_set_rpf_reg
-Description:	Set RPF register.
-Returns:		void
-******************************************************************************/
+ * Function:		fdp_ins_set_rpf_reg
+ * Description:	Set RPF register.
+ * Returns:		void
+ ******************************************************************************/
 static void fdp_ins_set_rpf_reg(struct fdp_obj_t *obj, struct fdp_refbuf_t *ref)
 {
 	struct vspm_fdp_proc_info *proc_info = obj->proc_info;
@@ -966,10 +966,10 @@ static void fdp_ins_set_rpf_reg(struct fdp_obj_t *obj, struct fdp_refbuf_t *ref)
 }
 
 /******************************************************************************
-Function:		fdp_ins_set_wpf_reg
-Description:	Set WPF register.
-Returns:		void
-******************************************************************************/
+ * Function:		fdp_ins_set_wpf_reg
+ * Description:	Set WPF register.
+ * Returns:		void
+ ******************************************************************************/
 static void fdp_ins_set_wpf_reg(struct fdp_obj_t *obj, struct fdp_imgbuf_t *buf)
 {
 	unsigned int reg_data;
@@ -997,10 +997,10 @@ static void fdp_ins_set_wpf_reg(struct fdp_obj_t *obj, struct fdp_imgbuf_t *buf)
 }
 
 /******************************************************************************
-Function:		fdp_ins_set_ipc_reg
-Description:	Set IPC register.
-Returns:		void
-******************************************************************************/
+ * Function:		fdp_ins_set_ipc_reg
+ * Description:	Set IPC register.
+ * Returns:		void
+ ******************************************************************************/
 static void fdp_ins_set_ipc_reg(
 	struct fdp_obj_t *obj, struct fdp_ipc_t *ipc)
 {
@@ -1063,10 +1063,10 @@ static void fdp_ins_set_ipc_reg(
 }
 
 /******************************************************************************
-Function:		fdp_ins_set_fcp_reg
-Description:	Set FCP register.
-Returns:		void
-******************************************************************************/
+ * Function:		fdp_ins_set_fcp_reg
+ * Description:	Set FCP register.
+ * Returns:		void
+ ******************************************************************************/
 static void fdp_ins_set_fcp_reg(
 	struct fdp_obj_t *obj, struct fcp_info_t *fcp)
 {
@@ -1131,10 +1131,10 @@ static void fdp_ins_set_fcp_reg(
 }
 
 /******************************************************************************
-Function:		fdp_ins_start_processing
-Description:	Start FDP processing.
-Returns:		void
-******************************************************************************/
+ * Function:		fdp_ins_start_processing
+ * Description:	Start FDP processing.
+ * Returns:		void
+ ******************************************************************************/
 void fdp_ins_start_processing(
 	struct fdp_obj_t *obj, struct fdp_start_t *start_par)
 {
@@ -1184,10 +1184,10 @@ void fdp_ins_start_processing(
 }
 
 /******************************************************************************
-Function:		fdp_ins_stop_processing
-Description:	Abort FDP processing.
-Returns:		void
-******************************************************************************/
+ * Function:		fdp_ins_stop_processing
+ * Description:	Abort FDP processing.
+ * Returns:		void
+ ******************************************************************************/
 void fdp_ins_stop_processing(struct fdp_obj_t *obj)
 {
 	unsigned int status;
@@ -1264,10 +1264,10 @@ void fdp_ins_stop_processing(struct fdp_obj_t *obj)
 
 
 /******************************************************************************
-Function:		fdp_ins_wait_processing
-Description:	Waiting FDP processing.
-Returns:		void
-******************************************************************************/
+ * Function:		fdp_ins_wait_processing
+ * Description:	Waiting FDP processing.
+ * Returns:		void
+ ******************************************************************************/
 void fdp_ins_wait_processing(struct fdp_obj_t *obj)
 {
 	unsigned int loop_cnt = FDP_STATUS_LOOP_CNT;
@@ -1297,10 +1297,10 @@ void fdp_ins_wait_processing(struct fdp_obj_t *obj)
 
 
 /******************************************************************************
-Function:		fdp_ins_software_reset
-Description:	Software reset of FDP and FCP.
-Returns:		void
-******************************************************************************/
+ * Function:		fdp_ins_software_reset
+ * Description:	Software reset of FDP and FCP.
+ * Returns:		void
+ ******************************************************************************/
 static void fdp_ins_software_reset(struct fdp_obj_t *obj)
 {
 	/* Forced stop the FDP processing */
@@ -1309,10 +1309,10 @@ static void fdp_ins_software_reset(struct fdp_obj_t *obj)
 
 
 /******************************************************************************
-Function:		fdp_int_get_process_result
-Description:	Get processing result
-Returns:		void
-******************************************************************************/
+ * Function:		fdp_int_get_process_result
+ * Description:	Get processing result
+ * Returns:		void
+ ******************************************************************************/
 static void fdp_int_get_process_result(struct fdp_obj_t *obj)
 {
 	struct vspm_fdp_proc_info *proc_info = obj->proc_info;
@@ -1337,10 +1337,10 @@ static void fdp_int_get_process_result(struct fdp_obj_t *obj)
 
 
 /******************************************************************************
-Function:		fdp_int_hdr
-Description:	Interrupt handler (sub routine)
-Returns:		void
-******************************************************************************/
+ * Function:		fdp_int_hdr
+ * Description:	Interrupt handler (sub routine)
+ * Returns:		void
+ ******************************************************************************/
 static void fdp_int_hdr(struct fdp_obj_t *obj)
 {
 	struct fdp_cb_info_t cb_info;
@@ -1368,10 +1368,10 @@ static void fdp_int_hdr(struct fdp_obj_t *obj)
 }
 
 /******************************************************************************
-Function:		fdp_ins_init_cmn_reg
-Description:	Initialize common register.
-Returns:		void
-******************************************************************************/
+ * Function:		fdp_ins_init_cmn_reg
+ * Description:	Initialize common register.
+ * Returns:		void
+ ******************************************************************************/
 static void fdp_ins_init_cmn_reg(struct fdp_obj_t *obj)
 {
 	/* operation mode register */
@@ -1386,10 +1386,10 @@ static void fdp_ins_init_cmn_reg(struct fdp_obj_t *obj)
 }
 
 /******************************************************************************
-Function:		fdp_ins_init_ipc_reg
-Description:	Initialize IPC register.
-Returns:		void
-******************************************************************************/
+ * Function:		fdp_ins_init_ipc_reg
+ * Description:	Initialize IPC register.
+ * Returns:		void
+ ******************************************************************************/
 static void fdp_ins_init_ipc_reg(struct fdp_obj_t *obj)
 {
 	/* Still mask threshold register */
@@ -1500,10 +1500,10 @@ static void fdp_ins_init_ipc_reg(struct fdp_obj_t *obj)
 
 
 /******************************************************************************
-Function:		fdp_ins_get_resource
-Description:	Get FDP resource.
-Returns:		0/E_FDP_INVALID_PARAM
-******************************************************************************/
+ * Function:		fdp_ins_get_resource
+ * Description:	Get FDP resource.
+ * Returns:		0/E_FDP_INVALID_PARAM
+ ******************************************************************************/
 long fdp_ins_get_resource(struct fdp_obj_t *obj)
 {
 	struct device_node *np = obj->pdev->dev.of_node;
@@ -1521,10 +1521,10 @@ long fdp_ins_get_resource(struct fdp_obj_t *obj)
 
 
 /******************************************************************************
-Function:		fdp_ins_init_reg
-Description:	Initialize FDP register
-Returns:		0/E_FDP_DEF_REG
-******************************************************************************/
+ * Function:		fdp_ins_init_reg
+ * Description:	Initialize FDP register
+ * Returns:		0/E_FDP_DEF_REG
+ ******************************************************************************/
 long fdp_ins_init_reg(struct fdp_obj_t *obj)
 {
 	struct platform_device *pdev = obj->pdev;
@@ -1572,10 +1572,10 @@ long fdp_ins_init_reg(struct fdp_obj_t *obj)
 
 
 /******************************************************************************
-Function:		fdp_ins_quit_reg
-Description:	Finalize FDP register
-Returns:		0
-******************************************************************************/
+ * Function:		fdp_ins_quit_reg
+ * Description:	Finalize FDP register
+ * Returns:		0
+ ******************************************************************************/
 long fdp_ins_quit_reg(struct fdp_obj_t *obj)
 {
 	/* unmap an I/O register of FCP */
@@ -1595,10 +1595,10 @@ long fdp_ins_quit_reg(struct fdp_obj_t *obj)
 
 
 /******************************************************************************
-Function:		fdp_ins_ih
-Description:	Interrupt handler
-Returns:		IRQ_HANDLED
-******************************************************************************/
+ * Function:		fdp_ins_ih
+ * Description:	Interrupt handler
+ * Returns:		IRQ_HANDLED
+ ******************************************************************************/
 static irqreturn_t fdp_ins_ih(int irq, void *dev)
 {
 	struct fdp_obj_t *obj = (struct fdp_obj_t *)dev;
@@ -1623,10 +1623,10 @@ static irqreturn_t fdp_ins_ih(int irq, void *dev)
 }
 
 /******************************************************************************
-Function:		fdp_reg_inth
-Description:	Registry interrupt handler
-Returns:		0/E_FDP_DEF_INH
-******************************************************************************/
+ * Function:		fdp_reg_inth
+ * Description:	Registry interrupt handler
+ * Returns:		0/E_FDP_DEF_INH
+ ******************************************************************************/
 long fdp_reg_inth(struct fdp_obj_t *obj)
 {
 	struct platform_device *pdev = obj->pdev;
@@ -1656,10 +1656,10 @@ long fdp_reg_inth(struct fdp_obj_t *obj)
 }
 
 /******************************************************************************
-Function:		fdp_free_inth
-Description:	Unregistry interrupt handler
-Returns:		0
-******************************************************************************/
+ * Function:		fdp_free_inth
+ * Description:	Unregistry interrupt handler
+ * Returns:		0
+ ******************************************************************************/
 long fdp_free_inth(struct fdp_obj_t *obj)
 {
 	/* registory interrupt handler */
@@ -1672,10 +1672,10 @@ long fdp_free_inth(struct fdp_obj_t *obj)
 }
 
 /******************************************************************************
-Function:		fdp_ins_enable_clock
-Description:	Enable clock supply
-Returns:		0/E_FDP_NO_CLK
-******************************************************************************/
+ * Function:		fdp_ins_enable_clock
+ * Description:	Enable clock supply
+ * Returns:		0/E_FDP_NO_CLK
+ ******************************************************************************/
 long fdp_ins_enable_clock(struct fdp_obj_t *obj)
 {
 	struct platform_device *pdev = obj->pdev;
@@ -1696,10 +1696,10 @@ long fdp_ins_enable_clock(struct fdp_obj_t *obj)
 
 
 /******************************************************************************
-Function:		fdp_ins_disable_clock
-Description:	Disable clock supply
-Returns:		0
-******************************************************************************/
+ * Function:		fdp_ins_disable_clock
+ * Description:	Disable clock supply
+ * Returns:		0
+ ******************************************************************************/
 long fdp_ins_disable_clock(struct fdp_obj_t *obj)
 {
 	struct platform_device *pdev = obj->pdev;
@@ -1711,10 +1711,10 @@ long fdp_ins_disable_clock(struct fdp_obj_t *obj)
 }
 
 /******************************************************************************
-Function:		fdp_ins_allocate_memory
-Description:	Allocate memory.
-Returns:		0/E_FDP_NO_MEM
-******************************************************************************/
+ * Function:		fdp_ins_allocate_memory
+ * Description:	Allocate memory.
+ * Returns:		0/E_FDP_NO_MEM
+ ******************************************************************************/
 long fdp_ins_allocate_memory(struct fdp_obj_t **obj)
 {
 	/* allocate memory */
@@ -1728,10 +1728,10 @@ long fdp_ins_allocate_memory(struct fdp_obj_t **obj)
 }
 
 /******************************************************************************
-Function:		fdp_ins_release_memory
-Description:	Release memory.
-Returns:		0
-******************************************************************************/
+ * Function:		fdp_ins_release_memory
+ * Description:	Release memory.
+ * Returns:		0
+ ******************************************************************************/
 long fdp_ins_release_memory(struct fdp_obj_t *obj)
 {
 	/* release memory */
@@ -1741,10 +1741,10 @@ long fdp_ins_release_memory(struct fdp_obj_t *obj)
 }
 
 /******************************************************************************
-Function:		fdp_write_reg_lut_tbl
-Description:	Write LUT table to register
-Returns:		void
-******************************************************************************/
+ * Function:		fdp_write_reg_lut_tbl
+ * Description:	Write LUT table to register
+ * Returns:		void
+ ******************************************************************************/
 void fdp_write_reg_lut_tbl(
 	const unsigned char *data, void __iomem *base, unsigned int offset)
 {
@@ -1764,10 +1764,10 @@ void fdp_write_reg_lut_tbl(
 }
 
 /******************************************************************************
-Function:		fdp_rewrite_reg
-Description:	Rewrite to register
-Returns:		void
-******************************************************************************/
+ * Function:		fdp_rewrite_reg
+ * Description:	Rewrite to register
+ * Returns:		void
+ ******************************************************************************/
 inline void fdp_rewrite_reg(
 	unsigned int data,
 	unsigned int mask,
@@ -1787,10 +1787,10 @@ inline void fdp_rewrite_reg(
 }
 
 /******************************************************************************
-Function:		fdp_write_reg
-Description:	Write to register
-Returns:		void
-******************************************************************************/
+ * Function:		fdp_write_reg
+ * Description:	Write to register
+ * Returns:		void
+ ******************************************************************************/
 inline void fdp_write_reg(
 	unsigned int data, void __iomem *base, unsigned int offset)
 {
@@ -1801,10 +1801,10 @@ inline void fdp_write_reg(
 }
 
 /******************************************************************************
-Function:		fdp_read_reg
-Description:	Read from register
-Returns:		read value from register.
-******************************************************************************/
+ * Function:		fdp_read_reg
+ * Description:	Read from register
+ * Returns:		read value from register.
+ ******************************************************************************/
 inline unsigned int fdp_read_reg(void __iomem *base, unsigned int offset)
 {
 	unsigned int __iomem *reg =

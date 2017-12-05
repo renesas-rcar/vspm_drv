@@ -1,63 +1,63 @@
 /*************************************************************************/ /*
- VSPM
-
- Copyright (C) 2015-2016 Renesas Electronics Corporation
-
- License        Dual MIT/GPLv2
-
- The contents of this file are subject to the MIT license as set out below.
-
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
-
- The above copyright notice and this permission notice shall be included in
- all copies or substantial portions of the Software.
-
- Alternatively, the contents of this file may be used under the terms of
- the GNU General Public License Version 2 ("GPL") in which case the provisions
- of GPL are applicable instead of those above.
-
- If you wish to allow use of your version of this file only under the terms of
- GPL, and not to allow others to use your version of this file under the terms
- of the MIT license, indicate your decision by deleting the provisions above
- and replace them with the notice and other provisions required by GPL as set
- out in the file called "GPL-COPYING" included in this distribution. If you do
- not delete the provisions above, a recipient may use your version of this file
- under the terms of either the MIT license or GPL.
-
- This License is also included in this distribution in the file called
- "MIT-COPYING".
-
- EXCEPT AS OTHERWISE STATED IN A NEGOTIATED AGREEMENT: (A) THE SOFTWARE IS
- PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
- BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
- PURPOSE AND NONINFRINGEMENT; AND (B) IN NO EVENT SHALL THE AUTHORS OR
- COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
- GPLv2:
- If you wish to use this file under the terms of GPL, following terms are
- effective.
-
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; version 2 of the License.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software
- Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/ /*************************************************************************/
+ * VSPM
+ *
+ * Copyright (C) 2015-2017 Renesas Electronics Corporation
+ *
+ * License        Dual MIT/GPLv2
+ *
+ * The contents of this file are subject to the MIT license as set out below.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * the GNU General Public License Version 2 ("GPL") in which case the provisions
+ * of GPL are applicable instead of those above.
+ *
+ * If you wish to allow use of your version of this file only under the terms of
+ * GPL, and not to allow others to use your version of this file under the terms
+ * of the MIT license, indicate your decision by deleting the provisions above
+ * and replace them with the notice and other provisions required by GPL as set
+ * out in the file called "GPL-COPYING" included in this distribution. If you do
+ * not delete the provisions above, a recipient may use your version of this
+ * file under the terms of either the MIT license or GPL.
+ *
+ * This License is also included in this distribution in the file called
+ * "MIT-COPYING".
+ *
+ * EXCEPT AS OTHERWISE STATED IN A NEGOTIATED AGREEMENT: (A) THE SOFTWARE IS
+ * PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT; AND (B) IN NO EVENT SHALL THE AUTHORS
+ * OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+ * IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *
+ * GPLv2:
+ * If you wish to use this file under the terms of GPL, following terms are
+ * effective.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */ /*************************************************************************/
 
 #include "vspm_public.h"
 #include "vspm_ip_ctrl.h"
@@ -76,10 +76,10 @@ static const unsigned int vsp_tbl_bru_route[VSP_BRU_IN_MAX] = {
 };
 
 /******************************************************************************
-Function:		vsp_ins_check_init_parameter
-Description:	Check initialize parameter
-Returns:		0/E_VSP_PARA_INPAR
-******************************************************************************/
+ * Function:		vsp_ins_check_init_parameter
+ * Description:	Check initialize parameter
+ * Returns:		0/E_VSP_PARA_INPAR
+ ******************************************************************************/
 long vsp_ins_check_init_parameter(struct vsp_init_t *param)
 {
 	/* check pointer */
@@ -95,10 +95,10 @@ long vsp_ins_check_init_parameter(struct vsp_init_t *param)
 
 
 /******************************************************************************
-Function:		vsp_ins_check_open_parameter
-Description:	Check open channel parameter
-Returns:		0/E_VSP_PARA_INPAR
-******************************************************************************/
+ * Function:		vsp_ins_check_open_parameter
+ * Description:	Check open channel parameter
+ * Returns:		0/E_VSP_PARA_INPAR
+ ******************************************************************************/
 long vsp_ins_check_open_parameter(struct vsp_open_t *param)
 {
 	/* check pointer */
@@ -114,10 +114,10 @@ long vsp_ins_check_open_parameter(struct vsp_open_t *param)
 
 
 /******************************************************************************
-Function:		vsp_ins_get_dpr_route
-Description:	Get route value of module
-Returns:		route value for DPR.
-******************************************************************************/
+ * Function:		vsp_ins_get_dpr_route
+ * Description:	Get route value of module
+ * Returns:		route value for DPR.
+ ******************************************************************************/
 static unsigned int vsp_ins_get_dpr_route(
 	struct vsp_ch_info *ch_info, unsigned long connect, unsigned char fxa)
 {
@@ -185,10 +185,10 @@ static unsigned int vsp_ins_get_dpr_route(
 
 
 /******************************************************************************
-Function:		vsp_ins_get_dpr_smppt
-Description:	Get sampling point value of module
-Returns:		sampling point for DPR.
-******************************************************************************/
+ * Function:		vsp_ins_get_dpr_smppt
+ * Description:	Get sampling point value of module
+ * Returns:		sampling point for DPR.
+ ******************************************************************************/
 static unsigned int vsp_ins_get_dpr_smppt(
 	struct vsp_ch_info *ch_info, unsigned int sampling)
 {
@@ -264,10 +264,10 @@ static unsigned int vsp_ins_get_dpr_smppt(
 
 
 /******************************************************************************
-Function:		vsp_ins_get_passband_bwidth
-Description:	Get passband of VI6_UDS_PASS_BWIDTH.
-Returns:		Passband value for UDS.
-******************************************************************************/
+ * Function:		vsp_ins_get_passband_bwidth
+ * Description:	Get passband of VI6_UDS_PASS_BWIDTH.
+ * Returns:		Passband value for UDS.
+ ******************************************************************************/
 static unsigned int vsp_ins_get_passband_bwidth(unsigned short ratio)
 {
 	unsigned int bwidth;
@@ -290,10 +290,10 @@ static unsigned int vsp_ins_get_passband_bwidth(unsigned short ratio)
 
 
 /******************************************************************************
-Function:		vsp_ins_check_input_color_space_of_bru
-Description:	Check input color space of bru.
-Returns:		0/E_VSP_PARA_BRU_INHSV/E_VSP_PARA_BRU_INCOLOR
-******************************************************************************/
+ * Function:		vsp_ins_check_input_color_space_of_bru
+ * Description:	Check input color space of bru.
+ * Returns:		0/E_VSP_PARA_BRU_INHSV/E_VSP_PARA_BRU_INCOLOR
+ ******************************************************************************/
 static long vsp_ins_check_input_color_space_of_bru(struct vsp_ch_info *ch_info)
 {
 	struct vsp_src_info *src_info;
@@ -322,10 +322,10 @@ static long vsp_ins_check_input_color_space_of_bru(struct vsp_ch_info *ch_info)
 
 
 /******************************************************************************
-Function:		vsp_ins_check_input_color_space_of_brs
-Description:	Check input color space of brs.
-Returns:		0/E_VSP_PARA_BRS_INHSV/E_VSP_PARA_BRS_INCOLOR
-******************************************************************************/
+ * Function:		vsp_ins_check_input_color_space_of_brs
+ * Description:	Check input color space of brs.
+ * Returns:		0/E_VSP_PARA_BRS_INHSV/E_VSP_PARA_BRS_INCOLOR
+ ******************************************************************************/
 static long vsp_ins_check_input_color_space_of_brs(struct vsp_ch_info *ch_info)
 {
 	struct vsp_src_info *src_info;
@@ -354,12 +354,12 @@ static long vsp_ins_check_input_color_space_of_brs(struct vsp_ch_info *ch_info)
 
 
 /******************************************************************************
-Function:		vsp_ins_check_master_layer
-Description:	Check master layer.
-Returns:		0/E_VSP_PARA_NOINPUT/E_VSP_PARA_NOPARENT
-	E_VSP_PARA_VIR_XPOSI/E_VSP_PARA_IN_XPOSI/E_VSP_PARA_VIR_YPOSI
-	E_VSP_PARA_IN_YPOSI
-******************************************************************************/
+ * Function:		vsp_ins_check_master_layer
+ * Description:	Check master layer.
+ * Returns:		0/E_VSP_PARA_NOINPUT/E_VSP_PARA_NOPARENT
+ *	E_VSP_PARA_VIR_XPOSI/E_VSP_PARA_IN_XPOSI/E_VSP_PARA_VIR_YPOSI
+ *	E_VSP_PARA_IN_YPOSI
+ ******************************************************************************/
 static long vsp_ins_check_master_layer(struct vsp_ch_info *ch_info)
 {
 	struct vsp_src_info *src_info;
@@ -437,13 +437,13 @@ static long vsp_ins_check_master_layer(struct vsp_ch_info *ch_info)
 
 
 /******************************************************************************
-Function:		vsp_ins_check_rpf_format
-Description:	Check format of RPF.
-Returns:		0/E_VSP_PARA_IN_ADR/E_VSP_PARA_IN_ADRC0
-	E_VSP_PARA_IN_ADRC1/E_VSP_PARA_IN_WIDTH/E_VSP_PARA_IN_WIDTHEX
-	E_VSP_PARA_IN_XOFFSET/E_VSP_PARA_IN_HEIGHT/E_VSP_PARA_IN_HEIGHTEX
-	E_VSP_PARA_IN_YOFFSET/E_VSP_PARA_IN_FORMAT
-******************************************************************************/
+ * Function:		vsp_ins_check_rpf_format
+ * Description:	Check format of RPF.
+ * Returns:		0/E_VSP_PARA_IN_ADR/E_VSP_PARA_IN_ADRC0
+ *	E_VSP_PARA_IN_ADRC1/E_VSP_PARA_IN_WIDTH/E_VSP_PARA_IN_WIDTHEX
+ *	E_VSP_PARA_IN_XOFFSET/E_VSP_PARA_IN_HEIGHT/E_VSP_PARA_IN_HEIGHTEX
+ *	E_VSP_PARA_IN_YOFFSET/E_VSP_PARA_IN_FORMAT
+ ******************************************************************************/
 static long vsp_ins_check_rpf_format(
 	struct vsp_rpf_info *rpf_info, struct vsp_src_t *src_par)
 {
@@ -676,10 +676,10 @@ static long vsp_ins_check_rpf_format(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_rpf_clut_param
-Description:	Check clut parameter of RPF.
-Returns:		0/E_VSP_PARA_OSD_CLUT/E_VSP_PARA_OSD_SIZE
-******************************************************************************/
+ * Function:		vsp_ins_check_rpf_clut_param
+ * Description:	Check clut parameter of RPF.
+ * Returns:		0/E_VSP_PARA_OSD_CLUT/E_VSP_PARA_OSD_SIZE
+ ******************************************************************************/
 static long vsp_ins_check_rpf_clut_param(
 	struct vsp_rpf_info *rpf_info, struct vsp_src_t *src_par)
 {
@@ -706,10 +706,10 @@ static long vsp_ins_check_rpf_clut_param(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_ckey_unit_param
-Description:	Check color key unit parameter of RPF.
-Returns:		0/E_VSP_PARA_ALPHA_CKEY
-******************************************************************************/
+ * Function:		vsp_ins_check_ckey_unit_param
+ * Description:	Check color key unit parameter of RPF.
+ * Returns:		0/E_VSP_PARA_ALPHA_CKEY
+ ******************************************************************************/
 static long vsp_ins_check_ckey_unit_param(
 	struct vsp_rpf_info *rpf_info, struct vsp_ckey_unit_t *ckey)
 {
@@ -747,11 +747,11 @@ static long vsp_ins_check_ckey_unit_param(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_irop_unit_param
-Description:	Check irop unit parameter of RPF.
-Returns:		0/E_VSP_PARA_ALPHA_BSEL/E_VSP_PARA_ALPHA_MSKEN
-	E_VSP_PARA_ALPHA_IROP
-******************************************************************************/
+ * Function:		vsp_ins_check_irop_unit_param
+ * Description:	Check irop unit parameter of RPF.
+ * Returns:		0/E_VSP_PARA_ALPHA_BSEL/E_VSP_PARA_ALPHA_MSKEN
+ *	E_VSP_PARA_ALPHA_IROP
+ ******************************************************************************/
 static long vsp_ins_check_irop_unit_param(
 	struct vsp_rpf_info *rpf_info,
 	struct vsp_alpha_unit_t *alpha,
@@ -838,10 +838,10 @@ static long vsp_ins_check_irop_unit_param(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_mult_unit_param
-Description:	Check multiple unit parameter of RPF.
-Returns:		0/E_VSP_PARA_ALPHA_MULT
-******************************************************************************/
+ * Function:		vsp_ins_check_mult_unit_param
+ * Description:	Check multiple unit parameter of RPF.
+ * Returns:		0/E_VSP_PARA_ALPHA_MULT
+ ******************************************************************************/
 static long vsp_ins_check_mult_unit_param(
 	struct vsp_rpf_info *rpf_info,
 	struct vsp_src_info *src_info,
@@ -878,14 +878,14 @@ static long vsp_ins_check_mult_unit_param(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_alpha_blend_param
-Description:	Check alpha blend parameter of RPF.
-Returns:		0/E_VSP_PARA_IN_ALPHA/E_VSP_PARA_ALPHA_ASEL
-	E_VSP_PARA_ALPHA_AEXT/E_VSP_PARA_ALPHA_ADR/E_VSP_PARA_IN_XOFFSET
-	return of vsp_ins_check_ckey_unit_param()
-	return of vsp_ins_check_irop_unit_param()
-	return of vsp_ins_check_mult_unit_param()
-******************************************************************************/
+ * Function:		vsp_ins_check_alpha_blend_param
+ * Description:	Check alpha blend parameter of RPF.
+ * Returns:		0/E_VSP_PARA_IN_ALPHA/E_VSP_PARA_ALPHA_ASEL
+ *	E_VSP_PARA_ALPHA_AEXT/E_VSP_PARA_ALPHA_ADR/E_VSP_PARA_IN_XOFFSET
+ *	return of vsp_ins_check_ckey_unit_param()
+ *	return of vsp_ins_check_irop_unit_param()
+ *	return of vsp_ins_check_mult_unit_param()
+ ******************************************************************************/
 static long vsp_ins_check_alpha_blend_param(
 	struct vsp_rpf_info *rpf_info,
 	struct vsp_src_info *src_info,
@@ -991,17 +991,17 @@ static long vsp_ins_check_alpha_blend_param(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_rpf_param
-Description:	Check source parameter of RPF.
-Returns:		0/E_VSP_PARA_NOIN/E_VSP_PARA_IN_ITURBT
-	E_VSP_PARA_IN_CLRCNG/E_VSP_PARA_IN_CSC/E_VSP_PARA_IN_VIR
-	E_VSP_PARA_IN_CIPM/E_VSP_PARA_IN_CEXT/E_VSP_PARA_IN_WIDTH
-	E_VSP_PARA_IN_HEIGHT/E_VSP_PARA_IN_WIDTHEX/E_VSP_PARA_IN_HEIGHTEX
-	E_VSP_PARA_IN_PWD/E_VSP_PARA_IN_CONNECT
-	return of vsp_ins_check_rpf_format()
-	return of vsp_ins_check_rpf_clut_param()
-	return of vsp_ins_check_alpha_blend_param()
-******************************************************************************/
+ * Function:		vsp_ins_check_rpf_param
+ * Description:	Check source parameter of RPF.
+ * Returns:		0/E_VSP_PARA_NOIN/E_VSP_PARA_IN_ITURBT
+ *	E_VSP_PARA_IN_CLRCNG/E_VSP_PARA_IN_CSC/E_VSP_PARA_IN_VIR
+ *	E_VSP_PARA_IN_CIPM/E_VSP_PARA_IN_CEXT/E_VSP_PARA_IN_WIDTH
+ *	E_VSP_PARA_IN_HEIGHT/E_VSP_PARA_IN_WIDTHEX/E_VSP_PARA_IN_HEIGHTEX
+ *	E_VSP_PARA_IN_PWD/E_VSP_PARA_IN_CONNECT
+ *	return of vsp_ins_check_rpf_format()
+ *	return of vsp_ins_check_rpf_clut_param()
+ *	return of vsp_ins_check_alpha_blend_param()
+ ******************************************************************************/
 static long vsp_ins_check_rpf_param(
 	struct vsp_ch_info *ch_info,
 	struct vsp_rpf_info *rpf_info,
@@ -1171,12 +1171,12 @@ static long vsp_ins_check_rpf_param(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_wpf_format
-Description:	Check format of WPF.
-Returns:		0/E_VSP_PARA_OUT_ADR/E_VSP_PARA_OUT_ADRC0
-	E_VSP_PARA_OUT_ADRC1/E_VSP_PARA_OUT_WIDTH/E_VSP_PARA_OUT_XOFFSET
-	E_VSP_PARA_OUT_HEIGHT/E_VSP_PARA_OUT_YOFFSET/E_VSP_PARA_OUT_FORMAT
-******************************************************************************/
+ * Function:		vsp_ins_check_wpf_format
+ * Description:	Check format of WPF.
+ * Returns:		0/E_VSP_PARA_OUT_ADR/E_VSP_PARA_OUT_ADRC0
+ *	E_VSP_PARA_OUT_ADRC1/E_VSP_PARA_OUT_WIDTH/E_VSP_PARA_OUT_XOFFSET
+ *	E_VSP_PARA_OUT_HEIGHT/E_VSP_PARA_OUT_YOFFSET/E_VSP_PARA_OUT_FORMAT
+ ******************************************************************************/
 static long vsp_ins_check_wpf_format(
 	struct vsp_ch_info *ch_info, struct vsp_dst_t *dst_par)
 {
@@ -1374,12 +1374,12 @@ static long vsp_ins_check_wpf_format(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_wpf_rotation
-Description:	Check rotation parameter of WPF.
-Returns:		0/E_VSP_PARA_OUT_XCOFFSET/E_VSP_PARA_OUT_WIDTH
-	E_VSP_PARA_OUT_XCLIP/E_VSP_PARA_OUT_YCOFFSET/E_VSP_PARA_OUT_HEIGHT
-	E_VSP_PARA_OUT_ROTATION
-******************************************************************************/
+ * Function:		vsp_ins_check_wpf_rotation
+ * Description:	Check rotation parameter of WPF.
+ * Returns:		0/E_VSP_PARA_OUT_XCOFFSET/E_VSP_PARA_OUT_WIDTH
+ *	E_VSP_PARA_OUT_XCLIP/E_VSP_PARA_OUT_YCOFFSET/E_VSP_PARA_OUT_HEIGHT
+ *	E_VSP_PARA_OUT_ROTATION
+ ******************************************************************************/
 static long vsp_ins_check_wpf_rotation(
 	struct vsp_ch_info *ch_info, struct vsp_dst_t *dst_par)
 {
@@ -1476,13 +1476,13 @@ static long vsp_ins_check_wpf_rotation(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_wpf_fcnl
-Description:	Check FCNL compression parameter of WPF.
-Returns:		0/E_VSP_PARA_OUT_STRIDE_C/E_VSP_PARA_OUT_ADRC0
-	E_VSP_PARA_OUT_ADRC1/E_VSP_PARA_OUT_STRIDE_Y/E_VSP_PARA_OUT_ADR
-	E_VSP_PARA_OUT_FORMAT/E_VSP_PARA_OUT_ROTATION/E_VSP_PARA_OUT_SWAP
-	E_VSP_PARA_FCNL
-******************************************************************************/
+ * Function:		vsp_ins_check_wpf_fcnl
+ * Description:	Check FCNL compression parameter of WPF.
+ * Returns:		0/E_VSP_PARA_OUT_STRIDE_C/E_VSP_PARA_OUT_ADRC0
+ *	E_VSP_PARA_OUT_ADRC1/E_VSP_PARA_OUT_STRIDE_Y/E_VSP_PARA_OUT_ADR
+ *	E_VSP_PARA_OUT_FORMAT/E_VSP_PARA_OUT_ROTATION/E_VSP_PARA_OUT_SWAP
+ *	E_VSP_PARA_FCNL
+ ******************************************************************************/
 static long vsp_ins_check_wpf_fcnl(
 	struct vsp_ch_info *ch_info, struct vsp_dst_t *dst_par)
 {
@@ -1564,10 +1564,10 @@ static long vsp_ins_check_wpf_fcnl(
 
 
 /******************************************************************************
-Function:		vsp_ins_recalculate_wpf_addr
-Description:	Recalculate buffer address of WPF.
-Returns:		0
-******************************************************************************/
+ * Function:		vsp_ins_recalculate_wpf_addr
+ * Description:	Recalculate buffer address of WPF.
+ * Returns:		0
+ ******************************************************************************/
 static long vsp_ins_recalculate_wpf_addr(
 	struct vsp_ch_info *ch_info, struct vsp_dst_t *dst_par)
 {
@@ -1669,17 +1669,17 @@ static long vsp_ins_recalculate_wpf_addr(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_wpf_param
-Description:	Check output parameter of WPF.
-Returns:		0/E_VSP_PARA_OUTPAR/E_VSP_PARA_OUT_INHSV
-	E_VSP_PARA_OUT_PXA/E_VSP_PARA_OUT_DITH/E_VSP_PARA_OUT_ITURBT
-	E_VSP_PARA_OUT_CLRCNG/E_VSP_PARA_OUT_CSC/E_VSP_PARA_OUT_NOTCOLOR
-	E_VSP_PARA_OUT_CBRM/E_VSP_PARA_OUT_ABRM/E_VSP_PARA_OUT_CLMD
-	return of vsp_ins_check_wpf_format()
-	return of vsp_ins_check_wpf_rotation()
-	return of vsp_ins_check_wpf_fcnl()
-	return of vsp_ins_recalculate_wpf_addr()
-******************************************************************************/
+ * Function:		vsp_ins_check_wpf_param
+ * Description:	Check output parameter of WPF.
+ * Returns:		0/E_VSP_PARA_OUTPAR/E_VSP_PARA_OUT_INHSV
+ *	E_VSP_PARA_OUT_PXA/E_VSP_PARA_OUT_DITH/E_VSP_PARA_OUT_ITURBT
+ *	E_VSP_PARA_OUT_CLRCNG/E_VSP_PARA_OUT_CSC/E_VSP_PARA_OUT_NOTCOLOR
+ *	E_VSP_PARA_OUT_CBRM/E_VSP_PARA_OUT_ABRM/E_VSP_PARA_OUT_CLMD
+ *	return of vsp_ins_check_wpf_format()
+ *	return of vsp_ins_check_wpf_rotation()
+ *	return of vsp_ins_check_wpf_fcnl()
+ *	return of vsp_ins_recalculate_wpf_addr()
+ ******************************************************************************/
 static long vsp_ins_check_wpf_param(
 	struct vsp_ch_info *ch_info, struct vsp_dst_t *dst_par)
 {
@@ -1805,12 +1805,12 @@ static long vsp_ins_check_wpf_param(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_sru_param
-Description:	Check module parameter of SRU.
-Returns:		0/E_VSP_PARA_NOSRU/E_VSP_PARA_SRU_INHSV
-	E_VSP_PARA_SRU_MODE/E_VSP_PARA_SRU_WIDTH/E_VSP_PARA_SRU_HEIGHT
-	E_VSP_PARA_SRU_PARAM/E_VSP_PARA_SRU_ENSCL/E_VSP_PARA_SRU_CONNECT
-******************************************************************************/
+ * Function:		vsp_ins_check_sru_param
+ * Description:	Check module parameter of SRU.
+ * Returns:		0/E_VSP_PARA_NOSRU/E_VSP_PARA_SRU_INHSV
+ *	E_VSP_PARA_SRU_MODE/E_VSP_PARA_SRU_WIDTH/E_VSP_PARA_SRU_HEIGHT
+ *	E_VSP_PARA_SRU_PARAM/E_VSP_PARA_SRU_ENSCL/E_VSP_PARA_SRU_CONNECT
+ ******************************************************************************/
 static long vsp_ins_check_sru_param(
 	struct vsp_ch_info *ch_info, struct vsp_sru_t *sru_param)
 {
@@ -1890,13 +1890,13 @@ static long vsp_ins_check_sru_param(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_uds_param
-Description:	Check module parameter of UDS.
-Returns:		0/E_VSP_PARA_NOUDS/E_VSP_PARA_UDS_INWIDTH
-	E_VSP_PARA_UDS_INHEIGHT/E_VSP_PARA_UDS_XRATIO/E_VSP_PARA_UDS_INWIDTH
-	E_VSP_PARA_UDS_YRATIO/E_VSP_PARA_UDS_AMD/E_VSP_PARA_UDS_CLIP/
-	E_VSP_PARA_UDS_ALPHA/E_VSP_PARA_UDS_COMP/E_VSP_PARA_UDS_CONNECT
-******************************************************************************/
+ * Function:		vsp_ins_check_uds_param
+ * Description:	Check module parameter of UDS.
+ * Returns:		0/E_VSP_PARA_NOUDS/E_VSP_PARA_UDS_INWIDTH
+ *	E_VSP_PARA_UDS_INHEIGHT/E_VSP_PARA_UDS_XRATIO/E_VSP_PARA_UDS_INWIDTH
+ *	E_VSP_PARA_UDS_YRATIO/E_VSP_PARA_UDS_AMD/E_VSP_PARA_UDS_CLIP/
+ *	E_VSP_PARA_UDS_ALPHA/E_VSP_PARA_UDS_COMP/E_VSP_PARA_UDS_CONNECT
+ ******************************************************************************/
 static long vsp_ins_check_uds_param(
 	struct vsp_ch_info *ch_info, struct vsp_uds_t *uds_param)
 {
@@ -2034,11 +2034,11 @@ static long vsp_ins_check_uds_param(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_lut_param
-Description:	Check module parameter of LUT.
-Returns:		0/E_VSP_PARA_NOLUT/E_VSP_PARA_LUT_ADR
-	E_VSP_PARA_LUT_SIZE/E_VSP_PARA_LUT_CONNECT
-******************************************************************************/
+ * Function:		vsp_ins_check_lut_param
+ * Description:	Check module parameter of LUT.
+ * Returns:		0/E_VSP_PARA_NOLUT/E_VSP_PARA_LUT_ADR
+ *	E_VSP_PARA_LUT_SIZE/E_VSP_PARA_LUT_CONNECT
+ ******************************************************************************/
 static long vsp_ins_check_lut_param(
 	struct vsp_ch_info *ch_info, struct vsp_lut_t *lut_param)
 {
@@ -2072,11 +2072,11 @@ static long vsp_ins_check_lut_param(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_clu_param
-Description:	Check module parameter of CLU.
-Returns:		0/E_VSP_PARA_NOCLU/E_VSP_PARA_CLU_ADR
-	E_VSP_PARA_CLU_SIZE/E_VSP_PARA_CLU_MODE/E_VSP_PARA_CLU_CONNECT
-******************************************************************************/
+ * Function:		vsp_ins_check_clu_param
+ * Description:	Check module parameter of CLU.
+ * Returns:		0/E_VSP_PARA_NOCLU/E_VSP_PARA_CLU_ADR
+ *	E_VSP_PARA_CLU_SIZE/E_VSP_PARA_CLU_MODE/E_VSP_PARA_CLU_CONNECT
+ ******************************************************************************/
 static long vsp_ins_check_clu_param(
 	struct vsp_ch_info *ch_info, struct vsp_clu_t *clu_param)
 {
@@ -2160,11 +2160,11 @@ static long vsp_ins_check_clu_param(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_hst_param
-Description:	Check module parameter of HST.
-Returns:		0/E_VSP_PARA_NOHST/E_VSP_PARA_HST_NOTRGB
-	E_VSP_PARA_HST_CONNECT
-******************************************************************************/
+ * Function:		vsp_ins_check_hst_param
+ * Description:	Check module parameter of HST.
+ * Returns:		0/E_VSP_PARA_NOHST/E_VSP_PARA_HST_NOTRGB
+ *	E_VSP_PARA_HST_CONNECT
+ ******************************************************************************/
 static long vsp_ins_check_hst_param(
 	struct vsp_ch_info *ch_info, struct vsp_hst_t *hst_param)
 {
@@ -2197,11 +2197,11 @@ static long vsp_ins_check_hst_param(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_hsi_param
-Description:	Check module parameter of HSI.
-Returns:		0/E_VSP_PARA_NOHSI/E_VSP_PARA_HSI_NOTHSV
-	E_VSP_PARA_HSI_CONNECT
-******************************************************************************/
+ * Function:		vsp_ins_check_hsi_param
+ * Description:	Check module parameter of HSI.
+ * Returns:		0/E_VSP_PARA_NOHSI/E_VSP_PARA_HSI_NOTHSV
+ *	E_VSP_PARA_HSI_CONNECT
+ ******************************************************************************/
 static long vsp_ins_check_hsi_param(
 	struct vsp_ch_info *ch_info, struct vsp_hsi_t *hsi_param)
 {
@@ -2234,11 +2234,11 @@ static long vsp_ins_check_hsi_param(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_blend_virtual_param
-Description:	Check virtual parameter of BRU.
-Returns:		0/E_VSP_PARA_VIR_ADR/E_VSP_PARA_VIR_WIDTH
-				E_VSP_PARA_VIR_HEIGHT/E_VSP_PARA_VIR_PWD
-******************************************************************************/
+ * Function:		vsp_ins_check_blend_virtual_param
+ * Description:	Check virtual parameter of BRU.
+ * Returns:		0/E_VSP_PARA_VIR_ADR/E_VSP_PARA_VIR_WIDTH
+ *				E_VSP_PARA_VIR_HEIGHT/E_VSP_PARA_VIR_PWD
+ ******************************************************************************/
 static long vsp_ins_check_blend_virtual_param(
 	struct vsp_ch_info *ch_info, struct vsp_bld_vir_t *vir_param)
 {
@@ -2291,11 +2291,11 @@ static long vsp_ins_check_blend_virtual_param(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_brs_virtual_param
-Description:	Check virtual parameter of BRS.
-Returns:		0/E_VSP_PARA_VIR_ADR/E_VSP_PARA_VIR_WIDTH
-				E_VSP_PARA_VIR_HEIGHT/E_VSP_PARA_VIR_PWD
-******************************************************************************/
+ * Function:		vsp_ins_check_brs_virtual_param
+ * Description:	Check virtual parameter of BRS.
+ * Returns:		0/E_VSP_PARA_VIR_ADR/E_VSP_PARA_VIR_WIDTH
+ *				E_VSP_PARA_VIR_HEIGHT/E_VSP_PARA_VIR_PWD
+ ******************************************************************************/
 static long vsp_ins_check_brs_virtual_param(
 	struct vsp_ch_info *ch_info, struct vsp_bld_vir_t *vir_param)
 {
@@ -2348,14 +2348,14 @@ static long vsp_ins_check_brs_virtual_param(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_blend_control_param
-Description:	Check blend control parameter of BRU.
-Returns:		0/E_VSP_PARA_BLEND_RBC/E_VSP_PARA_BLEND_CROP
-				E_VSP_PARA_BLEND_AROP/E_VSP_PARA_BLEND_FORM
-				E_VSP_PARA_BLEND_COEFX/E_VSP_PARA_BLEND_COEFY
-				E_VSP_PARA_BLEND_AFORM/E_VSP_PARA_BLEND_ACOEFX
-				E_VSP_PARA_BLEND_ACOEFY
-******************************************************************************/
+ * Function:		vsp_ins_check_blend_control_param
+ * Description:	Check blend control parameter of BRU.
+ * Returns:		0/E_VSP_PARA_BLEND_RBC/E_VSP_PARA_BLEND_CROP
+ *				E_VSP_PARA_BLEND_AROP/E_VSP_PARA_BLEND_FORM
+ *				E_VSP_PARA_BLEND_COEFX/E_VSP_PARA_BLEND_COEFY
+ *				E_VSP_PARA_BLEND_AFORM/E_VSP_PARA_BLEND_ACOEFX
+ *				E_VSP_PARA_BLEND_ACOEFY
+ ******************************************************************************/
 static long vsp_ins_check_blend_control_param(
 	unsigned int *bru_ctrl,
 	unsigned int *bru_bld,
@@ -2431,10 +2431,10 @@ static long vsp_ins_check_blend_control_param(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_rop_unit_param
-Description:	Check raster operation unit parameter of BRU.
-Returns:		0/E_VSP_PARA_ROP_CROP/E_VSP_PARA_ROP_AROP
-******************************************************************************/
+ * Function:		vsp_ins_check_rop_unit_param
+ * Description:	Check raster operation unit parameter of BRU.
+ * Returns:		0/E_VSP_PARA_ROP_CROP/E_VSP_PARA_ROP_AROP
+ ******************************************************************************/
 static long vsp_ins_check_rop_unit_param(
 	unsigned int *bru_rop,
 	unsigned char layer,
@@ -2464,15 +2464,15 @@ static long vsp_ins_check_rop_unit_param(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_bru_param
-Description:	Check module parameter of BRU.
-Returns:		0/E_VSP_PARA_NOBRU/E_VSP_PARA_BRU_LAYORDER
-	E_VSP_PARA_BRU_ADIV/E_VSP_PARA_BRU_DITH_BPP/E_VSP_PARA_BRU_DITH_MODE
-	E_VSP_PARA_BRU_CONNECT
-	return of vsp_ins_check_input_color_space_of_bru()
-	return of vsp_ins_check_blend_virtual_param()
-	return of vsp_ins_check_blend_control_param()
-******************************************************************************/
+ * Function:		vsp_ins_check_bru_param
+ * Description:	Check module parameter of BRU.
+ * Returns:		0/E_VSP_PARA_NOBRU/E_VSP_PARA_BRU_LAYORDER
+ *	E_VSP_PARA_BRU_ADIV/E_VSP_PARA_BRU_DITH_BPP/E_VSP_PARA_BRU_DITH_MODE
+ *	E_VSP_PARA_BRU_CONNECT
+ *	return of vsp_ins_check_input_color_space_of_bru()
+ *	return of vsp_ins_check_blend_virtual_param()
+ *	return of vsp_ins_check_blend_control_param()
+ ******************************************************************************/
 static long vsp_ins_check_bru_param(
 	struct vsp_ch_info *ch_info, struct vsp_bru_t *bru_param)
 {
@@ -2675,15 +2675,15 @@ static long vsp_ins_check_bru_param(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_brs_param
-Description:	Check module parameter of BRS.
-Returns:		0/E_VSP_PARA_NOBRS/E_VSP_PARA_BRS_LAYORDER
-	E_VSP_PARA_BRS_ADIV/E_VSP_PARA_BRS_DITH_BPP/E_VSP_PARA_BRS_DITH_MODE
-	E_VSP_PARA_BRS_CONNECT
-	return of vsp_ins_check_input_color_space_of_brs()
-	return of vsp_ins_check_brs_virtual_param()
-	return of vsp_ins_check_blend_control_param()
-******************************************************************************/
+ * Function:		vsp_ins_check_brs_param
+ * Description:	Check module parameter of BRS.
+ * Returns:		0/E_VSP_PARA_NOBRS/E_VSP_PARA_BRS_LAYORDER
+ *	E_VSP_PARA_BRS_ADIV/E_VSP_PARA_BRS_DITH_BPP/E_VSP_PARA_BRS_DITH_MODE
+ *	E_VSP_PARA_BRS_CONNECT
+ *	return of vsp_ins_check_input_color_space_of_brs()
+ *	return of vsp_ins_check_brs_virtual_param()
+ *	return of vsp_ins_check_blend_control_param()
+ ******************************************************************************/
 static long vsp_ins_check_brs_param(
 	struct vsp_ch_info *ch_info, struct vsp_brs_t *brs_param)
 {
@@ -2828,14 +2828,14 @@ static long vsp_ins_check_brs_param(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_hgo_param
-Description:	Check module parameter of HGO.
-Returns:		0/E_VSP_PARA_NOHGO/E_VSP_PARA_HGO_ADR
-	E_VSP_PARA_HGO_WIDTH/E_VSP_PARA_HGO_HEIGHT/E_VSP_PARA_HGO_XOFFSET
-	E_VSP_PARA_HGO_YOFFSET/E_VSP_PARA_HGO_BINMODE/E_VSP_PARA_HGO_MAXRGB
-	E_VSP_PARA_HGO_STEP/E_VSP_PARA_HGO_XSKIP/E_VSP_PARA_HGO_YSKIP
-	E_VSP_PARA_HGO_SMMPT
-******************************************************************************/
+ * Function:		vsp_ins_check_hgo_param
+ * Description:	Check module parameter of HGO.
+ * Returns:		0/E_VSP_PARA_NOHGO/E_VSP_PARA_HGO_ADR
+ *	E_VSP_PARA_HGO_WIDTH/E_VSP_PARA_HGO_HEIGHT/E_VSP_PARA_HGO_XOFFSET
+ *	E_VSP_PARA_HGO_YOFFSET/E_VSP_PARA_HGO_BINMODE/E_VSP_PARA_HGO_MAXRGB
+ *	E_VSP_PARA_HGO_STEP/E_VSP_PARA_HGO_XSKIP/E_VSP_PARA_HGO_YSKIP
+ *	E_VSP_PARA_HGO_SMMPT
+ ******************************************************************************/
 static long vsp_ins_check_hgo_param(
 	struct vsp_ch_info *ch_info, struct vsp_hgo_t *hgo_param)
 {
@@ -2924,10 +2924,10 @@ static long vsp_ins_check_hgo_param(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_hue_area_param
-Description:	Check hue area parameter of HGT.
-Returns:		0/E_VSP_PARA_HGT_AREA
-******************************************************************************/
+ * Function:		vsp_ins_check_hue_area_param
+ * Description:	Check hue area parameter of HGT.
+ * Returns:		0/E_VSP_PARA_HGT_AREA
+ ******************************************************************************/
 static long vsp_ins_check_hue_area_param(struct vsp_hue_area_t *hue_area)
 {
 	unsigned char val = hue_area[0].upper;
@@ -2953,14 +2953,14 @@ static long vsp_ins_check_hue_area_param(struct vsp_hue_area_t *hue_area)
 
 
 /******************************************************************************
-Function:		vsp_ins_check_hgt_param
-Description:	Check module parameter of HGT.
-Returns:		0/E_VSP_PARA_NOHGT/E_VSP_PARA_HGT_ADR
-	E_VSP_PARA_HGT_WIDTH/E_VSP_PARA_HGT_HEIGHT/E_VSP_PARA_HGT_XOFFSET
-	E_VSP_PARA_HGT_YOFFSET/E_VSP_PARA_HGO_XSKIP/E_VSP_PARA_HGO_YSKIP
-	E_VSP_PARA_HGT_SMMPT
-	return of vsp_ins_check_hue_area_param()
-******************************************************************************/
+ * Function:		vsp_ins_check_hgt_param
+ * Description:	Check module parameter of HGT.
+ * Returns:		0/E_VSP_PARA_NOHGT/E_VSP_PARA_HGT_ADR
+ *	E_VSP_PARA_HGT_WIDTH/E_VSP_PARA_HGT_HEIGHT/E_VSP_PARA_HGT_XOFFSET
+ *	E_VSP_PARA_HGT_YOFFSET/E_VSP_PARA_HGO_XSKIP/E_VSP_PARA_HGO_YSKIP
+ *	E_VSP_PARA_HGT_SMMPT
+ *	return of vsp_ins_check_hue_area_param()
+ ******************************************************************************/
 static long vsp_ins_check_hgt_param(
 	struct vsp_ch_info *ch_info, struct vsp_hgt_t *hgt_param)
 {
@@ -3038,10 +3038,10 @@ static long vsp_ins_check_hgt_param(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_shp_param
-Description:	Check module parameter of SHP.
-Returns:		0/E_VSP_PARA_NOSHP/E_VSP_PARA_SHP_CONNECT
-******************************************************************************/
+ * Function:		vsp_ins_check_shp_param
+ * Description:	Check module parameter of SHP.
+ * Returns:		0/E_VSP_PARA_NOSHP/E_VSP_PARA_SHP_CONNECT
+ ******************************************************************************/
 static long vsp_ins_check_shp_param(
 	struct vsp_ch_info *ch_info, struct vsp_shp_t *shp_param)
 {
@@ -3087,10 +3087,10 @@ static long vsp_ins_check_shp_param(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_dl_param
-Description:	Check display list parameter.
-Returns:		0/E_VSP_PARA_DL_ADR/E_VSP_PARA_DL_SIZE
-******************************************************************************/
+ * Function:		vsp_ins_check_dl_param
+ * Description:	Check display list parameter.
+ * Returns:		0/E_VSP_PARA_DL_ADR/E_VSP_PARA_DL_SIZE
+ ******************************************************************************/
 static long vsp_ins_check_dl_param(
 	struct vsp_ch_info *ch_info, struct vsp_dl_t *dl_param)
 {
@@ -3114,11 +3114,11 @@ static long vsp_ins_check_dl_param(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_module_param
-Description:	Check module parameter.
-Returns:		0/E_VSP_PARA_CONNECT
-	return of each of modules parameter function.
-******************************************************************************/
+ * Function:		vsp_ins_check_module_param
+ * Description:	Check module parameter.
+ * Returns:		0/E_VSP_PARA_CONNECT
+ *	return of each of modules parameter function.
+ ******************************************************************************/
 static long vsp_ins_check_module_param(
 	struct vsp_ch_info *ch_info, struct vsp_ctrl_t *ctrl_param)
 {
@@ -3200,13 +3200,13 @@ static long vsp_ins_check_module_param(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_connection_module_from_rpf
-Description:	Check connection module parameter from RPF.
-Returns:		0/E_VSP_PARA_RPFNUM/E_VSP_PARA_CTRLPAR
-	E_VSP_PARA_RPFORDER/E_VSP_PARA_CONNECT
-	return of vsp_ins_check_rpf_param()
-	return of vsp_ins_check_module_param()
-******************************************************************************/
+ * Function:		vsp_ins_check_connection_module_from_rpf
+ * Description:	Check connection module parameter from RPF.
+ * Returns:		0/E_VSP_PARA_RPFNUM/E_VSP_PARA_CTRLPAR
+ *	E_VSP_PARA_RPFORDER/E_VSP_PARA_CONNECT
+ *	return of vsp_ins_check_rpf_param()
+ *	return of vsp_ins_check_module_param()
+ ******************************************************************************/
 static long vsp_ins_check_connection_module_from_rpf(
 	struct vsp_prv_data *prv, struct vsp_start_t *param)
 {
@@ -3270,14 +3270,14 @@ static long vsp_ins_check_connection_module_from_rpf(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_connection_module_from_bru
-Description:	Check connection module parameter from BRU or BRS.
-Returns:		0/E_VSP_PARA_CONNECT
-	return of vsp_ins_check_brs_param()
-	return of vsp_ins_check_bru_param()
-	return of vsp_ins_check_master_layer()
-	return of vsp_ins_check_module_param()
-******************************************************************************/
+ * Function:		vsp_ins_check_connection_module_from_bru
+ * Description:	Check connection module parameter from BRU or BRS.
+ * Returns:		0/E_VSP_PARA_CONNECT
+ *	return of vsp_ins_check_brs_param()
+ *	return of vsp_ins_check_bru_param()
+ *	return of vsp_ins_check_master_layer()
+ *	return of vsp_ins_check_module_param()
+ ******************************************************************************/
 static long vsp_ins_check_connection_module_from_bru(
 	struct vsp_ch_info *ch_info, struct vsp_start_t *param)
 {
@@ -3326,12 +3326,12 @@ static long vsp_ins_check_connection_module_from_bru(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_independent_module
-Description:	Check independent module parameter.
-Returns:		0
-	return of vsp_ins_check_hgo_param()
-	return of vsp_ins_check_hgt_param()
-******************************************************************************/
+ * Function:		vsp_ins_check_independent_module
+ * Description:	Check independent module parameter.
+ * Returns:		0
+ *	return of vsp_ins_check_hgo_param()
+ *	return of vsp_ins_check_hgt_param()
+ ******************************************************************************/
 static long vsp_ins_check_independent_module(
 	struct vsp_ch_info *ch_info, struct vsp_start_t *param)
 {
@@ -3363,12 +3363,12 @@ static long vsp_ins_check_independent_module(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_output_module
-Description:	Check destination module parameter.
-Returns:		0
-	return of vsp_ins_check_wpf_param()
-	return of vsp_ins_check_dl_param()
-******************************************************************************/
+ * Function:		vsp_ins_check_output_module
+ * Description:	Check destination module parameter.
+ * Returns:		0
+ *	return of vsp_ins_check_wpf_param()
+ *	return of vsp_ins_check_dl_param()
+ ******************************************************************************/
 static long vsp_ins_check_output_module(
 	struct vsp_ch_info *ch_info, struct vsp_start_t *param)
 {
@@ -3389,12 +3389,12 @@ static long vsp_ins_check_output_module(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_partition
-Description:	Check partition parameter.
-Returns:		0/E_VSP_PARA_IN_WIDTHEX/E_VSP_PARA_IN_HEIGHTEX
-	E_VSP_PARA_ALPHA_ASEL/E_VSP_PARA_OUT_XCOFFSET/E_VSP_PARA_OUT_YCOFFSET
-	E_VSP_PARA_DL_SIZE/E_VSP_PARA_CONNECT
-******************************************************************************/
+ * Function:		vsp_ins_check_partition
+ * Description:	Check partition parameter.
+ * Returns:		0/E_VSP_PARA_IN_WIDTHEX/E_VSP_PARA_IN_HEIGHTEX
+ *	E_VSP_PARA_ALPHA_ASEL/E_VSP_PARA_OUT_XCOFFSET/E_VSP_PARA_OUT_YCOFFSET
+ *	E_VSP_PARA_DL_SIZE/E_VSP_PARA_CONNECT
+ ******************************************************************************/
 static long vsp_ins_check_partition(
 	struct vsp_ch_info *ch_info, struct vsp_start_t *st_par)
 {
@@ -3459,15 +3459,15 @@ static long vsp_ins_check_partition(
 
 
 /******************************************************************************
-Function:		vsp_ins_check_start_parameter
-Description:	Check vsp_start_t parameter.
-Returns:		0/E_VSP_PARA_USEMODULE
-	return of vsp_ins_check_connection_module_from_rpf()
-	return of vsp_ins_check_connection_module_from_bru()
-	return of vsp_ins_check_independent_module()
-	return of vsp_ins_check_output_module()
-	return of vsp_ins_check_partition()
-******************************************************************************/
+ * Function:		vsp_ins_check_start_parameter
+ * Description:	Check vsp_start_t parameter.
+ * Returns:		0/E_VSP_PARA_USEMODULE
+ *	return of vsp_ins_check_connection_module_from_rpf()
+ *	return of vsp_ins_check_connection_module_from_bru()
+ *	return of vsp_ins_check_independent_module()
+ *	return of vsp_ins_check_output_module()
+ *	return of vsp_ins_check_partition()
+ ******************************************************************************/
 long vsp_ins_check_start_parameter(
 	struct vsp_prv_data *prv, struct vsp_start_t *param)
 {
