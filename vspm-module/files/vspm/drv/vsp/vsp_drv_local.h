@@ -67,7 +67,7 @@
 	((void *)((unsigned long)(st_par->dl_par.virt_addr) + \
 	((unsigned long)(addr) - (unsigned long)(st_par->dl_par.hard_addr))))
 #define VSP_DL_WRITE(offset, data) \
-	dlwrite32(&body, reg_offset + (offset), (data));
+	dlwrite32(&body, reg_offset + (offset), (data))
 
 #define VSP_UDS_SCALE_AMD1(width, ratio) \
 	(((unsigned int)(width) << 12) / (ratio))
