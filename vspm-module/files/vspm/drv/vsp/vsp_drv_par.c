@@ -1101,19 +1101,19 @@ static long vsp_ins_check_rpf_param(
 	/* check extended area */
 	if (src_par->width_ex == 0) {
 		width = (unsigned int)src_par->width;
-	} else if ((src_par->width_ex < src_par->width) ||
-			(src_par->width_ex > 8190)) {
-		return E_VSP_PARA_IN_WIDTHEX;
 	} else {
+		if ((src_par->width_ex < src_par->width) ||
+		    (src_par->width_ex > 8190))
+			return E_VSP_PARA_IN_WIDTHEX;
 		width = (unsigned int)src_par->width_ex;
 	}
 
 	if (src_par->height_ex == 0) {
 		height = (unsigned int)src_par->height;
-	} else if ((src_par->height_ex < src_par->height) ||
-			(src_par->height_ex > 8190)) {
-		return E_VSP_PARA_IN_HEIGHTEX;
 	} else {
+		if ((src_par->height_ex < src_par->height) ||
+		    (src_par->height_ex > 8190))
+			return E_VSP_PARA_IN_HEIGHTEX;
 		height = (unsigned int)src_par->height_ex;
 	}
 	rpf_info->val_esize = (width << 16) | height;

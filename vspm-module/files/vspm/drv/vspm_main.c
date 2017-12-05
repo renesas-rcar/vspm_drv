@@ -335,9 +335,8 @@ static int vspm_vsp_probe(struct platform_device *pdev)
 			for (; i > 0; i--)
 				pdrv->vsp_clks[ch][i-1] = NULL;
 			return -1;
-		} else {
-			pdrv->vsp_clks[ch][i] = clk;
 		}
+		pdrv->vsp_clks[ch][i] = clk;
 	}
 
 	/* set driver data */
@@ -414,9 +413,8 @@ static int vspm_fdp_probe(struct platform_device *pdev)
 			for (; i > 0; i--)
 				pdrv->fdp_clks[ch][i-1] = NULL;
 			return -1;
-		} else {
-			pdrv->fdp_clks[ch][i] = clk;
 		}
+		pdrv->fdp_clks[ch][i] = clk;
 	}
 
 	/* set driver data */
