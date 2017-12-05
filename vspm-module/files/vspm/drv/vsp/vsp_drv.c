@@ -194,9 +194,9 @@ long vsp_lib_open(unsigned char ch, struct vsp_open_t *param)
 
 	/* check status */
 	if ((prv->ch_info[0].status != VSP_STAT_INIT) ||
-		(prv->ch_info[1].status != VSP_STAT_INIT)) {
-			ercd = E_VSP_INVALID_STATE;
-			goto err_exit1;
+	    (prv->ch_info[1].status != VSP_STAT_INIT)) {
+		ercd = E_VSP_INVALID_STATE;
+		goto err_exit1;
 	}
 
 	prv->pdev = param->pdev;

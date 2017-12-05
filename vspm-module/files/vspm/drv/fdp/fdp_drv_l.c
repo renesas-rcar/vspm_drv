@@ -97,9 +97,9 @@ static long fdp_ins_check_seq_param(
 	case FDP_SEQ_PROG:
 		/* check input pucture vertical size */
 		if ((seq_par->in_height < 32) ||
-			(seq_par->in_height > 8190) ||
-			(seq_par->in_height & 0x1))
-				return E_FDP_PARA_INHEIGHT;
+		    (seq_par->in_height > 8190) ||
+		    (seq_par->in_height & 0x1))
+			return E_FDP_PARA_INHEIGHT;
 
 		/* set progressive mode */
 		obj->ctrl_mode =
@@ -155,7 +155,7 @@ static long fdp_ins_check_seq_param(
 		if (seq_par->seq_mode == FDP_SEQ_INTER) {
 			if ((fproc_par->interpolated_line != FDP_DIM_PREV) &&
 			    (fproc_par->interpolated_line != FDP_DIM_NEXT)) {
-					return E_FDP_PARA_INTERPOLATED;
+				return E_FDP_PARA_INTERPOLATED;
 			}
 		}
 		break;
@@ -258,8 +258,8 @@ static long fdp_ins_check_pic_param_for_pulldown(
 			return E_FDP_PARA_REPEATTOP;
 		case 3:
 			if ((in_pic->repeat_first_field == 0) &&
-				(in_pic->top_field_first == 1))
-					return E_FDP_PARA_REPEATTOP;
+			    (in_pic->top_field_first == 1))
+				return E_FDP_PARA_REPEATTOP;
 			break;
 		default:
 			return E_FDP_PARA_PICSTRUCT;
@@ -270,13 +270,13 @@ static long fdp_ins_check_pic_param_for_pulldown(
 
 	/* check decode information repeat_first_field */
 	if ((in_pic->repeat_first_field != 0) &&
-		(in_pic->repeat_first_field != 1))
-			return E_FDP_PARA_REPEATTOP;
+	    (in_pic->repeat_first_field != 1))
+		return E_FDP_PARA_REPEATTOP;
 
 	/* check decode information top_field_first */
 	if ((in_pic->top_field_first != 0) &&
-		(in_pic->top_field_first != 1))
-			return E_FDP_PARA_REPEATTOP;
+	    (in_pic->top_field_first != 1))
+		return E_FDP_PARA_REPEATTOP;
 
 	return 0;
 }

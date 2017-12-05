@@ -1059,15 +1059,15 @@ static long vsp_ins_check_rpf_param(
 
 	/* check horizontal chrominance interpolation method parameter */
 	if ((src_par->cipm != VSP_CIPM_0_HOLD) &&
-		(src_par->cipm != VSP_CIPM_BI_LINEAR))
-			return E_VSP_PARA_IN_CIPM;
+	    (src_par->cipm != VSP_CIPM_BI_LINEAR))
+		return E_VSP_PARA_IN_CIPM;
 	rpf_info->val_infmt |= ((unsigned int)src_par->cipm) << 16;
 
 	/* check lower-bit color data extension method parameter */
 	if ((src_par->cext != VSP_CEXT_EXPAN) &&
-		(src_par->cext != VSP_CEXT_COPY) &&
-		(src_par->cext != VSP_CEXT_EXPAN_MAX))
-			return E_VSP_PARA_IN_CEXT;
+	    (src_par->cext != VSP_CEXT_COPY) &&
+	    (src_par->cext != VSP_CEXT_EXPAN_MAX))
+		return E_VSP_PARA_IN_CEXT;
 	rpf_info->val_infmt |= ((unsigned int)src_par->cext) << 12;
 
 	/* check format parameter */
@@ -1783,18 +1783,18 @@ static long vsp_ins_check_wpf_param(
 
 	/* check rounding control parameter */
 	if ((dst_par->cbrm != VSP_CSC_ROUND_DOWN) &&
-		(dst_par->cbrm != VSP_CSC_ROUND_OFF))
-			return E_VSP_PARA_OUT_CBRM;
+	    (dst_par->cbrm != VSP_CSC_ROUND_OFF))
+		return E_VSP_PARA_OUT_CBRM;
 
 	if ((dst_par->abrm != VSP_CONVERSION_ROUNDDOWN) &&
-		(dst_par->abrm != VSP_CONVERSION_ROUNDING) &&
-		(dst_par->abrm != VSP_CONVERSION_THRESHOLD))
-			return E_VSP_PARA_OUT_ABRM;
+	    (dst_par->abrm != VSP_CONVERSION_ROUNDING) &&
+	    (dst_par->abrm != VSP_CONVERSION_THRESHOLD))
+		return E_VSP_PARA_OUT_ABRM;
 
 	if ((dst_par->clmd != VSP_CLMD_NO) &&
-		(dst_par->clmd != VSP_CLMD_MODE1) &&
-		(dst_par->clmd != VSP_CLMD_MODE2))
-			return E_VSP_PARA_OUT_CLMD;
+	    (dst_par->clmd != VSP_CLMD_MODE1) &&
+	    (dst_par->clmd != VSP_CLMD_MODE2))
+		return E_VSP_PARA_OUT_CLMD;
 
 	return 0;
 }
@@ -2382,8 +2382,8 @@ static long vsp_ins_check_blend_control_param(
 
 		/* check blend_formula */
 		if ((ctrl_param->blend_formula != VSP_FORM_BLEND0) &&
-			(ctrl_param->blend_formula != VSP_FORM_BLEND1))
-				return E_VSP_PARA_BLEND_FORM;
+		    (ctrl_param->blend_formula != VSP_FORM_BLEND1))
+			return E_VSP_PARA_BLEND_FORM;
 
 		/* check blend_corfx */
 		if (ctrl_param->blend_coefx >= VSP_COEFFICIENT_BLENDX_MAX)
@@ -2395,8 +2395,8 @@ static long vsp_ins_check_blend_control_param(
 
 		/* check aformula */
 		if ((ctrl_param->aformula != VSP_FORM_ALPHA0) &&
-			(ctrl_param->aformula != VSP_FORM_ALPHA1))
-				return E_VSP_PARA_BLEND_AFORM;
+		    (ctrl_param->aformula != VSP_FORM_ALPHA1))
+			return E_VSP_PARA_BLEND_AFORM;
 
 		/* check acoefx */
 		if (ctrl_param->acoefx >= VSP_COEFFICIENT_ALPHAX_MAX)
@@ -2873,33 +2873,33 @@ static long vsp_ins_check_hgo_param(
 
 	/* check binary mode */
 	if ((hgo_param->binary_mode != VSP_STRAIGHT_BINARY) &&
-		(hgo_param->binary_mode != VSP_OFFSET_BINARY))
-			return E_VSP_PARA_HGO_BINMODE;
+	    (hgo_param->binary_mode != VSP_OFFSET_BINARY))
+		return E_VSP_PARA_HGO_BINMODE;
 	hgo_info->val_mode = (unsigned int)hgo_param->binary_mode;
 
 	/* check maxrgb mode */
 	if ((hgo_param->maxrgb_mode != VSP_MAXRGB_OFF) &&
-		(hgo_param->maxrgb_mode != VSP_MAXRGB_ON))
-			return E_VSP_PARA_HGO_MAXRGB;
+	    (hgo_param->maxrgb_mode != VSP_MAXRGB_ON))
+		return E_VSP_PARA_HGO_MAXRGB;
 	hgo_info->val_mode |= (unsigned int)hgo_param->maxrgb_mode;
 
 	/* check step mode */
 	if ((hgo_param->step_mode != VSP_STEP_64) &&
-		(hgo_param->step_mode != VSP_STEP_256))
-			return E_VSP_PARA_HGO_STEP;
+	    (hgo_param->step_mode != VSP_STEP_256))
+		return E_VSP_PARA_HGO_STEP;
 	hgo_info->val_mode |= ((unsigned int)hgo_param->step_mode) << 8;
 
 	/* check skip mode */
 	if ((hgo_param->x_skip != VSP_SKIP_OFF) &&
-		(hgo_param->x_skip != VSP_SKIP_1_2) &&
-		(hgo_param->x_skip != VSP_SKIP_1_4))
-			return E_VSP_PARA_HGO_XSKIP;
+	    (hgo_param->x_skip != VSP_SKIP_1_2) &&
+	    (hgo_param->x_skip != VSP_SKIP_1_4))
+		return E_VSP_PARA_HGO_XSKIP;
 	hgo_info->val_mode |= ((unsigned int)hgo_param->x_skip) << 2;
 
 	if ((hgo_param->y_skip != VSP_SKIP_OFF) &&
-		(hgo_param->y_skip != VSP_SKIP_1_2) &&
-		(hgo_param->y_skip != VSP_SKIP_1_4))
-			return E_VSP_PARA_HGO_YSKIP;
+	    (hgo_param->y_skip != VSP_SKIP_1_2) &&
+	    (hgo_param->y_skip != VSP_SKIP_1_4))
+		return E_VSP_PARA_HGO_YSKIP;
 	hgo_info->val_mode |= (unsigned int)hgo_param->y_skip;
 
 	/* set register reset (1st partition) */
