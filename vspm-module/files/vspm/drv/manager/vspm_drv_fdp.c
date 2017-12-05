@@ -103,6 +103,7 @@ long vspm_ins_fdp_ch(unsigned short module_id, unsigned char *ch)
 static void vspm_cb_fdp(unsigned long id, long ercd, void *userdata)
 {
 	unsigned long module_id = (unsigned long)userdata;
+
 	vspm_inc_ctrl_on_driver_complete((unsigned short)module_id, ercd);
 }
 
