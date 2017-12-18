@@ -123,7 +123,8 @@ long vspm_inc_sort_queue_entry(
  * Returns:		R_VSPM_OK/R_VSPM_NG
  ******************************************************************************/
 long vspm_inc_sort_queue_refer(struct vspm_queue_info *queue_info,
-	unsigned short index, struct vspm_job_info **p_job_info)
+			       unsigned short index,
+			       struct vspm_job_info **p_job_info)
 {
 	struct vspm_job_info *work_job_info;
 	unsigned short i;
@@ -131,7 +132,7 @@ long vspm_inc_sort_queue_refer(struct vspm_queue_info *queue_info,
 	/* check data counter */
 	if (index >= queue_info->data_count) {
 		EPRINT("%s out of index %d data_count=%d\n",
-			__func__, index, queue_info->data_count);
+		       __func__, index, queue_info->data_count);
 		return R_VSPM_NG;
 	}
 
@@ -160,7 +161,7 @@ long vspm_inc_sort_queue_remove(
 	/* check data counter */
 	if (index >= queue_info->data_count) {
 		EPRINT("%s out of index %d data_count=%d\n",
-			__func__, index, queue_info->data_count);
+		       __func__, index, queue_info->data_count);
 		return R_VSPM_NG;
 	}
 
@@ -195,7 +196,8 @@ unsigned short vspm_inc_sort_queue_get_count(struct vspm_queue_info *queue_info)
  * Returns:		R_VSPM_OK/R_VSPM_NG
  ******************************************************************************/
 long vspm_inc_sort_queue_find_item(struct vspm_queue_info *queue_info,
-	struct vspm_job_info *job_info, unsigned short *p_index)
+				   struct vspm_job_info *job_info,
+				   unsigned short *p_index)
 {
 	struct vspm_job_info *work_job_info;
 	unsigned short i;
@@ -211,7 +213,7 @@ long vspm_inc_sort_queue_find_item(struct vspm_queue_info *queue_info,
 
 	if (i >= queue_info->data_count) {
 		EPRINT("%s not found job_info, data_count=%d\n",
-			__func__, queue_info->data_count);
+		       __func__, queue_info->data_count);
 		return R_VSPM_NG;
 	}
 

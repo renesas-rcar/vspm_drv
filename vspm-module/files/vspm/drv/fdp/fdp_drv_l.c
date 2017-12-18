@@ -111,7 +111,7 @@ static long fdp_ins_check_seq_param(
 	case FDP_SEQ_INTER_2D:
 		/* check input pucture vertical size */
 		if ((seq_par->in_height < 16) ||
-			(seq_par->in_height > 4095))
+		    (seq_par->in_height > 4095))
 			return E_FDP_PARA_INHEIGHT;
 
 		/* set interlace mode */
@@ -138,8 +138,8 @@ static long fdp_ins_check_seq_param(
 
 	/* check input picture horizontal size */
 	if ((seq_par->in_width < 32) ||
-		(seq_par->in_width > 8190) ||
-		(seq_par->in_width & 0x1))
+	    (seq_par->in_width > 8190) ||
+	    (seq_par->in_width & 0x1))
 		return E_FDP_PARA_INWIDTH;
 
 	/* check telecine detect mode */
@@ -440,8 +440,8 @@ static long fdp_ins_check_fcp_param(
 		if (fcp->fcnl == FCP_FCNL_ENABLE) {
 			/* check destination format */
 			if ((fproc_par->out_format != FDP_YUV420_PLANAR) &&
-				(fproc_par->out_format != FDP_YUV422_PLANAR) &&
-				(fproc_par->out_format != FDP_YUV444_PLANAR))
+			    (fproc_par->out_format != FDP_YUV422_PLANAR) &&
+			    (fproc_par->out_format != FDP_YUV444_PLANAR))
 				return E_FDP_PARA_OUTFORMAT;
 
 			buf = fproc_par->out_buf;
@@ -477,7 +477,7 @@ static long fdp_ins_check_fcp_param(
 		if (fcp->tlen == FCP_TL_ENABLE) {
 			/* check position */
 			if ((fcp->pos_y > 8189) ||
-				(fcp->pos_c > 4094))
+			    (fcp->pos_c > 4094))
 				return E_FDP_PARA_FCP_POS;
 
 			/* check stride */
@@ -490,9 +490,9 @@ static long fdp_ins_check_fcp_param(
 
 			/* check current address of reference */
 			if ((fcp->ba_ref_cur_y == 0) ||
-				(fcp->ba_ref_cur_c == 0) ||
-				(fcp->ba_ref_cur_y & 0x3fff) ||
-				(fcp->ba_ref_cur_c & 0x3fff))
+			    (fcp->ba_ref_cur_c == 0) ||
+			    (fcp->ba_ref_cur_y & 0x3fff) ||
+			    (fcp->ba_ref_cur_c & 0x3fff))
 				return E_FDP_PARA_BA_REF;
 
 			/* get previous address of reference */
@@ -527,7 +527,7 @@ static long fdp_ins_check_fcp_param(
 		/* check FCL decompress parameter */
 		/* check current address of ancillary */
 		if ((fcp->ba_anc_cur_y & 0x7f) ||
-			(fcp->ba_anc_cur_c & 0x7f))
+		    (fcp->ba_anc_cur_c & 0x7f))
 			return E_FDP_PARA_BA_ANC;
 
 		/* get previous address of ancillary */
@@ -562,7 +562,7 @@ static long fdp_ins_check_aux_buffer_param(
 	if (seq_par->seq_mode == FDP_SEQ_INTER) {
 		if (seq_par->telecine_mode == FDP_TC_OFF) {
 			if ((obj->rpf0_addr_y == 0) ||
-				(obj->rpf2_addr_y == 0)) {
+			    (obj->rpf2_addr_y == 0)) {
 				/* reject previous and next field buffer */
 				obj->ctrl_chact &=
 					~(FD1_CTL_CHACT_PRE_READ |
@@ -575,7 +575,7 @@ static long fdp_ins_check_aux_buffer_param(
 			}
 		} else if (seq_par->telecine_mode == FDP_TC_FORCED_PULL_DOWN) {
 			if ((obj->rpf0_addr_y == 0) &&
-				(obj->rpf2_addr_y != 0)) {
+			    (obj->rpf2_addr_y != 0)) {
 				/* copy address */
 				obj->rpf0_addr_y = obj->rpf2_addr_y;
 				obj->fcp_ref_addr_y0 = obj->fcp_ref_addr_y2;
@@ -600,7 +600,7 @@ static long fdp_ins_check_aux_buffer_param(
 				if (fcp->tlen == FCP_TL_ENABLE) {
 					/* check reference base address */
 					if ((obj->fcp_ref_addr_y0 == 0) ||
-						(obj->fcp_ref_addr_y0 & 0x3fff))
+					    (obj->fcp_ref_addr_y0 & 0x3fff))
 						return E_FDP_PARA_BA_REF;
 				}
 
@@ -620,7 +620,7 @@ static long fdp_ins_check_aux_buffer_param(
 				if (fcp->tlen == FCP_TL_ENABLE) {
 					/* check reference base address */
 					if ((obj->fcp_ref_addr_y2 == 0) ||
-						(obj->fcp_ref_addr_y2 & 0x3fff))
+					    (obj->fcp_ref_addr_y2 & 0x3fff))
 						return E_FDP_PARA_BA_REF;
 				}
 
@@ -768,16 +768,16 @@ static long fdp_ins_check_fproc_param(
 
 	/* check last sequence indicator parameter */
 	if ((fproc_par->last_seq_indicator != 0) &&
-		(fproc_par->last_seq_indicator != 1))
+	    (fproc_par->last_seq_indicator != 1))
 		return E_FDP_PARA_LASTSTART;
 
 	fdp_ins_set_chact(obj, fproc_par, seq_par, seq_cnt);
 
 	/* check still mask address parameter */
 	if ((obj->ctrl_chact & FD1_CTL_CHACT_SMSK_WRITE) ||
-		(obj->ctrl_chact & FD1_CTL_CHACT_SMSK_READ)) {
+	    (obj->ctrl_chact & FD1_CTL_CHACT_SMSK_READ)) {
 		if ((proc_info->stlmsk_addr[0] == 0) ||
-			(proc_info->stlmsk_addr[1] == 0))
+		    (proc_info->stlmsk_addr[1] == 0))
 			return E_FDP_PARA_STLMSK_ADDR;
 	}
 
@@ -1007,7 +1007,7 @@ static void fdp_ins_set_ipc_reg(
 
 	/* Comb detection parameter register */
 	if ((seq_par->seq_mode == FDP_SEQ_INTER) &&
-		(ipc != NULL)) {
+	    (ipc != NULL)) {
 		reg_data =
 			(((unsigned int)ipc->cmb_ofst) << 16) |
 			(((unsigned int)ipc->cmb_max) << 8) |
@@ -1219,7 +1219,7 @@ void fdp_ins_stop_processing(struct fdp_obj_t *obj)
 
 		if (loop_cnt == 0) {
 			APRINT("%s: happen to timeout after reset of FCP!!\n",
-				__func__);
+			       __func__);
 		}
 	}
 
@@ -1245,7 +1245,7 @@ void fdp_ins_stop_processing(struct fdp_obj_t *obj)
 
 		if (loop_cnt == 0) {
 			APRINT("%s: happen to timeout after reset of FDP!!\n",
-				__func__);
+			       __func__);
 		}
 	}
 
@@ -1634,7 +1634,7 @@ long fdp_reg_inth(struct fdp_obj_t *obj)
 		obj);
 	if (ercd) {
 		EPRINT("%s: failed to request irq!! ercd=%d, irq=%d\n",
-			__func__, ercd, (int)obj->irq->start);
+		       __func__, ercd, (int)obj->irq->start);
 		return E_FDP_DEF_INH;
 	}
 
@@ -1673,7 +1673,7 @@ long fdp_ins_enable_clock(struct fdp_obj_t *obj)
 	ercd = pm_runtime_get_sync(dev);
 	if (ercd < 0) {
 		EPRINT("%s: failed to pm_runtime_get_sync!! ercd=%d\n",
-			__func__, ercd);
+		       __func__, ercd);
 		return E_FDP_NO_CLK;
 	}
 

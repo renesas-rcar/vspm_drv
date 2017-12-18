@@ -527,7 +527,7 @@ long vspm_ins_ctrl_forced_cancel(struct vspm_api_param_forced_cancel *cancel)
 	job_info = &g_vspm_ctrl_info.job_manager.job_info[0];
 	for (i = 0; i < VSPM_MAX_ELEMENTS; i++) {
 		if ((job_info->entry.priv == cancel->priv) &&
-				(job_info->status != VSPM_JOB_STATUS_EMPTY)) {
+		    (job_info->status != VSPM_JOB_STATUS_EMPTY)) {
 
 			if (job_info->status == VSPM_JOB_STATUS_ENTRY) {
 				unsigned short index;
@@ -630,7 +630,7 @@ long vspm_ins_ctrl_mode_param_check(
 		bits <<= VSPM_FDP_CH_OFFSET;
 	} else {
 		EPRINT("%s: Invalid type!! type=%d\n",
-			__func__, param->type);
+		       __func__, param->type);
 		return R_VSPM_PARAERR;
 	}
 
@@ -638,7 +638,7 @@ long vspm_ins_ctrl_mode_param_check(
 	bits &= usable->ch_bits;
 	if (!bits) {
 		EPRINT("%s: Invalid channel!! use_ch=0x%08x\n",
-			__func__, param->use_ch);
+		       __func__, param->use_ch);
 		return R_VSPM_PARAERR;
 	}
 
@@ -650,7 +650,7 @@ long vspm_ins_ctrl_mode_param_check(
 		bits &= ~(usable->occupy_bits);
 		if (!bits) {
 			EPRINT("%s: Already used!! use_ch=0x%08x\n",
-				__func__, param->use_ch);
+			       __func__, param->use_ch);
 			return R_VSPM_ALREADY_USED;
 		}
 
@@ -686,9 +686,9 @@ long vspm_ins_ctrl_entry_param_check(struct vspm_api_param_entry *entry)
 
 	/* check job priority */
 	if ((entry->job_priority < VSPM_PRI_MIN) ||
-		(entry->job_priority > VSPM_PRI_MAX)) {
+	    (entry->job_priority > VSPM_PRI_MAX)) {
 		EPRINT("%s Invalid job_priority %d\n",
-			__func__, entry->job_priority);
+		       __func__, entry->job_priority);
 		return R_VSPM_PARAERR;
 	}
 
@@ -720,7 +720,7 @@ long vspm_ins_ctrl_entry_param_check(struct vspm_api_param_entry *entry)
 		break;
 	default:
 		EPRINT("%s Illegal type 0x%04x\n",
-			__func__, ip_par->type);
+		       __func__, ip_par->type);
 		return R_VSPM_PARAERR;
 	}
 
@@ -732,7 +732,7 @@ long vspm_ins_ctrl_entry_param_check(struct vspm_api_param_entry *entry)
 		NULL);
 	if (ercd) {
 		EPRINT("%s can't assign IP!! 0x%08x\n",
-			 __func__, entry->priv->request_info.ch_bits);
+		       __func__, entry->priv->request_info.ch_bits);
 		return ercd;
 	}
 
@@ -915,7 +915,7 @@ static unsigned char vspm_ins_ctrl_get_req_clut_count(
 	for (i = 0; i < 5; i++) {
 		if (*src_par != NULL) {
 			if (((*src_par)->format == VSP_IN_RGB_CLUT_DATA) ||
-				((*src_par)->format == VSP_IN_YUV_CLUT_DATA)) {
+			    ((*src_par)->format == VSP_IN_YUV_CLUT_DATA)) {
 				cnt++;
 			}
 		}
@@ -962,7 +962,7 @@ unsigned int vspm_ins_ctrl_get_usable_vsp_ch_bits(
 		/* check WPF(rotation) module */
 		if (vsp_par->dst_par != NULL) {
 			if ((vsp_par->dst_par->rotation >= VSP_ROT_H_FLIP) &&
-				(vsp_res->wpf_rot_bits == 0))
+			    (vsp_res->wpf_rot_bits == 0))
 				assign_flag = 0;
 		}
 

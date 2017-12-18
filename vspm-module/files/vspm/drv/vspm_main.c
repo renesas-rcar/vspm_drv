@@ -323,7 +323,7 @@ static int vspm_vsp_probe(struct platform_device *pdev)
 		clk = devm_clk_get(&pdev->dev, clk_names[i]);
 		if (IS_ERR(clk)) {
 			APRINT("Cannot get %s clock!! ch=%d\n",
-				clk_names[i], ch);
+			       clk_names[i], ch);
 			for (; i > 0; i--)
 				pdrv->vsp_clks[ch][i-1] = NULL;
 			return -1;
@@ -399,7 +399,7 @@ static int vspm_fdp_probe(struct platform_device *pdev)
 		clk = devm_clk_get(&pdev->dev, clk_names[i]);
 		if (IS_ERR(clk)) {
 			APRINT("Cannot get %s clock!! ch=%d\n",
-				clk_names[i], ch);
+			       clk_names[i], ch);
 			for (; i > 0; i--)
 				pdrv->fdp_clks[ch][i-1] = NULL;
 			return -1;

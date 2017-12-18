@@ -332,7 +332,7 @@ static void vsp_ins_set_dl_for_rpf(
 
 	/* lookup table register */
 	if ((param->format == VSP_IN_RGB_CLUT_DATA) ||
-		(param->format == VSP_IN_YUV_CLUT_DATA)) {
+	    (param->format == VSP_IN_YUV_CLUT_DATA)) {
 		if (param->clut) {
 			dlrewrite32_lut(param->clut, reg_offset);
 
@@ -1298,8 +1298,8 @@ unsigned int vsp_ins_get_line_chroma(
 	unsigned short format, unsigned short offset)
 {
 	if ((format == VSP_IN_YUV420_SEMI_NV12) ||
-		(format == VSP_IN_YUV420_SEMI_NV21) ||
-		(format == VSP_IN_YUV420_PLANAR))
+	    (format == VSP_IN_YUV420_SEMI_NV21) ||
+	    (format == VSP_IN_YUV420_PLANAR))
 		return (unsigned int)(offset >> 1);
 	else
 		return (unsigned int)offset;
@@ -1375,9 +1375,9 @@ static void vsp_ins_replace_part_dst_addr(
 
 	/* replace address */
 	if ((dst_par->rotation == VSP_ROT_OFF) ||
-		(dst_par->rotation == VSP_ROT_V_FLIP) ||
-		(dst_par->rotation == VSP_ROT_90) ||
-		(dst_par->rotation == VSP_ROT_90_H_FLIP)) {
+	    (dst_par->rotation == VSP_ROT_V_FLIP) ||
+	    (dst_par->rotation == VSP_ROT_90) ||
+	    (dst_par->rotation == VSP_ROT_90_H_FLIP)) {
 		/* increment */
 		wpf_info->val_addr_y += temp_y;
 		if (wpf_info->val_addr_c0 != 0)
@@ -1417,7 +1417,7 @@ static void vsp_ins_replace_part_uds_module(
 
 	/* check SRU module */
 	if ((ch_info->reserved_module & VSP_SRU_USE) &&
-		(part_info->sru_first_flag == 0)) {
+	    (part_info->sru_first_flag == 0)) {
 		if (sru_par->mode == VSP_SRU_MODE2) {
 			l_temp >>= 1;
 			r_temp >>= 1;
@@ -1435,7 +1435,7 @@ static void vsp_ins_replace_part_uds_module(
 
 		/* calculate scaling */
 		if ((uds_par->amd == VSP_AMD_NO) &&
-			(uds_par->x_ratio < VSP_UDS_SCALE_1_1)) {
+		    (uds_par->x_ratio < VSP_UDS_SCALE_1_1)) {
 			if (l_temp == 0)
 				l_temp = 4096 - ratio;
 			else
@@ -1496,7 +1496,7 @@ static void vsp_ins_replace_part_rpf_module(
 	width = VSP_ROUND_UP(*r_pos, 4096) - offset;
 
 	if ((ch_info->reserved_module & VSP_SRU_USE) &&
-		(part_info->sru_first_flag == 1)) {
+	    (part_info->sru_first_flag == 1)) {
 		if (sru_par->mode == VSP_SRU_MODE2)
 			sru_scale = 2;
 	}
@@ -1602,7 +1602,7 @@ static void vsp_ins_get_part_offset(
 	unsigned int temp = *offset;
 
 	if ((ch_info->reserved_module & VSP_SRU_USE) &&
-		(part_info->sru_first_flag == 0)) {
+	    (part_info->sru_first_flag == 0)) {
 		if (sru_par->mode == VSP_SRU_MODE2)
 			temp >>= 1;
 	}
@@ -1612,7 +1612,7 @@ static void vsp_ins_get_part_offset(
 			(unsigned int)uds_par->x_ratio;
 
 		if ((uds_par->amd == VSP_AMD_NO) &&
-			(uds_par->x_ratio < VSP_UDS_SCALE_1_1)) {
+		    (uds_par->x_ratio < VSP_UDS_SCALE_1_1)) {
 			if (temp == 0)
 				temp = 4096 - ratio;
 			else
@@ -1625,7 +1625,7 @@ static void vsp_ins_get_part_offset(
 	}
 
 	if ((ch_info->reserved_module & VSP_SRU_USE) &&
-		(part_info->sru_first_flag == 1)) {
+	    (part_info->sru_first_flag == 1)) {
 		if (sru_par->mode == VSP_SRU_MODE2)
 			temp >>= 1;
 	}
@@ -1669,8 +1669,8 @@ static void vsp_ins_get_part_sampling_offset(
 			ratio = st_par->ctrl_par->uds->x_ratio;
 
 			if ((st_par->ctrl_par->uds->amd == VSP_AMD_NO) &&
-				(st_par->ctrl_par->uds->x_ratio <
-					VSP_UDS_SCALE_1_1))
+			    (st_par->ctrl_par->uds->x_ratio <
+			     VSP_UDS_SCALE_1_1))
 				temp = temp + ratio - 4096;
 
 			if (sampling == VSP_SMPPT_UDS)
@@ -1908,7 +1908,7 @@ static void vsp_ins_set_part_parameter(
 
 	if (ch_info->wpf_info.val_outfmt & VSP_WPF_OUTFMT_FCNL) {
 		if ((dst_par->rotation == VSP_ROT_H_FLIP) ||
-			(dst_par->rotation == VSP_ROT_180)) {
+		    (dst_par->rotation == VSP_ROT_180)) {
 			/* enable FCNL compression */
 			/* horizontal flipping, or 180 degree rotation */
 			dst_offset = width % part_info->div_size;
@@ -2196,7 +2196,7 @@ long vsp_ins_stop_processing(struct vsp_prv_data *prv)
 
 	if (loop_cnt == 0) {
 		APRINT("%s: happen to timeout after reset of FCP!!\n",
-			__func__);
+		       __func__);
 	}
 
 	/* init loop counter */
@@ -2230,7 +2230,7 @@ long vsp_ins_stop_processing(struct vsp_prv_data *prv)
 		vsp_ins_cb_function(prv, R_VSPM_CANCEL);
 	} else {
 		APRINT("%s: happen to timeout after reset of VSP!!\n",
-			__func__);
+		       __func__);
 		vsp_ins_cb_function(prv, R_VSPM_DRIVER_ERR);
 		vsp_ins_cb_function(prv, R_VSPM_DRIVER_ERR);
 	}
@@ -2252,7 +2252,7 @@ long vsp_ins_wait_processing(struct vsp_prv_data *prv)
 		msleep(VSP_STATUS_LOOP_TIME);
 
 		if ((prv->ch_info[0].status != VSP_STAT_RUN) &&
-			(prv->ch_info[1].status != VSP_STAT_RUN))
+		    (prv->ch_info[1].status != VSP_STAT_RUN))
 			break;
 	} while (--loop_cnt > 0);
 
@@ -2345,7 +2345,7 @@ long vsp_ins_get_vsp_resource(struct vsp_prv_data *prv)
 		"renesas,#read_outstanding",
 		&rdata->read_outstanding);
 	if ((rdata->read_outstanding != FCP_MODE_64) &&
-		(rdata->read_outstanding != FCP_MODE_16))
+	    (rdata->read_outstanding != FCP_MODE_16))
 		return E_VSP_PARA_INPAR;
 
 	/* read start resevation value */
@@ -2378,7 +2378,7 @@ long vsp_ins_enable_clock(struct vsp_prv_data *prv)
 	ercd = pm_runtime_get_sync(dev);
 	if (ercd < 0) {
 		EPRINT("%s: failed to pm_runtime_get_sync!! ercd=%d\n",
-			__func__, ercd);
+		       __func__, ercd);
 		return E_VSP_NO_CLK;
 	}
 
@@ -2657,7 +2657,7 @@ long vsp_ins_reg_ih(struct vsp_prv_data *prv)
 		prv);
 	if (ercd) {
 		EPRINT("%s: failed to request irq!! ercd=%d, irq=%d\n",
-			__func__, ercd, (int)prv->irq->start);
+		       __func__, ercd, (int)prv->irq->start);
 		prv->irq = NULL;
 		return E_VSP_DEF_INH;
 	}

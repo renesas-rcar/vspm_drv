@@ -84,7 +84,7 @@ long vspm_ins_exec_start(
 
 	if (exec_info->exec_ch_bits & channel_bit) {
 		EPRINT("%s Already executing module_id=0x%04x\n",
-			__func__, module_id);
+		       __func__, module_id);
 		return R_VSPM_NG;
 	}
 
@@ -187,7 +187,7 @@ long vspm_ins_exec_cancel(
 
 	if (!(exec_info->exec_ch_bits & VSPM_CH_TO_BIT(module_id))) {
 		EPRINT("%s not execute module_id=0x%04x\n",
-			__func__, module_id);
+		       __func__, module_id);
 		return R_VSPM_SEQERR;
 	}
 

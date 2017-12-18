@@ -79,7 +79,7 @@ long vspm_ins_vsp_ch(unsigned short module_id, unsigned char *ch)
 	/* check range */
 	if (!IS_VSP_CH(module_id)) {
 		EPRINT("%s: Invalid module ID module_id=%d\n",
-			__func__, module_id);
+		       __func__, module_id);
 		return R_VSPM_NG;
 	}
 
@@ -152,7 +152,7 @@ static long vspm_ins_assign_rpf(
 
 		if (*src_par != NULL) {
 			if (((*src_par)->format == VSP_IN_RGB_CLUT_DATA) ||
-				((*src_par)->format == VSP_IN_YUV_CLUT_DATA)) {
+			    ((*src_par)->format == VSP_IN_YUV_CLUT_DATA)) {
 				/* If using CLUT of RPF, */
 				/* RPF unsupported CLUT can not be used. */
 				use_rpf_flag = 0;
@@ -181,7 +181,7 @@ static long vspm_ins_assign_rpf(
 				clut_bits &= ~(bit);
 			} else {
 				EPRINT("%s: nothing to usable channel.\n",
-					__func__);
+				       __func__);
 				return R_VSPM_NG;
 			}
 		}
@@ -245,7 +245,7 @@ long vspm_ins_vsp_initialize(
 			ercd = vsp_lib_open(ch, &open_param);
 			if (ercd) {
 				EPRINT("%s: failed to open!! (%d, %ld)\n",
-					__func__, ch, ercd);
+				       __func__, ch, ercd);
 				/* forced quit */
 				(void)vsp_lib_quit();
 				return R_VSPM_NG;
@@ -255,7 +255,7 @@ long vspm_ins_vsp_initialize(
 			ercd = vsp_lib_get_status(ch, &status);
 			if (ercd) {
 				EPRINT("%s: failed to get!! (%d, %ld)\n",
-					__func__, ch, ercd);
+				       __func__, ch, ercd);
 				/* forced quit */
 				(void)vsp_lib_quit();
 				return R_VSPM_NG;
@@ -355,7 +355,7 @@ long vspm_ins_vsp_cancel(unsigned short module_id)
 	ercd = vsp_lib_abort(ch);
 	if (ercd) {
 		EPRINT("%s: failed to cancel!! (%d, %ld)\n",
-			__func__, ch, ercd);
+		       __func__, ch, ercd);
 		return R_VSPM_NG;
 	}
 
@@ -378,7 +378,7 @@ long vspm_ins_vsp_quit(struct vspm_usable_res_info *usable)
 	ercd = vsp_lib_quit();
 	if (ercd) {
 		EPRINT("%s: failed to quit!!() ercd=%ld\n",
-			__func__, ercd);
+		       __func__, ercd);
 		return R_VSPM_NG;
 	}
 
@@ -455,7 +455,7 @@ long vspm_ins_vsp_suspend(void)
 		ercd = vsp_lib_suspend(ch);
 		if (ercd != 0) {
 			APRINT("%s: failed to suspend ch=%d\n",
-				__func__, ch);
+			       __func__, ch);
 		}
 	}
 
@@ -477,7 +477,7 @@ long vspm_ins_vsp_resume(void)
 		ercd = vsp_lib_resume(ch);
 		if (ercd != 0) {
 			APRINT("%s: failed to resume ch=%d\n",
-				__func__, ch);
+			       __func__, ch);
 		}
 	}
 

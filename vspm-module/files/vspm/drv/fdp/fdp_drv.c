@@ -291,7 +291,7 @@ long fdp_lib_suspend(struct fdp_obj_t *obj)
 	long ercd;
 
 	if ((obj != NULL) &&
-		(obj->fdp_reg != NULL)) {
+	    (obj->fdp_reg != NULL)) {
 		if (obj->status == FDP_STAT_RUN) {
 			/* waiting processing finish */
 			fdp_ins_wait_processing(obj);
@@ -325,7 +325,7 @@ long fdp_lib_resume(struct fdp_obj_t *obj)
 	long ercd;
 
 	if ((obj != NULL) &&
-		(obj->fdp_reg == NULL)) {
+	    (obj->fdp_reg == NULL)) {
 		if (obj->status == FDP_STAT_READY) {
 			/* reinitialize register */
 			ercd = fdp_ins_init_reg(obj);

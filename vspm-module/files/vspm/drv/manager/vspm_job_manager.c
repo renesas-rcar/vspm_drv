@@ -133,13 +133,13 @@ struct vspm_job_info *vspm_ins_job_find_job_info(
 
 	if (job_info->status == VSPM_JOB_STATUS_EMPTY) {
 		EPRINT("%s Invalid status %ld job_id=0x%08lx\n",
-			__func__, job_info->status, job_id);
+		       __func__, job_info->status, job_id);
 		return NULL;
 	}
 
 	if (job_info->job_id != job_id) {
 		EPRINT("%s Invalid job_id 0x%08lx job_id=0x%08lx\n",
-			__func__, job_info->job_id, job_id);
+		       __func__, job_info->job_id, job_id);
 		return NULL;
 	}
 

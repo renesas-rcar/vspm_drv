@@ -648,7 +648,7 @@ static long vsp_ins_check_rpf_format(
 		}
 	} else {	/* src_par->vir == VSP_VIR */
 		if ((src_par->format != VSP_IN_ARGB8888) &&
-			(src_par->format != VSP_IN_YUV444_SEMI_PLANAR)) {
+		    (src_par->format != VSP_IN_YUV444_SEMI_PLANAR)) {
 			return E_VSP_PARA_IN_FORMAT;
 		}
 
@@ -671,17 +671,17 @@ static long vsp_ins_check_rpf_clut_param(
 	struct vsp_dl_t *clut = src_par->clut;
 
 	if ((src_par->format == VSP_IN_RGB_CLUT_DATA) ||
-		(src_par->format == VSP_IN_YUV_CLUT_DATA)) {
+	    (src_par->format == VSP_IN_YUV_CLUT_DATA)) {
 
 		if (clut != NULL) {
 			/* check display list pointer */
 			if ((clut->hard_addr == 0) ||
-				(clut->virt_addr == NULL))
+			    (clut->virt_addr == NULL))
 				return E_VSP_PARA_OSD_CLUT;
 
 			/* check size */
 			if ((clut->tbl_num < 1) ||
-				(clut->tbl_num > 256))
+			    (clut->tbl_num > 256))
 				return E_VSP_PARA_OSD_SIZE;
 		}
 	}
@@ -748,7 +748,7 @@ static long vsp_ins_check_irop_unit_param(
 
 	if (irop != NULL) {
 		if ((alpha->asel == VSP_ALPHA_NUM1) ||
-			(alpha->asel == VSP_ALPHA_NUM3)) {
+		    (alpha->asel == VSP_ALPHA_NUM3)) {
 			/* check 1bit mask-alpha generator */
 			if (irop->ref_sel == VSP_MSKEN_ALPHA) {
 				if (irop->bit_sel == VSP_ALPHA_8BIT)
@@ -762,9 +762,9 @@ static long vsp_ins_check_irop_unit_param(
 					((unsigned int)irop->bit_sel) << 23;
 
 				if ((irop->op_mode == VSP_IROP_NOP) ||
-					(irop->op_mode == VSP_IROP_CLEAR) ||
-					(irop->op_mode == VSP_IROP_INVERT) ||
-					(irop->op_mode == VSP_IROP_SET)) {
+				    (irop->op_mode == VSP_IROP_CLEAR) ||
+				    (irop->op_mode == VSP_IROP_INVERT) ||
+				    (irop->op_mode == VSP_IROP_SET)) {
 					/* don't use external memory */
 					*use_alpha_plane = 0;
 				}
@@ -833,18 +833,18 @@ static long vsp_ins_check_mult_unit_param(
 
 	if (mult != NULL) {
 		if ((mult->a_mmd != VSP_MULT_THROUGH) &&
-			(mult->a_mmd != VSP_MULT_RATIO))
+		    (mult->a_mmd != VSP_MULT_RATIO))
 			return E_VSP_PARA_ALPHA_MULT;
 
 		if ((mult->p_mmd != VSP_MULT_THROUGH) &&
-			(mult->p_mmd != VSP_MULT_RATIO) &&
-			(mult->p_mmd != VSP_MULT_ALPHA) &&
-			(mult->p_mmd != VSP_MULT_RATIO_ALPHA))
+		    (mult->p_mmd != VSP_MULT_RATIO) &&
+		    (mult->p_mmd != VSP_MULT_ALPHA) &&
+		    (mult->p_mmd != VSP_MULT_RATIO_ALPHA))
 			return E_VSP_PARA_ALPHA_MULT;
 
 		if (src_info->color == VSP_COLOR_YUV) {
 			if ((mult->a_mmd != VSP_MULT_THROUGH) ||
-				(mult->p_mmd != VSP_MULT_THROUGH))
+			    (mult->p_mmd != VSP_MULT_THROUGH))
 				return E_VSP_PARA_ALPHA_MULT;
 		}
 
@@ -906,8 +906,8 @@ static long vsp_ins_check_alpha_blend_param(
 	if (alpha->asel == VSP_ALPHA_NUM1) {
 		/* check 8bit transparent-alpha generator */
 		if ((alpha->aext != VSP_AEXT_EXPAN) &&
-			(alpha->aext != VSP_AEXT_COPY) &&
-			(alpha->aext != VSP_AEXT_EXPAN_MAX)) {
+		    (alpha->aext != VSP_AEXT_COPY) &&
+		    (alpha->aext != VSP_AEXT_EXPAN_MAX)) {
 			return E_VSP_PARA_ALPHA_AEXT;
 		}
 
@@ -1551,7 +1551,7 @@ static long vsp_ins_recalculate_wpf_addr(
 	unsigned int temp_c;
 
 	if ((dst_par->rotation == VSP_ROT_90) ||
-		(dst_par->rotation == VSP_ROT_90_V_FLIP)) {
+	    (dst_par->rotation == VSP_ROT_90_V_FLIP)) {
 		if (wpf_info->val_outfmt & VSP_WPF_OUTFMT_FCNL) {
 			/* enable FCNL compression */
 			temp_y = vsp_ins_get_bpp_luma(
@@ -1975,7 +1975,7 @@ static long vsp_ins_check_uds_param(
 	} else if (uds_param->complement == VSP_COMPLEMENT_NN) {
 		/* when under quarter, cannot use nearest neighbor */
 		if ((uds_param->x_ratio > VSP_UDS_SCALE_1_4) ||
-			(uds_param->y_ratio > VSP_UDS_SCALE_1_4))
+		    (uds_param->y_ratio > VSP_UDS_SCALE_1_4))
 			return E_VSP_PARA_UDS_COMP;
 
 		uds_info->val_ctrl |= VSP_UDS_CTRL_NN;
@@ -2336,7 +2336,7 @@ static long vsp_ins_check_blend_control_param(
 	if ((ctrl_param != NULL) && (src_layer != VSP_LAY_NO)) {
 		/* check rbc */
 		if ((ctrl_param->rbc != VSP_RBC_ROP) &&
-			(ctrl_param->rbc != VSP_RBC_BLEND))
+		    (ctrl_param->rbc != VSP_RBC_BLEND))
 			return E_VSP_PARA_BLEND_RBC;
 
 		/* check crop */
@@ -2488,7 +2488,7 @@ static long vsp_ins_check_bru_param(
 
 	/* check adiv */
 	if ((bru_param->adiv != VSP_DIVISION_OFF) &&
-		(bru_param->adiv != VSP_DIVISION_ON))
+	    (bru_param->adiv != VSP_DIVISION_ON))
 		return E_VSP_PARA_BRU_ADIV;
 
 	bru_info->val_inctrl = ((unsigned int)bru_param->adiv) << 28;
@@ -2503,11 +2503,11 @@ static long vsp_ins_check_bru_param(
 			/* enable dither unit */
 			if ((*dith_unit)->mode == VSP_DITH_COLOR_REDUCTION) {
 				if (((*dith_unit)->bpp != VSP_DITH_OFF) &&
-					((*dith_unit)->bpp != VSP_DITH_18BPP) &&
-					((*dith_unit)->bpp != VSP_DITH_16BPP) &&
-					((*dith_unit)->bpp != VSP_DITH_15BPP) &&
-					((*dith_unit)->bpp != VSP_DITH_12BPP) &&
-					((*dith_unit)->bpp != VSP_DITH_8BPP)) {
+				    ((*dith_unit)->bpp != VSP_DITH_18BPP) &&
+				    ((*dith_unit)->bpp != VSP_DITH_16BPP) &&
+				    ((*dith_unit)->bpp != VSP_DITH_15BPP) &&
+				    ((*dith_unit)->bpp != VSP_DITH_12BPP) &&
+				    ((*dith_unit)->bpp != VSP_DITH_8BPP)) {
 					return E_VSP_PARA_BRU_DITH_BPP;
 				}
 				/* set color reduction dither */
@@ -2693,7 +2693,7 @@ static long vsp_ins_check_brs_param(
 
 	/* check adiv */
 	if ((brs_param->adiv != VSP_DIVISION_OFF) &&
-		(brs_param->adiv != VSP_DIVISION_ON))
+	    (brs_param->adiv != VSP_DIVISION_ON))
 		return E_VSP_PARA_BRS_ADIV;
 
 	brs_info->val_inctrl = ((unsigned int)brs_param->adiv) << 28;
@@ -2708,11 +2708,11 @@ static long vsp_ins_check_brs_param(
 			/* enable dither unit */
 			if ((*dith_unit)->mode == VSP_DITH_COLOR_REDUCTION) {
 				if (((*dith_unit)->bpp != VSP_DITH_OFF) &&
-					((*dith_unit)->bpp != VSP_DITH_18BPP) &&
-					((*dith_unit)->bpp != VSP_DITH_16BPP) &&
-					((*dith_unit)->bpp != VSP_DITH_15BPP) &&
-					((*dith_unit)->bpp != VSP_DITH_12BPP) &&
-					((*dith_unit)->bpp != VSP_DITH_8BPP)) {
+				    ((*dith_unit)->bpp != VSP_DITH_18BPP) &&
+				    ((*dith_unit)->bpp != VSP_DITH_16BPP) &&
+				    ((*dith_unit)->bpp != VSP_DITH_15BPP) &&
+				    ((*dith_unit)->bpp != VSP_DITH_12BPP) &&
+				    ((*dith_unit)->bpp != VSP_DITH_8BPP)) {
 					return E_VSP_PARA_BRS_DITH_BPP;
 				}
 				/* set color reduction dither */
@@ -2804,11 +2804,11 @@ static long vsp_ins_check_hgo_param(
 
 	/* check address pointer */
 	if ((hgo_param->hard_addr == 0) ||
-		(hgo_param->virt_addr == NULL))
+	    (hgo_param->virt_addr == NULL))
 		return E_VSP_PARA_HGO_ADR;
 
 	if ((hgo_param->hard_addr & 0xff) ||
-		(((unsigned long)hgo_param->virt_addr) & 0xff))
+	    (((unsigned long)hgo_param->virt_addr) & 0xff))
 		return E_VSP_PARA_HGO_ADR;
 
 	hgo_info->virt_addr = (unsigned int *)hgo_param->virt_addr;
@@ -2900,7 +2900,7 @@ static long vsp_ins_check_hue_area_param(struct vsp_hue_area_t *hue_area)
 	}
 
 	if ((hue_area[0].upper < hue_area[0].lower) &&
-		(hue_area[0].lower < hue_area[5].upper)) {
+	    (hue_area[0].lower < hue_area[5].upper)) {
 		return E_VSP_PARA_HGT_AREA;
 	}
 
@@ -2929,11 +2929,11 @@ static long vsp_ins_check_hgt_param(
 
 	/* check address pointer */
 	if ((hgt_param->hard_addr == 0) ||
-		(hgt_param->virt_addr == NULL))
+	    (hgt_param->virt_addr == NULL))
 		return E_VSP_PARA_HGT_ADR;
 
 	if ((hgt_param->hard_addr & 0xff) ||
-		(((unsigned long)hgt_param->virt_addr) & 0xff))
+	    (((unsigned long)hgt_param->virt_addr) & 0xff))
 		return E_VSP_PARA_HGT_ADR;
 
 	hgt_info->virt_addr = (unsigned int *)hgt_param->virt_addr;
@@ -2965,14 +2965,14 @@ static long vsp_ins_check_hgt_param(
 
 	/* check skip mode */
 	if ((hgt_param->x_skip != VSP_SKIP_OFF) &&
-		(hgt_param->x_skip != VSP_SKIP_1_2) &&
-		(hgt_param->x_skip != VSP_SKIP_1_4)) {
+	    (hgt_param->x_skip != VSP_SKIP_1_2) &&
+	    (hgt_param->x_skip != VSP_SKIP_1_4)) {
 		return E_VSP_PARA_HGO_XSKIP;
 	}
 
 	if ((hgt_param->y_skip != VSP_SKIP_OFF) &&
-		(hgt_param->y_skip != VSP_SKIP_1_2) &&
-		(hgt_param->y_skip != VSP_SKIP_1_4)) {
+	    (hgt_param->y_skip != VSP_SKIP_1_2) &&
+	    (hgt_param->y_skip != VSP_SKIP_1_4)) {
 		return E_VSP_PARA_HGO_YSKIP;
 	}
 
@@ -3019,7 +3019,7 @@ static long vsp_ins_check_shp_param(
 
 	/* check mode */
 	if ((shp_param->mode != VSP_SHP_SHARP) &&
-		(shp_param->mode != VSP_SHP_UNSHARP)) {
+	    (shp_param->mode != VSP_SHP_UNSHARP)) {
 		return E_VSP_PARA_SHP_MODE;
 	}
 
@@ -3051,7 +3051,7 @@ static long vsp_ins_check_dl_param(
 
 	/* check address */
 	if ((dl_param->hard_addr == 0) ||
-		(dl_param->virt_addr == NULL))
+	    (dl_param->virt_addr == NULL))
 		return E_VSP_PARA_DL_ADR;
 
 	/* check size */

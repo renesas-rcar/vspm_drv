@@ -118,7 +118,7 @@ static struct fw_task_info *get_task_info(unsigned short tid)
 
 	if (task_info) {
 		if ((task_info == (struct fw_task_info *)&task_ctl.list) ||
-			(task_info->tid != tid)) {
+		    (task_info->tid != tid)) {
 			task_info = NULL;
 		}
 	}
@@ -242,7 +242,7 @@ static void *get_function(
 
 	/* Check the ID */
 	if ((func_tbl[index].msg_id == msg_id) &&
-		(func_tbl[index].func_id == func_id)) {
+	    (func_tbl[index].func_id == func_id)) {
 		/* Get a function address */
 		func = (void *)func_tbl[index].func;
 	}
@@ -377,7 +377,7 @@ int fw_execute(unsigned short tid, struct fw_func_tbl *func_tbl)
 			ercd = func((void *)&fw_msg, rcv_msg->para);
 		} else {
 			APRINT("Invalid func!! tid=%d, msg_id=%d, func_id=%d\n",
-				tid, rcv_msg->msg_id, rcv_msg->func_id);
+			       tid, rcv_msg->msg_id, rcv_msg->func_id);
 			ercd = 0;
 		}
 

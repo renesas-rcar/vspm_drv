@@ -153,7 +153,7 @@ long vspm_inm_init(void *mesp, void *para)
 	ercd = vspm_ins_ctrl_initialize((struct vspm_drvdata *)para);
 	if (ercd) {
 		EPRINT("%s failed to vspm_ins_ctrl_initialize %ld\n",
-			__func__, ercd);
+		       __func__, ercd);
 		return FW_NG;
 	}
 
@@ -196,7 +196,7 @@ long vspm_inm_suspend(void *mesp, void *para)
 	ercd = vspm_ins_ctrl_suspend((struct vspm_drvdata *)para);
 	if (ercd) {
 		EPRINT("%s failed to vspm_ins_ctrl_suspend %ld\n",
-			__func__, ercd);
+		       __func__, ercd);
 		return FW_NG;
 	}
 
@@ -218,7 +218,7 @@ long vspm_inm_resume(void *mesp, void *para)
 	ercd = vspm_ins_ctrl_resume((struct vspm_drvdata *)para);
 	if (ercd) {
 		EPRINT("%s failed to vspm_ins_ctrl_resume %ld\n",
-			__func__, ercd);
+		       __func__, ercd);
 		return FW_NG;
 	}
 
@@ -239,7 +239,7 @@ long vspm_inm_entry(void *mesp, void *para)
 	ercd = vspm_ins_ctrl_regist_entry((struct vspm_api_param_entry *)para);
 	if (ercd) {
 		EPRINT("%s failed to vspm_ins_ctrl_regist_entry %ld\n",
-			__func__, ercd);
+		       __func__, ercd);
 	}
 
 	return ercd;
@@ -262,7 +262,7 @@ long vspm_inm_driver_on_complete(void *mesp, void *para)
 		api_param->module_id, api_param->result);
 	if (ercd) {
 		EPRINT("%s failed to vspm_ins_ctrl_on_complete %ld\n",
-			__func__, ercd);
+		       __func__, ercd);
 	}
 
 	return FW_OK;

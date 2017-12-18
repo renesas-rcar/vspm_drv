@@ -81,7 +81,7 @@ long vspm_ins_fdp_ch(unsigned short module_id, unsigned char *ch)
 	/* chack range */
 	if (!IS_FDP_CH(module_id)) {
 		EPRINT("%s: Invalid module ID module_id=%d\n",
-			__func__, module_id);
+		       __func__, module_id);
 		return R_VSPM_NG;
 	}
 
@@ -350,7 +350,7 @@ long vspm_ins_fdp_suspend(void)
 		ercd = fdp_lib_suspend(g_fdp_obj[ch]);
 		if (ercd != 0) {
 			APRINT("%s: failed to suspend ch=%d\n",
-				__func__, ch);
+			       __func__, ch);
 		}
 	}
 
@@ -372,7 +372,7 @@ long vspm_ins_fdp_resume(void)
 		ercd = fdp_lib_resume(g_fdp_obj[ch]);
 		if (ercd != 0) {
 			APRINT("%s: failed to resume ch=%d\n",
-				__func__, ch);
+			       __func__, ch);
 		}
 	}
 
