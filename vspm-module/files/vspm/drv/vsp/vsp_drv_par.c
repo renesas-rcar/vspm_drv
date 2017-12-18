@@ -672,7 +672,6 @@ static long vsp_ins_check_rpf_clut_param(
 
 	if ((src_par->format == VSP_IN_RGB_CLUT_DATA) ||
 	    (src_par->format == VSP_IN_YUV_CLUT_DATA)) {
-
 		if (clut != NULL) {
 			/* check display list pointer */
 			if ((clut->hard_addr == 0) ||
