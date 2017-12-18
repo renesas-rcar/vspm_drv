@@ -325,7 +325,7 @@ static int vspm_vsp_probe(struct platform_device *pdev)
 			APRINT("Cannot get %s clock!! ch=%d\n",
 			       clk_names[i], ch);
 			for (; i > 0; i--)
-				pdrv->vsp_clks[ch][i-1] = NULL;
+				pdrv->vsp_clks[ch][i - 1] = NULL;
 			return -1;
 		}
 		pdrv->vsp_clks[ch][i] = clk;
@@ -401,7 +401,7 @@ static int vspm_fdp_probe(struct platform_device *pdev)
 			APRINT("Cannot get %s clock!! ch=%d\n",
 			       clk_names[i], ch);
 			for (; i > 0; i--)
-				pdrv->fdp_clks[ch][i-1] = NULL;
+				pdrv->fdp_clks[ch][i - 1] = NULL;
 			return -1;
 		}
 		pdrv->fdp_clks[ch][i] = clk;

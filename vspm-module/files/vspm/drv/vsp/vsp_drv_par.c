@@ -1838,7 +1838,7 @@ static long vsp_ins_check_sru_param(
 		return E_VSP_PARA_SRU_HEIGHT;
 
 	/* check param */
-	if (sru_param->param & (~(VSP_SRU_RCR|VSP_SRU_GY|VSP_SRU_BCB)))
+	if (sru_param->param & (~(VSP_SRU_RCR | VSP_SRU_GY | VSP_SRU_BCB)))
 		return E_VSP_PARA_SRU_PARAM;
 
 	/* check enscl */
@@ -2326,7 +2326,7 @@ static long vsp_ins_check_blend_control_param(
 {
 	/* initialise */
 	if (dst_layer != VSP_LAY_NO)
-		*bru_ctrl = ((unsigned int)(dst_layer-1)) << 20;
+		*bru_ctrl = ((unsigned int)(dst_layer - 1)) << 20;
 	else
 		*bru_ctrl = 0;
 
@@ -2373,7 +2373,7 @@ static long vsp_ins_check_blend_control_param(
 			return E_VSP_PARA_BLEND_ACOEFY;
 
 		*bru_ctrl |= ((unsigned int)ctrl_param->rbc) << 31;
-		*bru_ctrl |= ((unsigned int)(src_layer-1)) << 16;
+		*bru_ctrl |= ((unsigned int)(src_layer - 1)) << 16;
 		*bru_ctrl |= ((unsigned int)ctrl_param->crop) << 4;
 		*bru_ctrl |=  (unsigned int)ctrl_param->arop;
 
@@ -2402,7 +2402,7 @@ static long vsp_ins_check_rop_unit_param(
 {
 	/* initialise */
 	if (layer != VSP_LAY_NO)
-		*bru_rop = ((unsigned int)(layer-1)) << 20;
+		*bru_rop = ((unsigned int)(layer - 1)) << 20;
 	else
 		*bru_rop = 0;
 

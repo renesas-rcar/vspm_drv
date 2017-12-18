@@ -95,7 +95,7 @@ struct fw_msg {
 #define TASK_VSPM	(2)
 
 /* function ID */
-#define FUNCTIONID_VSPM_BASE	(TASK_VSPM*256)
+#define FUNCTIONID_VSPM_BASE	(TASK_VSPM * 256)
 
 /* framework functions */
 void fw_initialize(void);
