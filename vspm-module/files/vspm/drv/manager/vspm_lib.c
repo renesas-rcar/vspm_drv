@@ -188,7 +188,7 @@ long vspm_lib_get_status(
 	struct vspm_request_res_info *request = &priv->request_info;
 
 	/* check parameter */
-	if (param->fdp == NULL)
+	if (!param->fdp)
 		return R_VSPM_PARAERR;
 
 	if (request->type != VSPM_TYPE_FDP_AUTO)

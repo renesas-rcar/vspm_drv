@@ -171,7 +171,7 @@ static long fdp_ins_check_pic_param(
 	struct fdp_obj_t *obj, struct fdp_pic_t *in_pic)
 {
 	/* check pointer */
-	if (in_pic == NULL)
+	if (!in_pic)
 		return E_FDP_PARA_INPIC;
 
 	/* check input format */
@@ -293,7 +293,7 @@ static long fdp_ins_check_dstbuf_param(
 	unsigned short stride_c = seq_par->in_width;
 
 	/* check pointer */
-	if (buf == NULL)
+	if (!buf)
 		return E_FDP_PARA_OUTBUF;
 
 	switch (fproc_par->out_format) {
@@ -358,12 +358,12 @@ static long fdp_ins_check_refbuf_param(
 	obj->rpf2_addr_y = 0;
 
 	/* check reference pointer */
-	if (ref == NULL)
+	if (!ref)
 		return E_FDP_PARA_REFBUF;
 
 	/* check current field buffer */
 	buf = ref->cur_buf;
-	if (buf == NULL)
+	if (!buf)
 		return E_FDP_PARA_BUFREFRD1;
 
 	/* check format */
@@ -405,11 +405,11 @@ static long fdp_ins_check_refbuf_param(
 	}
 
 	/* get previous address */
-	if (ref->prev_buf != NULL)
+	if (ref->prev_buf)
 		obj->rpf0_addr_y = ref->prev_buf->addr;
 
 	/* get next address */
-	if (ref->next_buf != NULL)
+	if (ref->next_buf)
 		obj->rpf2_addr_y = ref->next_buf->addr;
 
 	return 0;
@@ -436,7 +436,7 @@ static long fdp_ins_check_fcp_param(
 	obj->fcp_anc_addr_y0 = 0;
 	obj->fcp_anc_addr_y2 = 0;
 
-	if (fcp != NULL) {
+	if (fcp) {
 		/* check FCNL compress parameter */
 		if (fcp->fcnl == FCP_FCNL_ENABLE) {
 			/* check destination format */
@@ -597,7 +597,7 @@ static long fdp_ins_check_aux_buffer_param(
 			if (obj->rpf0_addr_y == 0)
 				return E_FDP_PARA_BUFREFRD2;
 
-			if (fcp != NULL) {
+			if (fcp) {
 				if (fcp->tlen == FCP_TL_ENABLE) {
 					/* check reference base address */
 					if ((obj->fcp_ref_addr_y0 == 0) ||
@@ -617,7 +617,7 @@ static long fdp_ins_check_aux_buffer_param(
 			if (obj->rpf2_addr_y == 0)
 				return E_FDP_PARA_BUFREFRD0;
 
-			if (fcp != NULL) {
+			if (fcp) {
 				if (fcp->tlen == FCP_TL_ENABLE) {
 					/* check reference base address */
 					if ((obj->fcp_ref_addr_y2 == 0) ||
@@ -726,11 +726,11 @@ static long fdp_ins_check_fproc_param(
 	unsigned char seq_cnt;
 	long ercd;
 
-	if (fproc_par == NULL)
+	if (!fproc_par)
 		return E_FDP_PARA_FPROCPAR;
 
 	/* select sequence parameter */
-	if (fproc_par->seq_par != NULL) {
+	if (fproc_par->seq_par) {
 		/* set current sequence */
 		seq_par = fproc_par->seq_par;
 
@@ -848,7 +848,7 @@ static void fdp_ins_update_proc_info(
 {
 	struct vspm_fdp_proc_info *proc_info = obj->proc_info;
 
-	if (fproc_par->seq_par != NULL) {
+	if (fproc_par->seq_par) {
 		/* copy current sequence parameter */
 		memcpy(
 			&proc_info->seq_par,
@@ -873,7 +873,7 @@ long fdp_ins_check_start_param(
 	long ercd;
 
 	/* check pointer */
-	if (start_par == NULL)
+	if (!start_par)
 		return E_FDP_PARA_STARTPAR;
 
 	/* check frame processing request */
@@ -1008,7 +1008,7 @@ static void fdp_ins_set_ipc_reg(
 
 	/* Comb detection parameter register */
 	if ((seq_par->seq_mode == FDP_SEQ_INTER) &&
-	    (ipc != NULL)) {
+	    (ipc)) {
 		reg_data =
 			(((unsigned int)ipc->cmb_ofst) << 16) |
 			(((unsigned int)ipc->cmb_max) << 8) |
@@ -1067,7 +1067,7 @@ static void fdp_ins_set_fcp_reg(
 {
 	unsigned int reg_data;
 
-	if (fcp != NULL) {
+	if (fcp) {
 		/* TL conversion control register */
 		if (fcp->tlen == FCP_TL_ENABLE) {
 			/* ECR1417 and ECR1469 */
@@ -1282,7 +1282,7 @@ void fdp_ins_wait_processing(struct fdp_obj_t *obj)
 		obj->status = FDP_STAT_READY;
 
 		/* execute callback2 */
-		if (cb_info.fdp_cb2 != NULL) {
+		if (cb_info.fdp_cb2) {
 			cb_info.fdp_cb2(
 				0, R_VSPM_DRIVER_ERR, cb_info.userdata2);
 		}
@@ -1337,7 +1337,7 @@ static void fdp_int_hdr(struct fdp_obj_t *obj)
 	struct fdp_cb_info_t cb_info;
 
 	/* check parameter */
-	if (obj == NULL)
+	if (!obj)
 		return;
 
 	if (obj->status == FDP_STAT_RUN) {
@@ -1351,7 +1351,7 @@ static void fdp_int_hdr(struct fdp_obj_t *obj)
 		obj->status = FDP_STAT_READY;
 
 		/* execute callback2 */
-		if (cb_info.fdp_cb2 != NULL) {
+		if (cb_info.fdp_cb2) {
 			cb_info.fdp_cb2(
 				0, R_VSPM_OK, cb_info.userdata2);
 		}
@@ -1705,7 +1705,7 @@ long fdp_ins_allocate_memory(struct fdp_obj_t **obj)
 {
 	/* allocate memory */
 	*obj = kzalloc(sizeof(struct fdp_obj_t), GFP_KERNEL);
-	if (*obj == NULL) {
+	if (!(*obj)) {
 		EPRINT("%s: failed to allocate memory!!\n", __func__);
 		return E_FDP_NO_MEM;
 	}

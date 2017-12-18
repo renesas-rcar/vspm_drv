@@ -79,7 +79,7 @@ static const unsigned int vsp_tbl_bru_route[VSP_BRU_IN_MAX] = {
 long vsp_ins_check_init_parameter(struct vsp_init_t *param)
 {
 	/* check pointer */
-	if (param == NULL)
+	if (!param)
 		return E_VSP_PARA_INPAR;
 
 	/* check IP number */
@@ -97,11 +97,11 @@ long vsp_ins_check_init_parameter(struct vsp_init_t *param)
 long vsp_ins_check_open_parameter(struct vsp_open_t *param)
 {
 	/* check pointer */
-	if (param == NULL)
+	if (!param)
 		return E_VSP_PARA_INPAR;
 
 	/* check device parameter */
-	if (param->pdev == NULL)
+	if (!param->pdev)
 		return E_VSP_PARA_INPAR;
 
 	return 0;
@@ -672,10 +672,10 @@ static long vsp_ins_check_rpf_clut_param(
 
 	if ((src_par->format == VSP_IN_RGB_CLUT_DATA) ||
 	    (src_par->format == VSP_IN_YUV_CLUT_DATA)) {
-		if (clut != NULL) {
+		if (clut) {
 			/* check display list pointer */
 			if ((clut->hard_addr == 0) ||
-			    (clut->virt_addr == NULL))
+			    !clut->virt_addr)
 				return E_VSP_PARA_OSD_CLUT;
 
 			/* check size */
@@ -701,7 +701,7 @@ static long vsp_ins_check_ckey_unit_param(
 	rpf_info->val_ckey_set[0] = 0;
 	rpf_info->val_ckey_set[1] = 0;
 
-	if (ckey != NULL) {
+	if (ckey) {
 		switch (ckey->mode) {
 		case VSP_CKEY_THROUGH:
 			/* ckey unit is disable */
@@ -745,7 +745,7 @@ static long vsp_ins_check_irop_unit_param(
 	rpf_info->val_mskset[0] = 0;
 	rpf_info->val_mskset[1] = 0;
 
-	if (irop != NULL) {
+	if (irop) {
 		if ((alpha->asel == VSP_ALPHA_NUM1) ||
 		    (alpha->asel == VSP_ALPHA_NUM3)) {
 			/* check 1bit mask-alpha generator */
@@ -830,7 +830,7 @@ static long vsp_ins_check_mult_unit_param(
 	/* initialize */
 	rpf_info->val_mult_alph = 0;
 
-	if (mult != NULL) {
+	if (mult) {
 		if ((mult->a_mmd != VSP_MULT_THROUGH) &&
 		    (mult->a_mmd != VSP_MULT_RATIO))
 			return E_VSP_PARA_ALPHA_MULT;
@@ -876,7 +876,7 @@ static long vsp_ins_check_alpha_blend_param(
 	long ercd;
 
 	/* check pointer */
-	if (alpha == NULL)
+	if (!alpha)
 		return E_VSP_PARA_IN_ALPHA;
 
 	/* initialise value */
@@ -995,7 +995,7 @@ static long vsp_ins_check_rpf_param(
 	rpf_info->val_vrtcol = 0;
 
 	/* check pointer */
-	if (src_par == NULL)
+	if (!src_par)
 		return E_VSP_PARA_NOIN;
 
 	/* check virtual parameter */
@@ -1463,7 +1463,7 @@ static long vsp_ins_check_wpf_fcnl(
 	struct vsp_wpf_info *wpf_info = &ch_info->wpf_info;
 	struct fcp_info_t *fcp = dst_par->fcp;
 
-	if (fcp != NULL) {
+	if (fcp) {
 		if (fcp->fcnl == FCP_FCNL_ENABLE) {
 			switch (dst_par->rotation) {
 			case VSP_ROT_OFF:
@@ -1661,7 +1661,7 @@ static long vsp_ins_check_wpf_param(
 	long ercd;
 
 	/* check pointer */
-	if (dst_par == NULL)
+	if (!dst_par)
 		return E_VSP_PARA_OUTPAR;
 
 	/* check input color space */
@@ -1789,7 +1789,7 @@ static long vsp_ins_check_sru_param(
 	struct vsp_sru_info *sru_info = &ch_info->sru_info;
 
 	/* check pointer */
-	if (sru_param == NULL)
+	if (!sru_param)
 		return E_VSP_PARA_NOSRU;
 
 	/* check input color space */
@@ -1881,7 +1881,7 @@ static long vsp_ins_check_uds_param(
 	uds_info->val_hszclip = 0;
 
 	/* check pointer */
-	if (uds_param == NULL)
+	if (!uds_param)
 		return E_VSP_PARA_NOUDS;
 
 	/* check input image size */
@@ -2014,7 +2014,7 @@ static long vsp_ins_check_lut_param(
 	struct vsp_dl_t *lut = &lut_param->lut;
 
 	/* check pointer */
-	if (lut_param == NULL)
+	if (!lut_param)
 		return E_VSP_PARA_NOLUT;
 
 	/* check display list address */
@@ -2054,7 +2054,7 @@ static long vsp_ins_check_clu_param(
 	clu_info->val_ctrl = 0;
 
 	/* check pointer */
-	if (clu_param == NULL)
+	if (!clu_param)
 		return E_VSP_PARA_NOCLU;
 
 	/* check display list address */
@@ -2137,7 +2137,7 @@ static long vsp_ins_check_hst_param(
 	struct vsp_hst_info *hst_info = &ch_info->hst_info;
 
 	/* check pointer */
-	if (hst_param == NULL)
+	if (!hst_param)
 		return E_VSP_PARA_NOHST;
 
 	/* check input color space */
@@ -2173,7 +2173,7 @@ static long vsp_ins_check_hsi_param(
 	struct vsp_hsi_info *hsi_info = &ch_info->hsi_info;
 
 	/* check pointer */
-	if (hsi_param == NULL)
+	if (!hsi_param)
 		return E_VSP_PARA_NOHSI;
 
 	/* check input color space */
@@ -2210,7 +2210,7 @@ static long vsp_ins_check_blend_virtual_param(
 	unsigned int x_pos, y_pos;
 
 	/* check pointer */
-	if (vir_param == NULL)
+	if (!vir_param)
 		return E_VSP_PARA_VIR_ADR;
 
 	/* check width */
@@ -2266,7 +2266,7 @@ static long vsp_ins_check_brs_virtual_param(
 	unsigned int x_pos, y_pos;
 
 	/* check pointer */
-	if (vir_param == NULL)
+	if (!vir_param)
 		return E_VSP_PARA_VIR_ADR;
 
 	/* check width */
@@ -2332,7 +2332,7 @@ static long vsp_ins_check_blend_control_param(
 
 	*bru_bld = 0;
 
-	if ((ctrl_param != NULL) && (src_layer != VSP_LAY_NO)) {
+	if (ctrl_param && (src_layer != VSP_LAY_NO)) {
 		/* check rbc */
 		if ((ctrl_param->rbc != VSP_RBC_ROP) &&
 		    (ctrl_param->rbc != VSP_RBC_BLEND))
@@ -2406,7 +2406,7 @@ static long vsp_ins_check_rop_unit_param(
 	else
 		*bru_rop = 0;
 
-	if (rop_param != NULL) {
+	if (rop_param) {
 		/* check crop */
 		if (rop_param->crop >= VSP_IROP_MAX)
 			return E_VSP_PARA_ROP_CROP;
@@ -2454,7 +2454,7 @@ static long vsp_ins_check_bru_param(
 	bru_info->val_vir_size = 0;
 
 	/* check pointer */
-	if (bru_param == NULL)
+	if (!bru_param)
 		return E_VSP_PARA_NOBRU;
 
 	/* check input color space */
@@ -2495,7 +2495,7 @@ static long vsp_ins_check_bru_param(
 	/* set dithering parameter */
 	dith_unit = &bru_param->dither_unit[0];
 	for (i = 0; i < ch_info->bru_cnt; i++) {
-		if (*dith_unit == NULL) {
+		if (!(*dith_unit)) {
 			/* disable dither unit */
 			/* no check */
 		} else {
@@ -2664,7 +2664,7 @@ static long vsp_ins_check_brs_param(
 	brs_info->val_vir_size = 0;
 
 	/* check pointer */
-	if (brs_param == NULL)
+	if (!brs_param)
 		return E_VSP_PARA_NOBRS;
 
 	/* check input color space */
@@ -2700,7 +2700,7 @@ static long vsp_ins_check_brs_param(
 	/* set dithering parameter */
 	dith_unit = &brs_param->dither_unit[0];
 	for (i = 0; i < ch_info->brs_cnt; i++) {
-		if (*dith_unit == NULL) {
+		if (!(*dith_unit)) {
 			/* disable dither unit */
 			/* no check */
 		} else {
@@ -2798,12 +2798,12 @@ static long vsp_ins_check_hgo_param(
 	struct vsp_part_info *part_info = &ch_info->part_info;
 	struct vsp_hgo_info *hgo_info = &ch_info->hgo_info;
 
-	if (hgo_param == NULL)
+	if (!hgo_param)
 		return E_VSP_PARA_NOHGO;
 
 	/* check address pointer */
 	if ((hgo_param->hard_addr == 0) ||
-	    (hgo_param->virt_addr == NULL))
+	    !hgo_param->virt_addr)
 		return E_VSP_PARA_HGO_ADR;
 
 	if ((hgo_param->hard_addr & 0xff) ||
@@ -2923,12 +2923,12 @@ static long vsp_ins_check_hgt_param(
 
 	long ercd;
 
-	if (hgt_param == NULL)
+	if (!hgt_param)
 		return E_VSP_PARA_NOHGT;
 
 	/* check address pointer */
 	if ((hgt_param->hard_addr == 0) ||
-	    (hgt_param->virt_addr == NULL))
+	    !hgt_param->virt_addr)
 		return E_VSP_PARA_HGT_ADR;
 
 	if ((hgt_param->hard_addr & 0xff) ||
@@ -3002,7 +3002,7 @@ static long vsp_ins_check_shp_param(
 	struct vsp_shp_info *shp_info = &ch_info->shp_info;
 
 	/* check pointer */
-	if (shp_param == NULL)
+	if (!shp_param)
 		return E_VSP_PARA_NOSHP;
 
 	/* check input color space */
@@ -3050,7 +3050,7 @@ static long vsp_ins_check_dl_param(
 
 	/* check address */
 	if ((dl_param->hard_addr == 0) ||
-	    (dl_param->virt_addr == NULL))
+	    !dl_param->virt_addr)
 		return E_VSP_PARA_DL_ADR;
 
 	/* check size */
@@ -3175,7 +3175,7 @@ static long vsp_ins_check_connection_module_from_rpf(
 		return E_VSP_PARA_RPFNUM;
 
 	/* check module parameter pointer */
-	if (param->ctrl_par == NULL)
+	if (!param->ctrl_par)
 		return E_VSP_PARA_CTRLPAR;
 
 	for (i = 0; i < param->rpf_num; i++) {

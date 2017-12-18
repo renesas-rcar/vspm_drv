@@ -385,8 +385,7 @@ int fw_execute(unsigned short tid, struct fw_func_tbl *func_tbl)
 
 		if (rcv_msg->msg_id == MSG_EVENT) {
 			/* Release the received message */
-			if (rcv_msg->para != NULL)
-				kfree(rcv_msg->para);
+			kfree(rcv_msg->para);
 			kfree(rcv_msg);
 		} else {	/* rcv_msg->msg_id == MSG_FUNCTION */
 			/* Reply to the sender */
@@ -442,8 +441,7 @@ long fw_send_function(
 	ercd = snd_msg->reply.ercd;
 
 	/* Release the received reply-message */
-	if (snd_msg->para != NULL)
-		kfree(snd_msg->para);
+	kfree(snd_msg->para);
 	kfree(snd_msg);
 
 	return ercd;

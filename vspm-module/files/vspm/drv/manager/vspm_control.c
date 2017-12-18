@@ -157,7 +157,7 @@ long vspm_ins_ctrl_initialize(struct vspm_drvdata *pdrv)
 	long ercd;
 
 	/* check parameter */
-	if (pdrv == NULL)
+	if (!pdrv)
 		return R_VSPM_NG;
 
 	/* clear the VSPM driver control information table */
@@ -269,13 +269,13 @@ long vspm_ins_ctrl_set_mode(struct vspm_api_param_mode *mode)
 	long ercd;
 
 	/* check pointer */
-	if (mode == NULL)
+	if (!mode)
 		return R_VSPM_NG;
 
 	request = &mode->priv->request_info;
 	param = mode->param;
 
-	if (param != NULL) {
+	if (param) {
 		/* check parameter */
 		ercd = vspm_ins_ctrl_mode_param_check(&use_ch_bits, mode);
 		if (ercd)
@@ -297,7 +297,7 @@ long vspm_ins_ctrl_set_mode(struct vspm_api_param_mode *mode)
 				&request->fdp_info,
 				0,
 				sizeof(struct vspm_fdp_proc_info));
-			if (param->par.fdp != NULL) {
+			if (param->par.fdp) {
 				request->fdp_info.stlmsk_addr[0] =
 					param->par.fdp->hard_addr[0];
 				request->fdp_info.stlmsk_addr[1] =
@@ -332,7 +332,7 @@ long vspm_ins_ctrl_regist_entry(struct vspm_api_param_entry *entry)
 
 	/* Register in the job management table */
 	job_info = vspm_ins_job_entry(&g_vspm_ctrl_info.job_manager, entry);
-	if (job_info == NULL) {
+	if (!job_info) {
 		EPRINT("failed to vspm_ins_job_entry\n");
 		return R_VSPM_QUE_FULL;
 	}
@@ -411,7 +411,7 @@ long vspm_ins_ctrl_on_complete(unsigned short module_id, long result)
 	/* Get job information of the job that is running */
 	job_info = vspm_ins_exec_get_current_job_info(
 		&g_vspm_ctrl_info.exec_info, module_id);
-	if (job_info == NULL) {
+	if (!job_info) {
 		ercd = R_VSPM_OK;
 		goto dispatch;
 	}
@@ -458,7 +458,7 @@ long vspm_ins_ctrl_get_status(unsigned long job_id)
 	/* Search a job information */
 	job_info = vspm_ins_job_find_job_info(
 		&g_vspm_ctrl_info.job_manager, job_id);
-	if (job_info != NULL) {
+	if (job_info) {
 		/* Get a job status */
 		status = vspm_ins_job_get_status(job_info);
 		if (status == VSPM_JOB_STATUS_ENTRY)
@@ -485,7 +485,7 @@ long vspm_ins_ctrl_queue_cancel(unsigned long job_id)
 	/* Search a job information */
 	job_info = vspm_ins_job_find_job_info(
 		&g_vspm_ctrl_info.job_manager, job_id);
-	if (job_info != NULL) {
+	if (job_info) {
 		status = vspm_ins_job_get_status(job_info);
 		if (status == VSPM_JOB_STATUS_EXECUTING) {
 			rtncd = VSPM_STATUS_ACTIVE;
@@ -678,7 +678,7 @@ long vspm_ins_ctrl_entry_param_check(struct vspm_api_param_entry *entry)
 	long ercd;
 
 	/* check job ID pointer */
-	if (entry->p_job_id == NULL) {
+	if (!entry->p_job_id) {
 		EPRINT("%s p_job_id is NULL\n", __func__);
 		return R_VSPM_PARAERR;
 	}
@@ -692,13 +692,13 @@ long vspm_ins_ctrl_entry_param_check(struct vspm_api_param_entry *entry)
 	}
 
 	/* check callback pointer */
-	if (entry->pfn_complete_cb == NULL) {
+	if (!entry->pfn_complete_cb) {
 		EPRINT("%s pfn_complete_cb is NULL\n", __func__);
 		return R_VSPM_PARAERR;
 	}
 
 	/* check IP information pointer */
-	if (entry->p_ip_par == NULL) {
+	if (!entry->p_ip_par) {
 		EPRINT("%s p_ip_par is NULL\n", __func__);
 		return R_VSPM_PARAERR;
 	}
@@ -706,13 +706,13 @@ long vspm_ins_ctrl_entry_param_check(struct vspm_api_param_entry *entry)
 
 	switch (ip_par->type) {
 	case VSPM_TYPE_VSP_AUTO:
-		if (ip_par->par.vsp == NULL) {
+		if (!ip_par->par.vsp) {
 			EPRINT("%s par.vsp is NULL\n", __func__);
 			return R_VSPM_PARAERR;
 		}
 		break;
 	case VSPM_TYPE_FDP_AUTO:
-		if (ip_par->par.fdp == NULL) {
+		if (!ip_par->par.fdp) {
 			EPRINT("%s par.fdp is NULL\n", __func__);
 			return R_VSPM_PARAERR;
 		}
@@ -873,7 +873,7 @@ long vspm_ins_ctrl_assign_channel(
 		return R_VSPM_PARAERR;
 
 	/* set channel number */
-	if (ch != NULL)
+	if (ch)
 		*ch = ch_num;
 
 	return R_VSPM_OK;
@@ -912,7 +912,7 @@ static unsigned char vspm_ins_ctrl_get_req_clut_count(
 
 	src_par = &vsp_par->src_par[0];
 	for (i = 0; i < 5; i++) {
-		if (*src_par != NULL) {
+		if (*src_par) {
 			if (((*src_par)->format == VSP_IN_RGB_CLUT_DATA) ||
 			    ((*src_par)->format == VSP_IN_YUV_CLUT_DATA)) {
 				cnt++;
@@ -959,7 +959,7 @@ unsigned int vspm_ins_ctrl_get_usable_vsp_ch_bits(
 			assign_flag = 0;
 
 		/* check WPF(rotation) module */
-		if (vsp_par->dst_par != NULL) {
+		if (vsp_par->dst_par) {
 			if ((vsp_par->dst_par->rotation >= VSP_ROT_H_FLIP) &&
 			    (vsp_res->wpf_rot_bits == 0))
 				assign_flag = 0;

@@ -2565,7 +2565,7 @@ void vsp_ins_cb_function(struct vsp_prv_data *prv, long ercd)
 	void *userdata;
 
 	/* check parameter */
-	if (prv == NULL) {
+	if (!prv) {
 		APRINT("%s: private data is null!!\n", __func__);
 		return;
 	}

@@ -75,7 +75,7 @@ long fdp_lib_init(struct fdp_obj_t **obj)
 	long ercd;
 
 	/* check parameter */
-	if (obj == NULL)
+	if (!obj)
 		return E_FDP_INVALID_PARAM;
 
 	/* allocate memory */
@@ -100,7 +100,7 @@ long fdp_lib_quit(struct fdp_obj_t *obj)
 	long ercd;
 
 	/* check parameter */
-	if (obj == NULL)
+	if (!obj)
 		return E_FDP_INVALID_PARAM;
 
 	if (obj->status == FDP_STAT_RUN) {
@@ -142,7 +142,7 @@ long fdp_lib_open(struct fdp_obj_t *obj)
 	long ercd;
 
 	/* check parameter */
-	if (obj == NULL)
+	if (!obj)
 		return E_FDP_INVALID_PARAM;
 
 	/* check status */
@@ -197,7 +197,7 @@ long fdp_lib_close(struct fdp_obj_t *obj)
 	long ercd;
 
 	/* check parameter */
-	if (obj == NULL)
+	if (!obj)
 		return E_FDP_INVALID_PARAM;
 
 	/* check status */
@@ -236,14 +236,14 @@ long fdp_lib_start(struct fdp_obj_t *obj, struct fdp_start_t *start_par)
 	long ercd;
 
 	/* check parameter */
-	if (obj == NULL)
+	if (!obj)
 		return E_FDP_INVALID_PARAM;
 
 	/* check status */
 	if (obj->status != FDP_STAT_READY)
 		return E_FDP_INVALID_STATE;
 
-	if (obj->fdp_reg == NULL)
+	if (!obj->fdp_reg)
 		return E_FDP_INVALID_STATE;
 
 	/* check start parameter */
@@ -268,7 +268,7 @@ long fdp_lib_start(struct fdp_obj_t *obj, struct fdp_start_t *start_par)
 long fdp_lib_abort(struct fdp_obj_t *obj)
 {
 	/* check parameter */
-	if (obj == NULL)
+	if (!obj)
 		return E_FDP_INVALID_PARAM;
 
 	/* check status */
@@ -289,8 +289,8 @@ long fdp_lib_suspend(struct fdp_obj_t *obj)
 {
 	long ercd;
 
-	if ((obj != NULL) &&
-	    (obj->fdp_reg != NULL)) {
+	if (obj &&
+	    obj->fdp_reg) {
 		if (obj->status == FDP_STAT_RUN) {
 			/* waiting processing finish */
 			fdp_ins_wait_processing(obj);
@@ -323,8 +323,8 @@ long fdp_lib_resume(struct fdp_obj_t *obj)
 {
 	long ercd;
 
-	if ((obj != NULL) &&
-	    (obj->fdp_reg == NULL)) {
+	if (obj &&
+	    !obj->fdp_reg) {
 		if (obj->status == FDP_STAT_READY) {
 			/* reinitialize register */
 			ercd = fdp_ins_init_reg(obj);

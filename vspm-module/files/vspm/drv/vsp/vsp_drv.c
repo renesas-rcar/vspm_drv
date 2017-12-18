@@ -88,7 +88,7 @@ long vsp_lib_init(struct vsp_init_t *param)
 	for (i = 0; i < param->ip_num; i++) {
 		/* allocate memory */
 		prv = kzalloc(sizeof(struct vsp_prv_data), GFP_KERNEL);
-		if (prv == NULL)
+		if (!prv)
 			goto err_exit;
 
 		/* update status */
@@ -102,10 +102,8 @@ long vsp_lib_init(struct vsp_init_t *param)
 
 err_exit:
 	for (i = 0; i < param->ip_num; i++) {
-		if (g_vsp_obj[i] != NULL) {
-			kfree(g_vsp_obj[i]);
-			g_vsp_obj[i] = NULL;
-		}
+		kfree(g_vsp_obj[i]);
+		g_vsp_obj[i] = NULL;
 	}
 
 	return E_VSP_NO_MEM;
@@ -180,7 +178,7 @@ long vsp_lib_open(unsigned char ch, struct vsp_open_t *param)
 		goto err_exit1;
 	}
 
-	if (g_vsp_obj[ch] == NULL) {
+	if (!g_vsp_obj[ch]) {
 		ercd = E_VSP_NO_INIT;
 		goto err_exit1;
 	}
@@ -250,7 +248,7 @@ long vsp_lib_close(unsigned char ch)
 		return E_VSP_PARA_CH;
 
 	/* check condition */
-	if (g_vsp_obj[ch] == NULL)
+	if (!g_vsp_obj[ch])
 		return E_VSP_NO_INIT;
 	prv = g_vsp_obj[ch];
 
@@ -301,17 +299,17 @@ long vsp_lib_start(
 	long ercd;
 
 	/* check start parameter */
-	if (callback == NULL)
+	if (!callback)
 		return E_VSP_PARA_CB;
 
-	if (param == NULL)
+	if (!param)
 		return E_VSP_PARA_INPAR;
 
 	/* check channel parameter */
 	if (ch >= VSP_IP_MAX)
 		return E_VSP_PARA_CH;
 
-	if (g_vsp_obj[ch] == NULL)
+	if (!g_vsp_obj[ch])
 		return E_VSP_NO_INIT;
 
 	prv = g_vsp_obj[ch];
@@ -325,7 +323,7 @@ long vsp_lib_start(
 	if (ch_info->status != VSP_STAT_READY)
 		return E_VSP_INVALID_STATE;
 
-	if (prv->vsp_reg == NULL)
+	if (!prv->vsp_reg)
 		return E_VSP_INVALID_STATE;
 
 	/* update status */
@@ -375,7 +373,7 @@ long vsp_lib_abort(unsigned char ch)
 	if (ch >= VSP_IP_MAX)
 		return E_VSP_PARA_CH;
 
-	if (g_vsp_obj[ch] == NULL)
+	if (!g_vsp_obj[ch])
 		return E_VSP_NO_INIT;
 
 	prv = g_vsp_obj[ch];
@@ -403,14 +401,14 @@ long vsp_lib_get_status(unsigned char ch, struct vsp_status_t *status)
 	struct vsp_prv_data *prv;
 
 	/* check parameter */
-	if (status == NULL)
+	if (!status)
 		return E_VSP_PARA_INPAR;
 
 	/* check channel parameter */
 	if (ch >= VSP_IP_MAX)
 		return E_VSP_PARA_CH;
 
-	if (g_vsp_obj[ch] == NULL)
+	if (!g_vsp_obj[ch])
 		return E_VSP_NO_INIT;
 	prv = g_vsp_obj[ch];
 
@@ -447,8 +445,8 @@ long vsp_lib_suspend(unsigned char ch)
 
 	prv = g_vsp_obj[ch];
 
-	if ((prv != NULL) &&
-	    (prv->vsp_reg != NULL)) {
+	if (prv &&
+	    prv->vsp_reg) {
 		if ((prv->ch_info[0].status == VSP_STAT_RUN) ||
 		    (prv->ch_info[1].status == VSP_STAT_RUN)) {
 			/* waiting processing finish */
@@ -491,8 +489,8 @@ long vsp_lib_resume(unsigned char ch)
 
 	prv = g_vsp_obj[ch];
 
-	if ((prv != NULL) &&
-	    (prv->vsp_reg == NULL)) {
+	if (prv &&
+	    !prv->vsp_reg) {
 		if ((prv->ch_info[0].status == VSP_STAT_READY) &&
 		    (prv->ch_info[1].status == VSP_STAT_READY)) {
 			/* reinitialize register */

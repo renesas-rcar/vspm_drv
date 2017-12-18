@@ -91,7 +91,7 @@ long vspm_init_driver(void **handle, struct vspm_init_t *param)
 	down(&pdrv->init_sem);
 
 	/* check parameter */
-	if ((handle == NULL) || (param == NULL)) {
+	if (!handle || !param) {
 		ercd = R_VSPM_NG;
 		goto err_exit1;
 	}
@@ -156,7 +156,7 @@ long vspm_quit_driver(void *handle)
 	down(&pdrv->init_sem);
 
 	/* check parameter */
-	if (priv == NULL)
+	if (!priv)
 		goto err_exit1;
 
 	if (priv->pdrv != pdrv)
@@ -215,7 +215,7 @@ long vspm_entry_job(
 	long ercd;
 
 	/* check parameter */
-	if (priv == NULL)
+	if (!priv)
 		return R_VSPM_PARAERR;
 
 	if (priv->pdrv != p_vspm_drvdata)
@@ -250,7 +250,7 @@ long vspm_cancel_job(void *handle, unsigned long job_id)
 	long ercd;
 
 	/* check parameter */
-	if (priv == NULL)
+	if (!priv)
 		return R_VSPM_PARAERR;
 
 	if (priv->pdrv != p_vspm_drvdata)
@@ -275,13 +275,13 @@ long vspm_get_status(void *handle, struct vspm_status_t *status)
 	long ercd;
 
 	/* check parameter */
-	if (priv == NULL)
+	if (!priv)
 		return R_VSPM_PARAERR;
 
 	if (priv->pdrv != p_vspm_drvdata)
 		return R_VSPM_PARAERR;
 
-	if (status == NULL)
+	if (!status)
 		return R_VSPM_PARAERR;
 
 	/* get status */
@@ -313,7 +313,7 @@ static int vspm_vsp_probe(struct platform_device *pdev)
 		return -1;
 	}
 
-	if (pdrv->vsp_pdev[ch] != NULL) {
+	if (pdrv->vsp_pdev[ch]) {
 		APRINT("Already registered channel!! ch=%d\n", ch);
 		return -1;
 	}
@@ -389,7 +389,7 @@ static int vspm_fdp_probe(struct platform_device *pdev)
 		return -1;
 	}
 
-	if (pdrv->fdp_pdev[ch] != NULL) {
+	if (pdrv->fdp_pdev[ch]) {
 		APRINT("Already registered channel!! ch=%d\n", ch);
 		return -1;
 	}

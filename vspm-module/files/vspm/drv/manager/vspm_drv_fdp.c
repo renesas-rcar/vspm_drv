@@ -187,14 +187,14 @@ long vspm_ins_fdp_execute(
 	obj = g_fdp_obj[ch];
 
 	/* check parameter */
-	if (obj == NULL)
+	if (!obj)
 		return R_VSPM_NG;
 
 	/* check status */
 	if (obj->status != FDP_STAT_READY)
 		return E_FDP_INVALID_STATE;
 
-	if (obj->fdp_reg == NULL)
+	if (!obj->fdp_reg)
 		return E_FDP_INVALID_STATE;
 
 	/* set processing information */
@@ -310,14 +310,14 @@ long vspm_ins_fdp_execute_low_delay(
 	obj = g_fdp_obj[ch];
 
 	/* check parameter */
-	if (obj == NULL)
+	if (!obj)
 		return R_VSPM_NG;
 
 	/* check status */
 	if (obj->status != FDP_STAT_READY)
 		return E_FDP_INVALID_STATE;
 
-	if (obj->fdp_reg == NULL)
+	if (!obj->fdp_reg)
 		return E_FDP_INVALID_STATE;
 
 	/* set processing information */

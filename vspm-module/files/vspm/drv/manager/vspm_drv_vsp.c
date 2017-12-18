@@ -150,7 +150,7 @@ static long vspm_ins_assign_rpf(
 			break;
 		}
 
-		if (*src_par != NULL) {
+		if (*src_par) {
 			if (((*src_par)->format == VSP_IN_RGB_CLUT_DATA) ||
 			    ((*src_par)->format == VSP_IN_YUV_CLUT_DATA)) {
 				/* If using CLUT of RPF, */
