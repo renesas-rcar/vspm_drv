@@ -58,7 +58,7 @@
 #ifndef __FRAME_H__
 #define __FRAME_H__
 
-#define RESERVED(a) ((void) a)
+#define RESERVED(a) ((void)a)
 
 #define TRUE		1	/* true */
 #define FALSE		0	/* false */
