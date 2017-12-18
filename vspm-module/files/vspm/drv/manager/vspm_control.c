@@ -526,8 +526,8 @@ long vspm_ins_ctrl_forced_cancel(struct vspm_api_param_forced_cancel *cancel)
 
 	job_info = &g_vspm_ctrl_info.job_manager.job_info[0];
 	for (i = 0; i < VSPM_MAX_ELEMENTS; i++) {
-		if ((job_info->entry.priv == cancel->priv) &&
-		    (job_info->status != VSPM_JOB_STATUS_EMPTY)) {
+		if (job_info->entry.priv == cancel->priv &&
+		    job_info->status != VSPM_JOB_STATUS_EMPTY) {
 			if (job_info->status == VSPM_JOB_STATUS_ENTRY) {
 				unsigned short index;
 
@@ -684,8 +684,8 @@ long vspm_ins_ctrl_entry_param_check(struct vspm_api_param_entry *entry)
 	}
 
 	/* check job priority */
-	if ((entry->job_priority < VSPM_PRI_MIN) ||
-	    (entry->job_priority > VSPM_PRI_MAX)) {
+	if (entry->job_priority < VSPM_PRI_MIN ||
+	    entry->job_priority > VSPM_PRI_MAX) {
 		EPRINT("%s Invalid job_priority %d\n",
 		       __func__, entry->job_priority);
 		return R_VSPM_PARAERR;
@@ -960,8 +960,8 @@ unsigned int vspm_ins_ctrl_get_usable_vsp_ch_bits(
 
 		/* check WPF(rotation) module */
 		if (vsp_par->dst_par) {
-			if ((vsp_par->dst_par->rotation >= VSP_ROT_H_FLIP) &&
-			    (vsp_res->wpf_rot_bits == 0))
+			if (vsp_par->dst_par->rotation >= VSP_ROT_H_FLIP &&
+			    vsp_res->wpf_rot_bits == 0)
 				assign_flag = 0;
 		}
 

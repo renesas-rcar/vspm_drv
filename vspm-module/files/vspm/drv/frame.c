@@ -118,7 +118,7 @@ static struct fw_task_info *get_task_info(unsigned short tid)
 
 	if (task_info) {
 		if ((task_info == (struct fw_task_info *)&task_ctl.list) ||
-		    (task_info->tid != tid)) {
+		    task_info->tid != tid) {
 			task_info = NULL;
 		}
 	}
@@ -180,7 +180,7 @@ static int send_message(
 
 	/* Send a message */
 	spin_lock_irqsave(&task_info->msg.lock, lock_flag);
-	if ((func_id == FUNC_TASK_SUSPEND) || (func_id == FUNC_TASK_RESUME))
+	if (func_id == FUNC_TASK_SUSPEND || func_id == FUNC_TASK_RESUME)
 		list_add(&snd_msg->list, &task_info->msg.list);
 	else
 		list_add_tail(&snd_msg->list, &task_info->msg.list);
@@ -241,8 +241,8 @@ static void *get_function(
 	index = (func_id & 0x00FF) - 1;
 
 	/* Check the ID */
-	if ((func_tbl[index].msg_id == msg_id) &&
-	    (func_tbl[index].func_id == func_id)) {
+	if (func_tbl[index].msg_id == msg_id &&
+	    func_tbl[index].func_id == func_id) {
 		/* Get a function address */
 		func = (void *)func_tbl[index].func;
 	}
@@ -358,8 +358,8 @@ int fw_execute(unsigned short tid, struct fw_func_tbl *func_tbl)
 			continue;
 
 		/* Check a message ID */
-		if ((rcv_msg->msg_id != MSG_EVENT) &&
-		    (rcv_msg->msg_id != MSG_FUNCTION)) {
+		if (rcv_msg->msg_id != MSG_EVENT &&
+		    rcv_msg->msg_id != MSG_FUNCTION) {
 			APRINT("Invalid message ID %d\n", rcv_msg->msg_id);
 			continue;
 		}

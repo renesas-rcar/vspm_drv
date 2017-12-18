@@ -83,7 +83,7 @@ long vsp_ins_check_init_parameter(struct vsp_init_t *param)
 		return E_VSP_PARA_INPAR;
 
 	/* check IP number */
-	if ((param->ip_num < 1) || (param->ip_num > VSP_IP_MAX))
+	if (param->ip_num < 1 || param->ip_num > VSP_IP_MAX)
 		return E_VSP_PARA_INPAR;
 
 	return 0;
@@ -396,8 +396,8 @@ static long vsp_ins_check_master_layer(struct vsp_ch_info *ch_info)
 		if (i != master_idx) {
 			if (src_info->x_position >=
 					ch_info->src_info[master_idx].width) {
-				if ((src_info->rpf_ch == 14) ||
-				    (src_info->rpf_ch == 12))
+				if (src_info->rpf_ch == 14 ||
+				    src_info->rpf_ch == 12)
 					return E_VSP_PARA_VIR_XPOSI;
 				else
 					return E_VSP_PARA_IN_XPOSI;
@@ -405,8 +405,8 @@ static long vsp_ins_check_master_layer(struct vsp_ch_info *ch_info)
 
 			if (src_info->y_position >=
 					ch_info->src_info[master_idx].height) {
-				if ((src_info->rpf_ch == 14) ||
-				    (src_info->rpf_ch == 12))
+				if (src_info->rpf_ch == 14 ||
+				    src_info->rpf_ch == 12)
 					return E_VSP_PARA_VIR_YPOSI;
 				else
 					return E_VSP_PARA_IN_YPOSI;
@@ -647,8 +647,8 @@ static long vsp_ins_check_rpf_format(
 			return E_VSP_PARA_IN_FORMAT;
 		}
 	} else {	/* src_par->vir == VSP_VIR */
-		if ((src_par->format != VSP_IN_ARGB8888) &&
-		    (src_par->format != VSP_IN_YUV444_SEMI_PLANAR)) {
+		if (src_par->format != VSP_IN_ARGB8888 &&
+		    src_par->format != VSP_IN_YUV444_SEMI_PLANAR) {
 			return E_VSP_PARA_IN_FORMAT;
 		}
 
@@ -670,17 +670,17 @@ static long vsp_ins_check_rpf_clut_param(
 {
 	struct vsp_dl_t *clut = src_par->clut;
 
-	if ((src_par->format == VSP_IN_RGB_CLUT_DATA) ||
-	    (src_par->format == VSP_IN_YUV_CLUT_DATA)) {
+	if (src_par->format == VSP_IN_RGB_CLUT_DATA ||
+	    src_par->format == VSP_IN_YUV_CLUT_DATA) {
 		if (clut) {
 			/* check display list pointer */
-			if ((clut->hard_addr == 0) ||
+			if (clut->hard_addr == 0 ||
 			    !clut->virt_addr)
 				return E_VSP_PARA_OSD_CLUT;
 
 			/* check size */
-			if ((clut->tbl_num < 1) ||
-			    (clut->tbl_num > 256))
+			if (clut->tbl_num < 1 ||
+			    clut->tbl_num > 256)
 				return E_VSP_PARA_OSD_SIZE;
 		}
 	}
@@ -746,8 +746,8 @@ static long vsp_ins_check_irop_unit_param(
 	rpf_info->val_mskset[1] = 0;
 
 	if (irop) {
-		if ((alpha->asel == VSP_ALPHA_NUM1) ||
-		    (alpha->asel == VSP_ALPHA_NUM3)) {
+		if (alpha->asel == VSP_ALPHA_NUM1 ||
+		    alpha->asel == VSP_ALPHA_NUM3) {
 			/* check 1bit mask-alpha generator */
 			if (irop->ref_sel == VSP_MSKEN_ALPHA) {
 				if (irop->bit_sel == VSP_ALPHA_8BIT)
@@ -760,10 +760,10 @@ static long vsp_ins_check_irop_unit_param(
 				rpf_info->val_alpha_sel |=
 					((unsigned int)irop->bit_sel) << 23;
 
-				if ((irop->op_mode == VSP_IROP_NOP) ||
-				    (irop->op_mode == VSP_IROP_CLEAR) ||
-				    (irop->op_mode == VSP_IROP_INVERT) ||
-				    (irop->op_mode == VSP_IROP_SET)) {
+				if (irop->op_mode == VSP_IROP_NOP ||
+				    irop->op_mode == VSP_IROP_CLEAR ||
+				    irop->op_mode == VSP_IROP_INVERT ||
+				    irop->op_mode == VSP_IROP_SET) {
 					/* don't use external memory */
 					*use_alpha_plane = 0;
 				}
@@ -831,19 +831,19 @@ static long vsp_ins_check_mult_unit_param(
 	rpf_info->val_mult_alph = 0;
 
 	if (mult) {
-		if ((mult->a_mmd != VSP_MULT_THROUGH) &&
-		    (mult->a_mmd != VSP_MULT_RATIO))
+		if (mult->a_mmd != VSP_MULT_THROUGH &&
+		    mult->a_mmd != VSP_MULT_RATIO)
 			return E_VSP_PARA_ALPHA_MULT;
 
-		if ((mult->p_mmd != VSP_MULT_THROUGH) &&
-		    (mult->p_mmd != VSP_MULT_RATIO) &&
-		    (mult->p_mmd != VSP_MULT_ALPHA) &&
-		    (mult->p_mmd != VSP_MULT_RATIO_ALPHA))
+		if (mult->p_mmd != VSP_MULT_THROUGH &&
+		    mult->p_mmd != VSP_MULT_RATIO &&
+		    mult->p_mmd != VSP_MULT_ALPHA &&
+		    mult->p_mmd != VSP_MULT_RATIO_ALPHA)
 			return E_VSP_PARA_ALPHA_MULT;
 
 		if (src_info->color == VSP_COLOR_YUV) {
-			if ((mult->a_mmd != VSP_MULT_THROUGH) ||
-			    (mult->p_mmd != VSP_MULT_THROUGH))
+			if (mult->a_mmd != VSP_MULT_THROUGH ||
+			    mult->p_mmd != VSP_MULT_THROUGH)
 				return E_VSP_PARA_ALPHA_MULT;
 		}
 
@@ -904,9 +904,9 @@ static long vsp_ins_check_alpha_blend_param(
 	rpf_info->val_alpha_sel = ((unsigned int)alpha->asel) << 28;
 	if (alpha->asel == VSP_ALPHA_NUM1) {
 		/* check 8bit transparent-alpha generator */
-		if ((alpha->aext != VSP_AEXT_EXPAN) &&
-		    (alpha->aext != VSP_AEXT_COPY) &&
-		    (alpha->aext != VSP_AEXT_EXPAN_MAX)) {
+		if (alpha->aext != VSP_AEXT_EXPAN &&
+		    alpha->aext != VSP_AEXT_COPY &&
+		    alpha->aext != VSP_AEXT_EXPAN_MAX) {
 			return E_VSP_PARA_ALPHA_AEXT;
 		}
 
@@ -1038,15 +1038,15 @@ static long vsp_ins_check_rpf_param(
 	}
 
 	/* check horizontal chrominance interpolation method parameter */
-	if ((src_par->cipm != VSP_CIPM_0_HOLD) &&
-	    (src_par->cipm != VSP_CIPM_BI_LINEAR))
+	if (src_par->cipm != VSP_CIPM_0_HOLD &&
+	    src_par->cipm != VSP_CIPM_BI_LINEAR)
 		return E_VSP_PARA_IN_CIPM;
 	rpf_info->val_infmt |= ((unsigned int)src_par->cipm) << 16;
 
 	/* check lower-bit color data extension method parameter */
-	if ((src_par->cext != VSP_CEXT_EXPAN) &&
-	    (src_par->cext != VSP_CEXT_COPY) &&
-	    (src_par->cext != VSP_CEXT_EXPAN_MAX))
+	if (src_par->cext != VSP_CEXT_EXPAN &&
+	    src_par->cext != VSP_CEXT_COPY &&
+	    src_par->cext != VSP_CEXT_EXPAN_MAX)
 		return E_VSP_PARA_IN_CEXT;
 	rpf_info->val_infmt |= ((unsigned int)src_par->cext) << 12;
 
@@ -1069,10 +1069,10 @@ static long vsp_ins_check_rpf_param(
 	rpf_info->val_dswap = (unsigned int)(src_par->swap);
 
 	/* check basic area */
-	if ((src_par->width < 1) || (src_par->width > 8190))
+	if (src_par->width < 1 || src_par->width > 8190)
 		return E_VSP_PARA_IN_WIDTH;
 
-	if ((src_par->height < 1) || (src_par->height > 8190))
+	if (src_par->height < 1 || src_par->height > 8190)
 		return E_VSP_PARA_IN_HEIGHT;
 
 	rpf_info->val_bsize = ((unsigned int)src_par->width << 16);
@@ -1082,8 +1082,8 @@ static long vsp_ins_check_rpf_param(
 	if (src_par->width_ex == 0) {
 		width = (unsigned int)src_par->width;
 	} else {
-		if ((src_par->width_ex < src_par->width) ||
-		    (src_par->width_ex > 8190))
+		if (src_par->width_ex < src_par->width ||
+		    src_par->width_ex > 8190)
 			return E_VSP_PARA_IN_WIDTHEX;
 		width = (unsigned int)src_par->width_ex;
 	}
@@ -1091,8 +1091,8 @@ static long vsp_ins_check_rpf_param(
 	if (src_par->height_ex == 0) {
 		height = (unsigned int)src_par->height;
 	} else {
-		if ((src_par->height_ex < src_par->height) ||
-		    (src_par->height_ex > 8190))
+		if (src_par->height_ex < src_par->height ||
+		    src_par->height_ex > 8190)
 			return E_VSP_PARA_IN_HEIGHTEX;
 		height = (unsigned int)src_par->height_ex;
 	}
@@ -1488,16 +1488,16 @@ static long vsp_ins_check_wpf_fcnl(
 					return E_VSP_PARA_OUT_ADR;
 
 				/* check format */
-				if ((dst_par->format !=
-						VSP_OUT_PRGB8888) &&
-					(dst_par->format !=
-						VSP_OUT_YUV422_INT0_YUY2) &&
-					(dst_par->format !=
-						VSP_OUT_YUV444_PLANAR) &&
-					(dst_par->format !=
-						VSP_OUT_YUV422_PLANAR) &&
-					(dst_par->format !=
-						VSP_OUT_YUV420_PLANAR))
+				if (dst_par->format !=
+						VSP_OUT_PRGB8888 &&
+					dst_par->format !=
+						VSP_OUT_YUV422_INT0_YUY2 &&
+					dst_par->format !=
+						VSP_OUT_YUV444_PLANAR &&
+					dst_par->format !=
+						VSP_OUT_YUV422_PLANAR &&
+					dst_par->format !=
+						VSP_OUT_YUV420_PLANAR)
 					return E_VSP_PARA_OUT_FORMAT;
 				break;
 			case VSP_ROT_90:
@@ -1549,8 +1549,8 @@ static long vsp_ins_recalculate_wpf_addr(
 	unsigned int temp_y;
 	unsigned int temp_c;
 
-	if ((dst_par->rotation == VSP_ROT_90) ||
-	    (dst_par->rotation == VSP_ROT_90_V_FLIP)) {
+	if (dst_par->rotation == VSP_ROT_90 ||
+	    dst_par->rotation == VSP_ROT_90_V_FLIP) {
 		if (wpf_info->val_outfmt & VSP_WPF_OUTFMT_FCNL) {
 			/* enable FCNL compression */
 			temp_y = vsp_ins_get_bpp_luma(
@@ -1757,18 +1757,18 @@ static long vsp_ins_check_wpf_param(
 	}
 
 	/* check rounding control parameter */
-	if ((dst_par->cbrm != VSP_CSC_ROUND_DOWN) &&
-	    (dst_par->cbrm != VSP_CSC_ROUND_OFF))
+	if (dst_par->cbrm != VSP_CSC_ROUND_DOWN &&
+	    dst_par->cbrm != VSP_CSC_ROUND_OFF)
 		return E_VSP_PARA_OUT_CBRM;
 
-	if ((dst_par->abrm != VSP_CONVERSION_ROUNDDOWN) &&
-	    (dst_par->abrm != VSP_CONVERSION_ROUNDING) &&
-	    (dst_par->abrm != VSP_CONVERSION_THRESHOLD))
+	if (dst_par->abrm != VSP_CONVERSION_ROUNDDOWN &&
+	    dst_par->abrm != VSP_CONVERSION_ROUNDING &&
+	    dst_par->abrm != VSP_CONVERSION_THRESHOLD)
 		return E_VSP_PARA_OUT_ABRM;
 
-	if ((dst_par->clmd != VSP_CLMD_NO) &&
-	    (dst_par->clmd != VSP_CLMD_MODE1) &&
-	    (dst_par->clmd != VSP_CLMD_MODE2))
+	if (dst_par->clmd != VSP_CLMD_NO &&
+	    dst_par->clmd != VSP_CLMD_MODE1 &&
+	    dst_par->clmd != VSP_CLMD_MODE2)
 		return E_VSP_PARA_OUT_CLMD;
 
 	return 0;
@@ -1973,8 +1973,8 @@ static long vsp_ins_check_uds_param(
 		/* no error */
 	} else if (uds_param->complement == VSP_COMPLEMENT_NN) {
 		/* when under quarter, cannot use nearest neighbor */
-		if ((uds_param->x_ratio > VSP_UDS_SCALE_1_4) ||
-		    (uds_param->y_ratio > VSP_UDS_SCALE_1_4))
+		if (uds_param->x_ratio > VSP_UDS_SCALE_1_4 ||
+		    uds_param->y_ratio > VSP_UDS_SCALE_1_4)
 			return E_VSP_PARA_UDS_COMP;
 
 		uds_info->val_ctrl |= VSP_UDS_CTRL_NN;
@@ -2022,7 +2022,7 @@ static long vsp_ins_check_lut_param(
 		return E_VSP_PARA_LUT_ADR;
 
 	/* check display list size */
-	if ((lut->tbl_num < 1) || (lut->tbl_num > 256))
+	if (lut->tbl_num < 1 || lut->tbl_num > 256)
 		return E_VSP_PARA_LUT_SIZE;
 
 	/* check connect parameter */
@@ -2068,7 +2068,7 @@ static long vsp_ins_check_clu_param(
 		clu_info->val_ctrl |= VSP_CLU_CTRL_AAI;
 
 		/* check display list size */
-		if ((clu->tbl_num < 1) || (clu->tbl_num > 4913))
+		if (clu->tbl_num < 1 || clu->tbl_num > 4913)
 			return E_VSP_PARA_CLU_SIZE;
 
 		clu_info->val_ctrl |=
@@ -2076,7 +2076,7 @@ static long vsp_ins_check_clu_param(
 		break;
 	case VSP_CLU_MODE_3D:
 		/* check display list size */
-		if ((clu->tbl_num < 2) || (clu->tbl_num > 9826))
+		if (clu->tbl_num < 2 || clu->tbl_num > 9826)
 			return E_VSP_PARA_CLU_SIZE;
 
 		if (clu->tbl_num % 2)
@@ -2090,7 +2090,7 @@ static long vsp_ins_check_clu_param(
 		clu_info->val_ctrl |= VSP_CLU_CTRL_AAI;
 
 		/* check display list size */
-		if ((clu->tbl_num < 1) || (clu->tbl_num > 289))
+		if (clu->tbl_num < 1 || clu->tbl_num > 289)
 			return E_VSP_PARA_CLU_SIZE;
 
 		clu_info->val_ctrl |=
@@ -2098,7 +2098,7 @@ static long vsp_ins_check_clu_param(
 		break;
 	case VSP_CLU_MODE_2D:
 		/* check display list size */
-		if ((clu->tbl_num < 2) || (clu->tbl_num > 578))
+		if (clu->tbl_num < 2 || clu->tbl_num > 578)
 			return E_VSP_PARA_CLU_SIZE;
 
 		if (clu->tbl_num % 2)
@@ -2214,11 +2214,11 @@ static long vsp_ins_check_blend_virtual_param(
 		return E_VSP_PARA_VIR_ADR;
 
 	/* check width */
-	if ((vir_param->width < 1) || (vir_param->width > 8190))
+	if (vir_param->width < 1 || vir_param->width > 8190)
 		return E_VSP_PARA_VIR_WIDTH;
 
 	/* check height */
-	if ((vir_param->height < 1) || (vir_param->height > 8190))
+	if (vir_param->height < 1 || vir_param->height > 8190)
 		return E_VSP_PARA_VIR_HEIGHT;
 
 	bru_info->val_vir_size = ((unsigned int)vir_param->width) << 16;
@@ -2270,11 +2270,11 @@ static long vsp_ins_check_brs_virtual_param(
 		return E_VSP_PARA_VIR_ADR;
 
 	/* check width */
-	if ((vir_param->width < 1) || (vir_param->width > 8190))
+	if (vir_param->width < 1 || vir_param->width > 8190)
 		return E_VSP_PARA_VIR_WIDTH;
 
 	/* check height */
-	if ((vir_param->height < 1) || (vir_param->height > 8190))
+	if (vir_param->height < 1 || vir_param->height > 8190)
 		return E_VSP_PARA_VIR_HEIGHT;
 
 	brs_info->val_vir_size = ((unsigned int)vir_param->width) << 16;
@@ -2332,10 +2332,10 @@ static long vsp_ins_check_blend_control_param(
 
 	*bru_bld = 0;
 
-	if (ctrl_param && (src_layer != VSP_LAY_NO)) {
+	if (ctrl_param && src_layer != VSP_LAY_NO) {
 		/* check rbc */
-		if ((ctrl_param->rbc != VSP_RBC_ROP) &&
-		    (ctrl_param->rbc != VSP_RBC_BLEND))
+		if (ctrl_param->rbc != VSP_RBC_ROP &&
+		    ctrl_param->rbc != VSP_RBC_BLEND)
 			return E_VSP_PARA_BLEND_RBC;
 
 		/* check crop */
@@ -2347,8 +2347,8 @@ static long vsp_ins_check_blend_control_param(
 			return E_VSP_PARA_BLEND_AROP;
 
 		/* check blend_formula */
-		if ((ctrl_param->blend_formula != VSP_FORM_BLEND0) &&
-		    (ctrl_param->blend_formula != VSP_FORM_BLEND1))
+		if (ctrl_param->blend_formula != VSP_FORM_BLEND0 &&
+		    ctrl_param->blend_formula != VSP_FORM_BLEND1)
 			return E_VSP_PARA_BLEND_FORM;
 
 		/* check blend_corfx */
@@ -2360,8 +2360,8 @@ static long vsp_ins_check_blend_control_param(
 			return E_VSP_PARA_BLEND_COEFY;
 
 		/* check aformula */
-		if ((ctrl_param->aformula != VSP_FORM_ALPHA0) &&
-		    (ctrl_param->aformula != VSP_FORM_ALPHA1))
+		if (ctrl_param->aformula != VSP_FORM_ALPHA0 &&
+		    ctrl_param->aformula != VSP_FORM_ALPHA1)
 			return E_VSP_PARA_BLEND_AFORM;
 
 		/* check acoefx */
@@ -2486,8 +2486,8 @@ static long vsp_ins_check_bru_param(
 		return E_VSP_PARA_BRU_LAYORDER;
 
 	/* check adiv */
-	if ((bru_param->adiv != VSP_DIVISION_OFF) &&
-	    (bru_param->adiv != VSP_DIVISION_ON))
+	if (bru_param->adiv != VSP_DIVISION_OFF &&
+	    bru_param->adiv != VSP_DIVISION_ON)
 		return E_VSP_PARA_BRU_ADIV;
 
 	bru_info->val_inctrl = ((unsigned int)bru_param->adiv) << 28;
@@ -2691,8 +2691,8 @@ static long vsp_ins_check_brs_param(
 		return E_VSP_PARA_BRS_LAYORDER;
 
 	/* check adiv */
-	if ((brs_param->adiv != VSP_DIVISION_OFF) &&
-	    (brs_param->adiv != VSP_DIVISION_ON))
+	if (brs_param->adiv != VSP_DIVISION_OFF &&
+	    brs_param->adiv != VSP_DIVISION_ON)
 		return E_VSP_PARA_BRS_ADIV;
 
 	brs_info->val_inctrl = ((unsigned int)brs_param->adiv) << 28;
@@ -2802,7 +2802,7 @@ static long vsp_ins_check_hgo_param(
 		return E_VSP_PARA_NOHGO;
 
 	/* check address pointer */
-	if ((hgo_param->hard_addr == 0) ||
+	if (hgo_param->hard_addr == 0 ||
 	    !hgo_param->virt_addr)
 		return E_VSP_PARA_HGO_ADR;
 
@@ -2814,10 +2814,10 @@ static long vsp_ins_check_hgo_param(
 	hgo_info->val_hard_addr = hgo_param->hard_addr;
 
 	/* check detection window area */
-	if ((hgo_param->width < 1) || (hgo_param->width > 8190))
+	if (hgo_param->width < 1 || hgo_param->width > 8190)
 		return E_VSP_PARA_HGO_WIDTH;
 
-	if ((hgo_param->height < 1) || (hgo_param->height > 8190))
+	if (hgo_param->height < 1 || hgo_param->height > 8190)
 		return E_VSP_PARA_HGO_HEIGHT;
 
 	if ((hgo_param->width + hgo_param->x_offset) > 8190)
@@ -2833,33 +2833,33 @@ static long vsp_ins_check_hgo_param(
 	hgo_info->val_size |= (unsigned int)hgo_param->height;
 
 	/* check binary mode */
-	if ((hgo_param->binary_mode != VSP_STRAIGHT_BINARY) &&
-	    (hgo_param->binary_mode != VSP_OFFSET_BINARY))
+	if (hgo_param->binary_mode != VSP_STRAIGHT_BINARY &&
+	    hgo_param->binary_mode != VSP_OFFSET_BINARY)
 		return E_VSP_PARA_HGO_BINMODE;
 	hgo_info->val_mode = (unsigned int)hgo_param->binary_mode;
 
 	/* check maxrgb mode */
-	if ((hgo_param->maxrgb_mode != VSP_MAXRGB_OFF) &&
-	    (hgo_param->maxrgb_mode != VSP_MAXRGB_ON))
+	if (hgo_param->maxrgb_mode != VSP_MAXRGB_OFF &&
+	    hgo_param->maxrgb_mode != VSP_MAXRGB_ON)
 		return E_VSP_PARA_HGO_MAXRGB;
 	hgo_info->val_mode |= (unsigned int)hgo_param->maxrgb_mode;
 
 	/* check step mode */
-	if ((hgo_param->step_mode != VSP_STEP_64) &&
-	    (hgo_param->step_mode != VSP_STEP_256))
+	if (hgo_param->step_mode != VSP_STEP_64 &&
+	    hgo_param->step_mode != VSP_STEP_256)
 		return E_VSP_PARA_HGO_STEP;
 	hgo_info->val_mode |= ((unsigned int)hgo_param->step_mode) << 8;
 
 	/* check skip mode */
-	if ((hgo_param->x_skip != VSP_SKIP_OFF) &&
-	    (hgo_param->x_skip != VSP_SKIP_1_2) &&
-	    (hgo_param->x_skip != VSP_SKIP_1_4))
+	if (hgo_param->x_skip != VSP_SKIP_OFF &&
+	    hgo_param->x_skip != VSP_SKIP_1_2 &&
+	    hgo_param->x_skip != VSP_SKIP_1_4)
 		return E_VSP_PARA_HGO_XSKIP;
 	hgo_info->val_mode |= ((unsigned int)hgo_param->x_skip) << 2;
 
-	if ((hgo_param->y_skip != VSP_SKIP_OFF) &&
-	    (hgo_param->y_skip != VSP_SKIP_1_2) &&
-	    (hgo_param->y_skip != VSP_SKIP_1_4))
+	if (hgo_param->y_skip != VSP_SKIP_OFF &&
+	    hgo_param->y_skip != VSP_SKIP_1_2 &&
+	    hgo_param->y_skip != VSP_SKIP_1_4)
 		return E_VSP_PARA_HGO_YSKIP;
 	hgo_info->val_mode |= (unsigned int)hgo_param->y_skip;
 
@@ -2898,8 +2898,8 @@ static long vsp_ins_check_hue_area_param(struct vsp_hue_area_t *hue_area)
 		val = hue_area[i].upper;
 	}
 
-	if ((hue_area[0].upper < hue_area[0].lower) &&
-	    (hue_area[0].lower < hue_area[5].upper)) {
+	if (hue_area[0].upper < hue_area[0].lower &&
+	    hue_area[0].lower < hue_area[5].upper) {
 		return E_VSP_PARA_HGT_AREA;
 	}
 
@@ -2927,7 +2927,7 @@ static long vsp_ins_check_hgt_param(
 		return E_VSP_PARA_NOHGT;
 
 	/* check address pointer */
-	if ((hgt_param->hard_addr == 0) ||
+	if (hgt_param->hard_addr == 0 ||
 	    !hgt_param->virt_addr)
 		return E_VSP_PARA_HGT_ADR;
 
@@ -2939,10 +2939,10 @@ static long vsp_ins_check_hgt_param(
 	hgt_info->val_hard_addr = hgt_param->hard_addr;
 
 	/* check detection window area */
-	if ((hgt_param->width < 1) || (hgt_param->width > 8190))
+	if (hgt_param->width < 1 || hgt_param->width > 8190)
 		return E_VSP_PARA_HGT_WIDTH;
 
-	if ((hgt_param->height < 1) || (hgt_param->height > 8190))
+	if (hgt_param->height < 1 || hgt_param->height > 8190)
 		return E_VSP_PARA_HGT_HEIGHT;
 
 	if ((hgt_param->width + hgt_param->x_offset) > 8190)
@@ -2963,15 +2963,15 @@ static long vsp_ins_check_hgt_param(
 		return ercd;
 
 	/* check skip mode */
-	if ((hgt_param->x_skip != VSP_SKIP_OFF) &&
-	    (hgt_param->x_skip != VSP_SKIP_1_2) &&
-	    (hgt_param->x_skip != VSP_SKIP_1_4)) {
+	if (hgt_param->x_skip != VSP_SKIP_OFF &&
+	    hgt_param->x_skip != VSP_SKIP_1_2 &&
+	    hgt_param->x_skip != VSP_SKIP_1_4) {
 		return E_VSP_PARA_HGO_XSKIP;
 	}
 
-	if ((hgt_param->y_skip != VSP_SKIP_OFF) &&
-	    (hgt_param->y_skip != VSP_SKIP_1_2) &&
-	    (hgt_param->y_skip != VSP_SKIP_1_4)) {
+	if (hgt_param->y_skip != VSP_SKIP_OFF &&
+	    hgt_param->y_skip != VSP_SKIP_1_2 &&
+	    hgt_param->y_skip != VSP_SKIP_1_4) {
 		return E_VSP_PARA_HGO_YSKIP;
 	}
 
@@ -3017,8 +3017,8 @@ static long vsp_ins_check_shp_param(
 		return E_VSP_PARA_SHP_HEIGHT;
 
 	/* check mode */
-	if ((shp_param->mode != VSP_SHP_SHARP) &&
-	    (shp_param->mode != VSP_SHP_UNSHARP)) {
+	if (shp_param->mode != VSP_SHP_SHARP &&
+	    shp_param->mode != VSP_SHP_UNSHARP) {
 		return E_VSP_PARA_SHP_MODE;
 	}
 
@@ -3049,14 +3049,14 @@ static long vsp_ins_check_dl_param(
 	struct vsp_wpf_info *wpf_info = &ch_info->wpf_info;
 
 	/* check address */
-	if ((dl_param->hard_addr == 0) ||
+	if (dl_param->hard_addr == 0 ||
 	    !dl_param->virt_addr)
 		return E_VSP_PARA_DL_ADR;
 
 	/* check size */
 	if ((dl_param->tbl_num <
 			((VSP_DL_HEAD_SIZE + VSP_DL_BODY_SIZE) >> 3)) ||
-		(dl_param->tbl_num > 16383))
+		dl_param->tbl_num > 16383)
 		return E_VSP_PARA_DL_SIZE;
 
 	wpf_info->val_dl_addr = dl_param->hard_addr;
@@ -3081,8 +3081,8 @@ static long vsp_ins_check_module_param(
 		processing_module = ch_info->next_module;
 
 		/* check duplicate */
-		if ((processing_module != VSP_BRU_USE) &&
-		    (processing_module != VSP_BRS_USE)) {
+		if (processing_module != VSP_BRU_USE &&
+		    processing_module != VSP_BRS_USE) {
 			if (ch_info->reserved_module & processing_module)
 				return E_VSP_PARA_CONNECT;
 		}
@@ -3212,7 +3212,7 @@ static long vsp_ins_check_connection_module_from_rpf(
 	}
 
 	/* check connection */
-	if ((ch_info->wpf_cnt > 0) && (ch_info->bru_cnt > 0))
+	if (ch_info->wpf_cnt > 0 && ch_info->bru_cnt > 0)
 		return E_VSP_PARA_CONNECT;
 
 	return 0;

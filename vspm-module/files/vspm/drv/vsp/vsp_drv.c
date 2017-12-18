@@ -185,8 +185,8 @@ long vsp_lib_open(unsigned char ch, struct vsp_open_t *param)
 	prv = g_vsp_obj[ch];
 
 	/* check status */
-	if ((prv->ch_info[0].status != VSP_STAT_INIT) ||
-	    (prv->ch_info[1].status != VSP_STAT_INIT)) {
+	if (prv->ch_info[0].status != VSP_STAT_INIT ||
+	    prv->ch_info[1].status != VSP_STAT_INIT) {
 		ercd = E_VSP_INVALID_STATE;
 		goto err_exit1;
 	}
@@ -253,8 +253,8 @@ long vsp_lib_close(unsigned char ch)
 	prv = g_vsp_obj[ch];
 
 	/* check status */
-	if ((prv->ch_info[0].status != VSP_STAT_READY) ||
-	    (prv->ch_info[1].status != VSP_STAT_READY))
+	if (prv->ch_info[0].status != VSP_STAT_READY ||
+	    prv->ch_info[1].status != VSP_STAT_READY)
 		return E_VSP_INVALID_STATE;
 
 	/* unregistory interrupt handler */
@@ -379,8 +379,8 @@ long vsp_lib_abort(unsigned char ch)
 	prv = g_vsp_obj[ch];
 
 	/* check status */
-	if ((prv->ch_info[0].status == VSP_STAT_RUN) ||
-	    (prv->ch_info[1].status == VSP_STAT_RUN)) {
+	if (prv->ch_info[0].status == VSP_STAT_RUN ||
+	    prv->ch_info[1].status == VSP_STAT_RUN) {
 		/* stop VSP processing */
 		ercd = vsp_ins_stop_processing(prv);
 		if (ercd)
@@ -413,8 +413,8 @@ long vsp_lib_get_status(unsigned char ch, struct vsp_status_t *status)
 	prv = g_vsp_obj[ch];
 
 	/* check status */
-	if ((prv->ch_info[0].status == VSP_STAT_INIT) ||
-	    (prv->ch_info[1].status == VSP_STAT_INIT))
+	if (prv->ch_info[0].status == VSP_STAT_INIT ||
+	    prv->ch_info[1].status == VSP_STAT_INIT)
 		return E_VSP_INVALID_STATE;
 
 	/* set status */
@@ -447,14 +447,14 @@ long vsp_lib_suspend(unsigned char ch)
 
 	if (prv &&
 	    prv->vsp_reg) {
-		if ((prv->ch_info[0].status == VSP_STAT_RUN) ||
-		    (prv->ch_info[1].status == VSP_STAT_RUN)) {
+		if (prv->ch_info[0].status == VSP_STAT_RUN ||
+		    prv->ch_info[1].status == VSP_STAT_RUN) {
 			/* waiting processing finish */
 			(void)vsp_ins_wait_processing(prv);
 		}
 
-		if ((prv->ch_info[0].status == VSP_STAT_READY) &&
-		    (prv->ch_info[1].status == VSP_STAT_READY)) {
+		if (prv->ch_info[0].status == VSP_STAT_READY &&
+		    prv->ch_info[1].status == VSP_STAT_READY) {
 			/* unregistory interrupt handler */
 			ercd = vsp_ins_unreg_ih(prv);
 			if (ercd)
@@ -491,8 +491,8 @@ long vsp_lib_resume(unsigned char ch)
 
 	if (prv &&
 	    !prv->vsp_reg) {
-		if ((prv->ch_info[0].status == VSP_STAT_READY) &&
-		    (prv->ch_info[1].status == VSP_STAT_READY)) {
+		if (prv->ch_info[0].status == VSP_STAT_READY &&
+		    prv->ch_info[1].status == VSP_STAT_READY) {
 			/* reinitialize register */
 			ercd = vsp_ins_init_reg(prv);
 			if (ercd)
