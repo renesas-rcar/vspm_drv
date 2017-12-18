@@ -69,7 +69,6 @@
 
 #include "vsp_drv_public.h"
 
-
 /******************************************************************************
  * Function:		vspm_ins_vsp_ch
  * Description:	Get channel number from module_id.
@@ -90,7 +89,6 @@ long vspm_ins_vsp_ch(unsigned short module_id, unsigned char *ch)
 	return R_VSPM_OK;
 }
 
-
 /******************************************************************************
  * Function:		vspm_ins_get_bit_count
  * Description:	Get bit count.
@@ -109,7 +107,6 @@ static long vspm_ins_get_bit_count(unsigned int bits)
 
 	return cnt;
 }
-
 
 /******************************************************************************
  * Function:		vspm_ins_assign_rpf
@@ -197,7 +194,6 @@ static long vspm_ins_assign_rpf(
 	return R_VSPM_OK;
 }
 
-
 /******************************************************************************
  * Function:		vspm_cb_vsp
  * Description:	Callback function.
@@ -210,7 +206,6 @@ static void vspm_cb_vsp(unsigned long id, long ercd, void *userdata)
 	/* callback function */
 	vspm_inc_ctrl_on_driver_complete((unsigned short)module_id, ercd);
 }
-
 
 /******************************************************************************
  * Function:		vspm_ins_vsp_initialize
@@ -293,7 +288,6 @@ long vspm_ins_vsp_initialize(
 	return R_VSPM_OK;
 }
 
-
 /******************************************************************************
  * Function:		vspm_ins_vsp_execute
  * Description:	Execute VSP driver.
@@ -331,7 +325,6 @@ long vspm_ins_vsp_execute(unsigned short module_id, struct vsp_start_t *vsp_par)
 	return R_VSPM_OK;
 }
 
-
 /******************************************************************************
  * Function:		vspm_ins_vsp_exec_complete
  * Description:	Complete VSP driver.
@@ -341,7 +334,6 @@ long vspm_ins_vsp_exec_complete(unsigned short module_id)
 {
 	return R_VSPM_OK;
 }
-
 
 /******************************************************************************
  * Function:		vspm_ins_vsp_cancel
@@ -369,7 +361,6 @@ long vspm_ins_vsp_cancel(unsigned short module_id)
 
 	return R_VSPM_OK;
 }
-
 
 /******************************************************************************
  * Function:		vspm_ins_vsp_quit
@@ -410,7 +401,6 @@ long vspm_ins_vsp_quit(struct vspm_usable_res_info *usable)
 	return R_VSPM_OK;
 }
 
-
 /******************************************************************************
  * Function:		vspm_ins_vsp_execute_low_delay
  * Description:	Execute VSP driver VSPM task through.
@@ -450,7 +440,6 @@ long vspm_ins_vsp_execute_low_delay(
 	return R_VSPM_OK;
 }
 
-
 /******************************************************************************
  * Function:		vspm_ins_vsp_suspend
  * Description:	Suspend VSP driver.
@@ -472,7 +461,6 @@ long vspm_ins_vsp_suspend(void)
 
 	return R_VSPM_OK;
 }
-
 
 /******************************************************************************
  * Function:		vspm_ins_vsp_resume

@@ -67,7 +67,6 @@
 #include "vspm_lib_public.h"
 #include "vspm_common.h"
 
-
 /******************************************************************************
  * Function:		vspm_lib_entry
  * Description:	Entry of various IP operations.
@@ -114,7 +113,6 @@ long vspm_lib_entry(struct vspm_api_param_entry *entry)
 	return R_VSPM_OK;
 }
 
-
 /******************************************************************************
  * Function:		vspm_lib_queue_cancel
  * Description:	Cancel the job.
@@ -142,7 +140,6 @@ long vspm_lib_queue_cancel(
 	return ercd;
 }
 
-
 /******************************************************************************
  * Function:		vspm_lib_forced_cancel
  * Description:	Forced cancel the job.
@@ -160,7 +157,6 @@ long vspm_lib_forced_cancel(struct vspm_privdata *priv)
 		sizeof(cancel),
 		&cancel);
 }
-
 
 /******************************************************************************
  * Function:		vspm_lib_set_mode
@@ -180,7 +176,6 @@ long vspm_lib_set_mode(struct vspm_privdata *priv, struct vspm_init_t *param)
 		sizeof(mode),
 		&mode);
 }
-
 
 /******************************************************************************
  * Function:		vspm_lib_get_status

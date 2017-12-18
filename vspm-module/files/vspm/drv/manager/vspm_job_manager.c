@@ -67,7 +67,6 @@
 #include "vspm_lib_public.h"
 #include "vspm_common.h"
 
-
 /******************************************************************************
  * Function:		vspm_ins_job_entry
  * Description:	Job registration.
@@ -114,7 +113,6 @@ struct vspm_job_info *vspm_ins_job_entry(
 	return job_info;
 }
 
-
 /******************************************************************************
  * Function:		vspm_ins_job_find_job_info
  * Description:	Search a job information.
@@ -148,7 +146,6 @@ struct vspm_job_info *vspm_ins_job_find_job_info(
 	return job_info;
 }
 
-
 /******************************************************************************
  * Function:		vspm_ins_job_get_status
  * Description:	Get status information of the job.
@@ -158,7 +155,6 @@ unsigned long vspm_ins_job_get_status(struct vspm_job_info *job_info)
 {
 	return job_info->status;
 }
-
 
 /******************************************************************************
  * Function:		vspm_ins_job_cancel
@@ -183,7 +179,6 @@ long vspm_ins_job_cancel(struct vspm_job_info *job_info)
 	return R_VSPM_OK;
 }
 
-
 /******************************************************************************
  * Function:		vspm_ins_job_execute_start
  * Description:	Set to executing the state of the job.
@@ -205,7 +200,6 @@ long vspm_ins_job_execute_start(
 
 	return R_VSPM_OK;
 }
-
 
 /******************************************************************************
  * Function:		vspm_ins_job_execute_complete
@@ -232,7 +226,6 @@ long vspm_ins_job_execute_complete(
 	return R_VSPM_OK;
 }
 
-
 /******************************************************************************
  * Function:		vspm_ins_job_remove
  * Description:	Remove the job.
@@ -242,7 +235,6 @@ void vspm_ins_job_remove(struct vspm_job_info *job_info)
 {
 	job_info->status = VSPM_JOB_STATUS_EMPTY;
 }
-
 
 /******************************************************************************
  * Function:		vspm_ins_job_get_job_id
@@ -254,7 +246,6 @@ unsigned long vspm_ins_job_get_job_id(struct vspm_job_info *job_info)
 	return job_info->job_id;
 }
 
-
 /******************************************************************************
  * Function:		vspm_ins_job_get_ip_param
  * Description:	Get IP parameter of the job information.
@@ -264,7 +255,6 @@ struct vspm_job_t *vspm_ins_job_get_ip_param(struct vspm_job_info *job_info)
 {
 	return job_info->entry.p_ip_par;
 }
-
 
 /******************************************************************************
  * Function:		vspm_ins_job_get_request_param

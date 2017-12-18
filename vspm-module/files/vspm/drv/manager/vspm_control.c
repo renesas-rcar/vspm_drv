@@ -87,7 +87,6 @@ static void vspm_ins_mask_low_bits(unsigned int *bits, unsigned int num)
 	*bits &= mask_bits;
 }
 
-
 /******************************************************************************
  * Function:		vspm_ins_ctrl_get_ch_lsb
  * Description:	Get channel from LSB.
@@ -113,7 +112,6 @@ static unsigned short vspm_ins_ctrl_get_ch_lsb(unsigned int bits)
 
 	return cnt;
 }
-
 
 /******************************************************************************
  * Function:		vspm_ins_ctrl_get_ch_msb
@@ -144,7 +142,6 @@ static unsigned short vspm_ins_ctrl_get_ch_msb(unsigned int bits)
 
 	return cnt;
 }
-
 
 /******************************************************************************
  * Function:		vspm_ins_ctrl_initialize
@@ -192,7 +189,6 @@ long vspm_ins_ctrl_initialize(struct vspm_drvdata *pdrv)
 	return R_VSPM_OK;
 }
 
-
 /******************************************************************************
  * Function:		vspm_ins_ctrl_quit
  * Description:	Finalize VSP Manager.
@@ -222,7 +218,6 @@ long vspm_ins_ctrl_quit(struct vspm_drvdata *pdrv)
 	return R_VSPM_OK;
 }
 
-
 /******************************************************************************
  * Function:		vspm_ins_ctrl_suspend
  * Description:	Pre-suspend processing.
@@ -240,7 +235,6 @@ long vspm_ins_ctrl_suspend(struct vspm_drvdata *pdrv)
 	return R_VSPM_OK;
 }
 
-
 /******************************************************************************
  * Function:		vspm_ins_ctrl_suspend
  * Description:	Post-resume processing.
@@ -257,7 +251,6 @@ long vspm_ins_ctrl_resume(struct vspm_drvdata *pdrv)
 
 	return R_VSPM_OK;
 }
-
 
 /******************************************************************************
  * Function:		vspm_ins_ctrl_set_mode
@@ -326,7 +319,6 @@ long vspm_ins_ctrl_set_mode(struct vspm_api_param_mode *mode)
 	return R_VSPM_OK;
 }
 
-
 /******************************************************************************
  * Function:		vspm_ins_ctrl_regist_entry
  * Description:	Registory entry parameter.
@@ -360,7 +352,6 @@ long vspm_ins_ctrl_regist_entry(struct vspm_api_param_entry *entry)
 
 	return R_VSPM_OK;
 }
-
 
 /******************************************************************************
  * Function:		vspm_ins_ctrl_exec_entry
@@ -396,7 +387,6 @@ long vspm_ins_ctrl_exec_entry(struct vspm_api_param_entry *entry)
 
 	return ercd;
 }
-
 
 /******************************************************************************
  * Function:		vspm_ins_ctrl_on_complete
@@ -453,7 +443,6 @@ dispatch:
 	return ercd;
 }
 
-
 /******************************************************************************
  * Function:		vspm_ins_ctrl_get_status
  * Description:	Get status of entry jobs.
@@ -480,7 +469,6 @@ long vspm_ins_ctrl_get_status(unsigned long job_id)
 
 	return rtncd;
 }
-
 
 /******************************************************************************
  * Function:		vspm_ins_ctrl_queue_cancel
@@ -522,7 +510,6 @@ long vspm_ins_ctrl_queue_cancel(unsigned long job_id)
 
 	return rtncd;
 }
-
 
 /******************************************************************************
  * Function:		vspm_ins_ctrl_forced_cancel
@@ -586,7 +573,6 @@ long vspm_ins_ctrl_forced_cancel(struct vspm_api_param_forced_cancel *cancel)
 	return R_VSPM_OK;
 }
 
-
 /******************************************************************************
  * Function:		vspm_ins_ctrl_cancel_entry
  * Description:	Cancel entry parameter.
@@ -617,7 +603,6 @@ long vspm_ins_ctrl_cancel_entry(struct vspm_privdata *priv)
 
 	return ercd;
 }
-
 
 /******************************************************************************
  * Function:		vspm_ins_ctrl_mode_param_check
@@ -681,7 +666,6 @@ long vspm_ins_ctrl_mode_param_check(
 
 	return R_VSPM_OK;
 }
-
 
 /******************************************************************************
  * Function:		vspm_ins_ctrl_entry_param_check
@@ -754,7 +738,6 @@ long vspm_ins_ctrl_entry_param_check(struct vspm_api_param_entry *entry)
 
 	return R_VSPM_OK;
 }
-
 
 /******************************************************************************
  * Function:		vspm_ins_ctrl_dispatch
@@ -838,7 +821,6 @@ void vspm_ins_ctrl_dispatch(void)
 	}
 }
 
-
 /******************************************************************************
  * Function:		vspm_ins_ctrl_assign_channel
  * Description:	Assignment channel.
@@ -898,7 +880,6 @@ long vspm_ins_ctrl_assign_channel(
 	return R_VSPM_OK;
 }
 
-
 /******************************************************************************
  * Function:		vspm_ins_ctrl_count_bits
  * Description:	Get bit count of 1.
@@ -916,7 +897,6 @@ static unsigned char vspm_ins_ctrl_count_bits(unsigned int bits)
 
 	return cnt;
 }
-
 
 /******************************************************************************
  * Function:		vspm_ins_ctrl_get_req_clut_count
@@ -1002,7 +982,6 @@ unsigned int vspm_ins_ctrl_get_usable_vsp_ch_bits(
 
 	return ch_bits;
 }
-
 
 /******************************************************************************
  * Function:		vspm_inc_ctrl_on_driver_complete

@@ -140,7 +140,6 @@ err_exit1:
 }
 EXPORT_SYMBOL(vspm_init_driver);
 
-
 /******************************************************************************
  * Function:		vspm_quit_driver
  * Description:	Finalize VSP Manager.
@@ -197,7 +196,6 @@ err_exit1:
 }
 EXPORT_SYMBOL(vspm_quit_driver);
 
-
 /******************************************************************************
  * Function:		vspm_entry_job
  * Description:	Entry of job.
@@ -240,7 +238,6 @@ long vspm_entry_job(
 }
 EXPORT_SYMBOL(vspm_entry_job);
 
-
 /******************************************************************************
  * Function:		vspm_cancel_job
  * Description:	Cancel of job.
@@ -265,7 +262,6 @@ long vspm_cancel_job(void *handle, unsigned long job_id)
 	return ercd;
 }
 EXPORT_SYMBOL(vspm_cancel_job);
-
 
 /******************************************************************************
  * Function:		vspm_get_status
@@ -346,7 +342,6 @@ static int vspm_vsp_probe(struct platform_device *pdev)
 	return 0;
 }
 
-
 static int vspm_vsp_remove(struct platform_device *pdev)
 {
 	struct vspm_drvdata *pdrv = p_vspm_drvdata;
@@ -371,7 +366,6 @@ static int vspm_vsp_remove(struct platform_device *pdev)
 
 	return 0;
 }
-
 
 static int vspm_fdp_probe(struct platform_device *pdev)
 {
@@ -424,7 +418,6 @@ static int vspm_fdp_probe(struct platform_device *pdev)
 	return 0;
 }
 
-
 static int vspm_fdp_remove(struct platform_device *pdev)
 {
 	struct vspm_drvdata *pdrv = p_vspm_drvdata;
@@ -449,7 +442,6 @@ static int vspm_fdp_remove(struct platform_device *pdev)
 
 	return 0;
 }
-
 
 static int vspm_pm_suspend(struct device *dev)
 {
@@ -483,7 +475,6 @@ static int vspm_pm_resume(struct device *dev)
 	return 0;
 }
 
-
 static int vspm_pm_runtime_suspend(struct device *dev)
 {
 	struct platform_device *pdev = to_platform_device(dev);
@@ -514,13 +505,11 @@ static int vspm_pm_runtime_resume(struct device *dev)
 	return 0;
 }
 
-
 static const struct dev_pm_ops vspm_vsp_pm_ops = {
 	SET_SYSTEM_SLEEP_PM_OPS(vspm_pm_suspend, vspm_pm_resume)
 	SET_RUNTIME_PM_OPS(
 		vspm_pm_runtime_suspend, vspm_pm_runtime_resume, NULL)
 };
-
 
 static const struct dev_pm_ops vspm_fdp_pm_ops = {
 	SET_SYSTEM_SLEEP_PM_OPS(vspm_pm_suspend, vspm_pm_resume)
@@ -548,7 +537,6 @@ static struct platform_driver vspm_vsp_driver = {
 	.probe		= vspm_vsp_probe,
 	.remove		= vspm_vsp_remove,
 };
-
 
 static struct platform_driver vspm_fdp_driver = {
 	.driver = {
@@ -584,13 +572,11 @@ static int vspm_platform_driver_register(void)
 	return 0;
 }
 
-
 static void vspm_platform_driver_unregister(void)
 {
 	platform_driver_unregister(&vspm_vsp_driver);
 	platform_driver_unregister(&vspm_fdp_driver);
 }
-
 
 static int __init vspm_module_init(void)
 {
@@ -623,7 +609,6 @@ static int __init vspm_module_init(void)
 	sema_init(&pdrv->init_sem, 1);/* unlock */
 	return 0;
 }
-
 
 static void __exit vspm_module_exit(void)
 {

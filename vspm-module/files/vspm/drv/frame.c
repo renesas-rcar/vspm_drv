@@ -65,7 +65,6 @@
 #include "vspm_main.h"
 #include "vspm_log.h"
 
-
 /* task message information structure */
 struct fw_msg_info {
 	struct list_head list;
@@ -126,7 +125,6 @@ static struct fw_task_info *get_task_info(unsigned short tid)
 
 	return task_info;
 }
-
 
 /******************************************************************************
  * Function:		send_message
@@ -200,7 +198,6 @@ static int send_message(
 	return FW_OK;
 }
 
-
 /******************************************************************************
  * Function:		recieve_message
  * Description:	wait to receive a message.
@@ -229,7 +226,6 @@ static int recieve_message(
 	return FW_OK;
 }
 
-
 /******************************************************************************
  * Function:		get_function
  * Description:	get a function address.
@@ -254,7 +250,6 @@ static void *get_function(
 	return func;
 }
 
-
 /******************************************************************************
  * Function:		fw_initialize
  * Description:	the framework initialization.
@@ -265,7 +260,6 @@ void fw_initialize(void)
 	INIT_LIST_HEAD(&task_ctl.list);
 	spin_lock_init(&task_ctl.lock);
 }
-
 
 /******************************************************************************
  * Function:		fw_task_register
@@ -311,7 +305,6 @@ int fw_task_register(unsigned short tid)
 	return FW_OK;
 }
 
-
 /******************************************************************************
  * Function:		fw_task_unregister
  * Description:	unregister a task information.
@@ -337,7 +330,6 @@ int fw_task_unregister(unsigned short tid)
 
 	return FW_OK;
 }
-
 
 /******************************************************************************
  * Function:		fw_execute
@@ -414,7 +406,6 @@ int fw_execute(unsigned short tid, struct fw_func_tbl *func_tbl)
 	return FW_OK;
 }
 
-
 /******************************************************************************
  * Function:		fw_send_event
  * Description:	send a event message.
@@ -428,7 +419,6 @@ long fw_send_event(unsigned short tid, short func_id, size_t size, void *para)
 
 	return FW_OK;
 }
-
 
 /******************************************************************************
  * Function:		fw_send_function

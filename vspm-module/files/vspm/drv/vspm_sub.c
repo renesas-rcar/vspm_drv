@@ -148,7 +148,6 @@ long vspm_quit(struct vspm_drvdata *pdrv)
 	return R_VSPM_OK;
 }
 
-
 /******************************************************************************
  * Function:		vspm_suspend
  * Description:	Suspend the VSPM thread.
@@ -172,7 +171,6 @@ long vspm_suspend(struct vspm_drvdata *pdrv)
 	return R_VSPM_OK;
 }
 
-
 /******************************************************************************
  * Function:		vspm_resume
  * Description:	Resume the VSPM thread.
@@ -195,7 +193,6 @@ long vspm_resume(struct vspm_drvdata *pdrv)
 
 	return R_VSPM_OK;
 }
-
 
 /******************************************************************************
  * Function:		vspm_cancel

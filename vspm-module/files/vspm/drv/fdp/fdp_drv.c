@@ -279,7 +279,6 @@ long fdp_lib_abort(struct fdp_obj_t *obj)
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		fdp_lib_suspend
  * Description:	Suspend of FDP processing
@@ -313,7 +312,6 @@ long fdp_lib_suspend(struct fdp_obj_t *obj)
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		fdp_lib_resume

@@ -777,7 +777,6 @@ struct vsp_prv_data {
 	unsigned char ridx;
 };
 
-
 /* define local functions */
 long vsp_ins_check_init_parameter(struct vsp_init_t *param);
 long vsp_ins_check_open_parameter(struct vsp_open_t *param);

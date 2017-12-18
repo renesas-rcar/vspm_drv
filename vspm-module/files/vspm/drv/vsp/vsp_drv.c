@@ -111,7 +111,6 @@ err_exit:
 	return E_VSP_NO_MEM;
 }
 
-
 /******************************************************************************
  * Function:		vsp_lib_quit
  * Description:	Finalize VSP driver
@@ -154,7 +153,6 @@ long vsp_lib_quit(void)
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		vsp_lib_open
@@ -233,7 +231,6 @@ err_exit1:
 	return ercd;
 }
 
-
 /******************************************************************************
  * Function:		vsp_lib_close
  * Description:	Finalize FDP channel.
@@ -283,7 +280,6 @@ long vsp_lib_close(unsigned char ch)
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		vsp_lib_start
@@ -363,7 +359,6 @@ long vsp_lib_start(
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		vsp_lib_abort
  * Description:	Forced stop of VSP processing
@@ -396,7 +391,6 @@ long vsp_lib_abort(unsigned char ch)
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		vsp_lib_get_status
@@ -433,7 +427,6 @@ long vsp_lib_get_status(unsigned char ch, struct vsp_status_t *status)
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		vsp_lib_suspend
@@ -478,7 +471,6 @@ long vsp_lib_suspend(unsigned char ch)
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		vsp_lib_resume

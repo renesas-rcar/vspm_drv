@@ -212,7 +212,6 @@ long vspm_ins_fdp_execute(
 	return R_VSPM_OK;
 }
 
-
 /******************************************************************************
  * Function:		vspm_ins_fdp_exec_complete
  * Description:	Complete FDP driver.
@@ -249,7 +248,6 @@ long vspm_ins_fdp_cancel(unsigned short module_id)
 	return R_VSPM_OK;
 }
 
-
 /******************************************************************************
  * Function:		vspm_ins_fdp_quit
  * Description:	Finalize FDP driver.
@@ -284,7 +282,6 @@ long vspm_ins_fdp_quit(struct vspm_usable_res_info *usable)
 
 	return R_VSPM_OK;
 }
-
 
 /******************************************************************************
  * Function:		vspm_ins_fdp_execute_low_delay
@@ -338,7 +335,6 @@ long vspm_ins_fdp_execute_low_delay(
 	return R_VSPM_OK;
 }
 
-
 /******************************************************************************
  * Function:		vspm_ins_fdp_suspend
  * Description:	Suspend FDP driver.
@@ -360,7 +356,6 @@ long vspm_ins_fdp_suspend(void)
 
 	return R_VSPM_OK;
 }
-
 
 /******************************************************************************
  * Function:		vspm_ins_fdp_resume

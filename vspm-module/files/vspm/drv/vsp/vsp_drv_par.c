@@ -89,7 +89,6 @@ long vsp_ins_check_init_parameter(struct vsp_init_t *param)
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_check_open_parameter
  * Description:	Check open channel parameter
@@ -107,7 +106,6 @@ long vsp_ins_check_open_parameter(struct vsp_open_t *param)
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_get_dpr_route
@@ -178,7 +176,6 @@ static unsigned int vsp_ins_get_dpr_route(
 
 	return route;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_get_dpr_smppt
@@ -258,7 +255,6 @@ static unsigned int vsp_ins_get_dpr_smppt(
 	return smppt;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_get_passband_bwidth
  * Description:	Get passband of VI6_UDS_PASS_BWIDTH.
@@ -283,7 +279,6 @@ static unsigned int vsp_ins_get_passband_bwidth(unsigned short ratio)
 
 	return bwidth;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_check_input_color_space_of_bru
@@ -316,7 +311,6 @@ static long vsp_ins_check_input_color_space_of_bru(struct vsp_ch_info *ch_info)
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_check_input_color_space_of_brs
  * Description:	Check input color space of brs.
@@ -347,7 +341,6 @@ static long vsp_ins_check_input_color_space_of_brs(struct vsp_ch_info *ch_info)
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_check_master_layer
@@ -430,7 +423,6 @@ static long vsp_ins_check_master_layer(struct vsp_ch_info *ch_info)
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_check_rpf_format
@@ -668,8 +660,6 @@ static long vsp_ins_check_rpf_format(
 	return 0;
 }
 
-
-
 /******************************************************************************
  * Function:		vsp_ins_check_rpf_clut_param
  * Description:	Check clut parameter of RPF.
@@ -698,7 +688,6 @@ static long vsp_ins_check_rpf_clut_param(
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_check_ckey_unit_param
@@ -738,7 +727,6 @@ static long vsp_ins_check_ckey_unit_param(
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_check_irop_unit_param
@@ -830,7 +818,6 @@ static long vsp_ins_check_irop_unit_param(
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_check_mult_unit_param
  * Description:	Check multiple unit parameter of RPF.
@@ -869,7 +856,6 @@ static long vsp_ins_check_mult_unit_param(
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_check_alpha_blend_param
@@ -982,7 +968,6 @@ static long vsp_ins_check_alpha_blend_param(
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_check_rpf_param
@@ -1162,7 +1147,6 @@ static long vsp_ins_check_rpf_param(
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_check_wpf_format
@@ -1365,7 +1349,6 @@ static long vsp_ins_check_wpf_format(
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_check_wpf_rotation
  * Description:	Check rotation parameter of WPF.
@@ -1467,7 +1450,6 @@ static long vsp_ins_check_wpf_rotation(
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_check_wpf_fcnl
  * Description:	Check FCNL compression parameter of WPF.
@@ -1553,7 +1535,6 @@ static long vsp_ins_check_wpf_fcnl(
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_recalculate_wpf_addr
@@ -1658,7 +1639,6 @@ static long vsp_ins_recalculate_wpf_addr(
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_check_wpf_param
@@ -1795,7 +1775,6 @@ static long vsp_ins_check_wpf_param(
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_check_sru_param
  * Description:	Check module parameter of SRU.
@@ -1879,7 +1858,6 @@ static long vsp_ins_check_sru_param(
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_check_uds_param
@@ -2024,7 +2002,6 @@ static long vsp_ins_check_uds_param(
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_check_lut_param
  * Description:	Check module parameter of LUT.
@@ -2061,7 +2038,6 @@ static long vsp_ins_check_lut_param(
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_check_clu_param
@@ -2149,7 +2125,6 @@ static long vsp_ins_check_clu_param(
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_check_hst_param
  * Description:	Check module parameter of HST.
@@ -2186,7 +2161,6 @@ static long vsp_ins_check_hst_param(
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_check_hsi_param
  * Description:	Check module parameter of HSI.
@@ -2222,7 +2196,6 @@ static long vsp_ins_check_hsi_param(
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_check_blend_virtual_param
@@ -2280,7 +2253,6 @@ static long vsp_ins_check_blend_virtual_param(
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_check_brs_virtual_param
  * Description:	Check virtual parameter of BRS.
@@ -2336,7 +2308,6 @@ static long vsp_ins_check_brs_virtual_param(
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_check_blend_control_param
@@ -2420,7 +2391,6 @@ static long vsp_ins_check_blend_control_param(
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_check_rop_unit_param
  * Description:	Check raster operation unit parameter of BRU.
@@ -2452,7 +2422,6 @@ static long vsp_ins_check_rop_unit_param(
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_check_bru_param
@@ -2664,7 +2633,6 @@ static long vsp_ins_check_bru_param(
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_check_brs_param
  * Description:	Check module parameter of BRS.
@@ -2800,7 +2768,6 @@ static long vsp_ins_check_brs_param(
 	if (ercd)
 		return ercd;
 
-
 	/* check connect parameter */
 	if (brs_param->connect & ~VSP_BRS_USABLE_DPR)
 		return E_VSP_PARA_BRS_CONNECT;
@@ -2816,7 +2783,6 @@ static long vsp_ins_check_brs_param(
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_check_hgo_param
@@ -2913,7 +2879,6 @@ static long vsp_ins_check_hgo_param(
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_check_hue_area_param
  * Description:	Check hue area parameter of HGT.
@@ -2941,7 +2906,6 @@ static long vsp_ins_check_hue_area_param(struct vsp_hue_area_t *hue_area)
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_check_hgt_param
@@ -3027,7 +2991,6 @@ static long vsp_ins_check_hgt_param(
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_check_shp_param
  * Description:	Check module parameter of SHP.
@@ -3076,7 +3039,6 @@ static long vsp_ins_check_shp_param(
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_check_dl_param
  * Description:	Check display list parameter.
@@ -3102,7 +3064,6 @@ static long vsp_ins_check_dl_param(
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_check_module_param
@@ -3189,7 +3150,6 @@ static long vsp_ins_check_module_param(
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_check_connection_module_from_rpf
  * Description:	Check connection module parameter from RPF.
@@ -3259,7 +3219,6 @@ static long vsp_ins_check_connection_module_from_rpf(
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_check_connection_module_from_bru
  * Description:	Check connection module parameter from BRU or BRS.
@@ -3315,7 +3274,6 @@ static long vsp_ins_check_connection_module_from_bru(
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_check_independent_module
  * Description:	Check independent module parameter.
@@ -3352,7 +3310,6 @@ static long vsp_ins_check_independent_module(
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_check_output_module
  * Description:	Check destination module parameter.
@@ -3377,7 +3334,6 @@ static long vsp_ins_check_output_module(
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_check_partition
@@ -3447,7 +3403,6 @@ static long vsp_ins_check_partition(
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_check_start_parameter

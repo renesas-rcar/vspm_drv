@@ -67,7 +67,6 @@
 #include "vspm_lib_public.h"
 #include "vspm_common.h"
 
-
 /******************************************************************************
  * Function:		vspm_ins_exec_start
  * Description:	Execute job.
@@ -118,7 +117,6 @@ long vspm_ins_exec_start(
 	return ercd;
 }
 
-
 /******************************************************************************
  * Function:		vspm_ins_exec_complete
  * Description:	Job completion processing.
@@ -151,7 +149,6 @@ long vspm_ins_exec_complete(
 	return R_VSPM_OK;
 }
 
-
 /******************************************************************************
  * Function:		vspm_ins_exec_get_current_job_info
  * Description:	Get job information of the currently.
@@ -166,7 +163,6 @@ struct vspm_job_info *vspm_ins_exec_get_current_job_info(
 	return exec_info->p_exec_job_info[module_id];
 }
 
-
 /******************************************************************************
  * Function:		vspm_ins_exec_update_current_status
  * Description:	Update status of the running job.
@@ -177,7 +173,6 @@ void vspm_ins_exec_update_current_status(
 {
 	usable->ch_bits &= ~exec_info->exec_ch_bits;
 }
-
 
 /******************************************************************************
  * Function:		vspm_ins_exec_cancel

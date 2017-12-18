@@ -221,7 +221,6 @@ long vspm_inc_sort_queue_find_item(
 	struct vspm_job_info *job_info,
 	unsigned short *p_index);
 
-
 /* VSP control functions */
 long vspm_ins_vsp_ch(unsigned short module_id, unsigned char *ch);
 long vspm_ins_vsp_initialize(

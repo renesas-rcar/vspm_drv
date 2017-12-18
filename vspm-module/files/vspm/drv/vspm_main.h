@@ -84,7 +84,6 @@ struct vspm_drvdata {
 	struct semaphore init_sem;
 };
 
-
 /* FDP process information structure */
 struct vspm_fdp_proc_info {
 	struct fdp_seq_t seq_par;	/* sequence parameter */

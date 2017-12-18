@@ -127,7 +127,6 @@ static struct fw_func_tbl g_vspm_func_tbl[] = {
 	}
 };
 
-
 /******************************************************************************
  * Function:		vspm_task
  * Description:	VSPM task entry.
@@ -138,7 +137,6 @@ void vspm_task(void)
 	/* start the processing framework */
 	fw_execute(TASK_VSPM, g_vspm_func_tbl);
 }
-
 
 /******************************************************************************
  * Function:		vspm_inm_init
@@ -162,7 +160,6 @@ long vspm_inm_init(void *mesp, void *para)
 	return FW_OK;
 }
 
-
 /******************************************************************************
  * Function:		vspm_inm_quit
  * Description:	Exit the VSPM task.
@@ -183,7 +180,6 @@ long vspm_inm_quit(void *mesp, void *para)
 
 	return FW_OK;
 }
-
 
 /******************************************************************************
  * Function:		vspm_inm_suspend
@@ -207,7 +203,6 @@ long vspm_inm_suspend(void *mesp, void *para)
 	return FW_OK;
 }
 
-
 /******************************************************************************
  * Function:		vspm_inm_resume
  * Description:	Resume the VSPM task.
@@ -230,7 +225,6 @@ long vspm_inm_resume(void *mesp, void *para)
 	return FW_OK;
 }
 
-
 /******************************************************************************
  * Function:		vspm_inm_entry
  * Description:	Entry of various IP operations.
@@ -250,7 +244,6 @@ long vspm_inm_entry(void *mesp, void *para)
 
 	return ercd;
 }
-
 
 /******************************************************************************
  * Function:		vspm_inm_driver_on_complete
@@ -275,7 +268,6 @@ long vspm_inm_driver_on_complete(void *mesp, void *para)
 	return FW_OK;
 }
 
-
 /******************************************************************************
  * Function:		vspm_inm_cancel
  * Description:	Cancel the job.
@@ -287,7 +279,6 @@ long vspm_inm_cancel(void *mesp, void *para)
 
 	return vspm_ins_ctrl_queue_cancel(*(unsigned long *)para);
 }
-
 
 /******************************************************************************
  * Function:		vspm_inm_forced_cancel
@@ -302,7 +293,6 @@ long vspm_inm_forced_cancel(void *mesp, void *para)
 		(struct vspm_api_param_forced_cancel *)para);
 }
 
-
 /******************************************************************************
  * Function:		vspm_inm_set_mode
  * Description:	Set VSP manager operation mode.
@@ -314,7 +304,6 @@ long vspm_inm_set_mode(void *mesp, void *para)
 
 	return vspm_ins_ctrl_set_mode((struct vspm_api_param_mode *)para);
 }
-
 
 /******************************************************************************
  * Function:		vspm_inm_dispatch

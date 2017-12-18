@@ -126,7 +126,6 @@ inline void vsp_write_reg(
 	iowrite32(data, reg);
 }
 
-
 /******************************************************************************
  * Function:		vsp_read_reg
  * Description:	Read from register
@@ -139,7 +138,6 @@ inline unsigned int vsp_read_reg(void __iomem *base, unsigned int offset)
 	reg += (offset >> 2);
 	return ioread32(reg);
 }
-
 
 /******************************************************************************
  * Function:		dlwrite32
@@ -171,7 +169,6 @@ static void dlrewrite32_lut(struct vsp_dl_t *clut, unsigned int reg_offset)
 		reg_offset += 4;
 	}
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_set_dl_for_dpr
@@ -257,7 +254,6 @@ static void vsp_ins_set_dl_for_dpr(
 	head->body_info[0].size +=
 		(unsigned int)((unsigned long)(body) - (unsigned long)(body0));
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_set_dl_for_rpf
@@ -361,7 +357,6 @@ static void vsp_ins_set_dl_for_rpf(
 		(unsigned int)((unsigned long)(body) - (unsigned long)(body0));
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_set_dl_for_wpf
  * Description:	Set WPF register value to display list.
@@ -431,7 +426,6 @@ static void vsp_ins_set_dl_for_wpf(
 		(unsigned int)((unsigned long)(body) - (unsigned long)(body0));
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_set_dl_for_sru
  * Description:	Set SRU register value to display list.
@@ -472,7 +466,6 @@ static void vsp_ins_set_dl_for_sru(
 	head->body_info[0].size +=
 		(unsigned int)((unsigned long)(body) - (unsigned long)(body0));
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_set_dl_for_uds
@@ -534,7 +527,6 @@ static void vsp_ins_set_dl_for_uds(
 		(unsigned int)((unsigned long)(body) - (unsigned long)(body0));
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_set_dl_for_lut
  * Description:	Set LUT register value to display list.
@@ -568,7 +560,6 @@ static void vsp_ins_set_dl_for_lut(
 	head->body_info[0].size +=
 		(unsigned int)((unsigned long)(body) - (unsigned long)(body0));
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_set_dl_for_clu
@@ -610,7 +601,6 @@ static void vsp_ins_set_dl_for_clu(
 		(unsigned int)((unsigned long)(body) - (unsigned long)(body0));
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_set_dl_for_hst
  * Description:	Set HST register value to display list.
@@ -637,7 +627,6 @@ static void vsp_ins_set_dl_for_hst(
 		(unsigned int)((unsigned long)(body) - (unsigned long)(body0));
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_set_dl_for_hsi
  * Description:	Set HSI register value to display list.
@@ -663,7 +652,6 @@ static void vsp_ins_set_dl_for_hsi(
 	head->body_info[0].size +=
 		(unsigned int)((unsigned long)(body) - (unsigned long)(body0));
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_set_dl_for_bru
@@ -725,7 +713,6 @@ static void vsp_ins_set_dl_for_bru(
 		(unsigned int)((unsigned long)(body) - (unsigned long)(body0));
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_set_dl_for_brs
  * Description:	Set BRS register value to display list.
@@ -770,7 +757,6 @@ static void vsp_ins_set_dl_for_brs(
 	head->body_info[0].size +=
 		(unsigned int)((unsigned long)(body) - (unsigned long)(body0));
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_set_dl_for_hgo
@@ -829,7 +815,6 @@ static void vsp_ins_set_dl_for_hgo(
 	head->body_info[0].size +=
 		(unsigned int)((unsigned long)(body) - (unsigned long)(body0));
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_set_dl_for_hgt
@@ -966,7 +951,6 @@ static void vsp_ins_set_dl_for_shp(
 		(unsigned int)((unsigned long)(body) - (unsigned long)(body0));
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_set_dl_for_module
  * Description:	Set modules register value to display list.
@@ -1039,7 +1023,6 @@ static void vsp_ins_set_dl_for_module(
 	}
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_set_part_full
  * Description:	Set all registers value to display list.
@@ -1088,7 +1071,6 @@ static void vsp_ins_set_part_full(
 	head->next_head_addr = ch_info->next_dl_addr;
 	head->next_frame_ctrl = 2;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_set_part_diff
@@ -1219,7 +1201,6 @@ static void vsp_ins_set_part_diff(
 	head->next_frame_ctrl = 2;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_get_bpp_luma
  * Description:	Get byte per pixel of RGB/Y.
@@ -1260,7 +1241,6 @@ unsigned int vsp_ins_get_bpp_luma(
 	return bpp;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_get_bpp_chroma
  * Description:	Get byte per pixel of choroma.
@@ -1295,7 +1275,6 @@ unsigned int vsp_ins_get_bpp_chroma(
 	return bpp;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_get_line_luma
  * Description:	Get byte per line of RGB/Y.
@@ -1309,7 +1288,6 @@ unsigned int vsp_ins_get_line_luma(
 	else
 		return (unsigned int)offset;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_get_line_chroma
@@ -1326,7 +1304,6 @@ unsigned int vsp_ins_get_line_chroma(
 	else
 		return (unsigned int)offset;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_replace_part_src_addr
@@ -1358,7 +1335,6 @@ static void vsp_ins_replace_part_src_addr(
 			part_info->rpf_addr_ai + (unsigned int)offset;
 	}
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_replace_part_dst_addr
@@ -1417,7 +1393,6 @@ static void vsp_ins_replace_part_dst_addr(
 			wpf_info->val_addr_c1 -= temp_c;
 	}
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_replace_part_uds_module
@@ -1490,7 +1465,6 @@ static void vsp_ins_replace_part_uds_module(
 	*r_pos = r_temp;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_replace_part_rpf_module
  * Description:	Replace RPF module of partition.
@@ -1555,7 +1529,6 @@ static void vsp_ins_replace_part_rpf_module(
 	rpf_info->val_esize = rpf_info->val_bsize;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_replace_part_connection_module
  * Description:	Replace connecting module of partition.
@@ -1611,7 +1584,6 @@ static void vsp_ins_replace_part_connection_module(
 	vsp_ins_replace_part_rpf_module(ch_info, st_par, &l_pos, &r_pos);
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_get_part_offset
  * Description:	Get source offset value of partition.
@@ -1660,7 +1632,6 @@ static void vsp_ins_get_part_offset(
 
 	*offset = temp;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_get_part_sampling_offset
@@ -1747,7 +1718,6 @@ static void vsp_ins_get_part_sampling_offset(
 	*offset = VSP_ROUND_UP(temp, ratio);
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_replace_part_window_of_hgo
  * Description:	Replace HGO detect window of partition.
@@ -1795,7 +1765,6 @@ static void vsp_ins_replace_part_window_of_hgo(
 	}
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_replace_part_window_of_hgt
  * Description:	Replace HGT detect window of partition.
@@ -1842,7 +1811,6 @@ static void vsp_ins_replace_part_window_of_hgt(
 		hgt_info->val_dpr = VSP_DPR_SMPPT_NOT_USE;
 	}
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_replace_part_independent_module
@@ -1914,7 +1882,6 @@ static void vsp_ins_replace_part_independent_module(
 			ch_info, st_par, left, right, margin);
 	}
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_set_part_parameter
@@ -1992,7 +1959,6 @@ static void vsp_ins_set_part_parameter(
 	}
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_get_hgo_register
  * Description:	Get histogram from HGO register.
@@ -2057,7 +2023,6 @@ static long vsp_ins_get_hgo_register(struct vsp_prv_data *prv)
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_get_hgt_register
  * Description:	Get histogram from HGT register.
@@ -2089,7 +2054,6 @@ static long vsp_ins_get_hgt_register(struct vsp_prv_data *prv)
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_get_module_register
  * Description:	Get module register value.
@@ -2119,7 +2083,6 @@ static long vsp_ins_get_module_register(
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_set_start_parameter
  * Description:	Set vsp_start_t parameter.
@@ -2143,7 +2106,6 @@ long vsp_ins_set_start_parameter(
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_start_processing
@@ -2190,7 +2152,6 @@ void vsp_ins_start_processing(struct vsp_prv_data *prv)
 		prv->widx = 1 - prv->widx;
 	}
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_stop_processing
@@ -2277,7 +2238,6 @@ long vsp_ins_stop_processing(struct vsp_prv_data *prv)
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_wait_processing
  * Description:	Waiting VSP processing.
@@ -2305,7 +2265,6 @@ long vsp_ins_wait_processing(struct vsp_prv_data *prv)
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_software_reset
  * Description:	Software reset of VSP and FCP.
@@ -2316,7 +2275,6 @@ static void vsp_ins_software_reset(struct vsp_prv_data *prv)
 	/* Forced stop the VSP processing */
 	(void)vsp_ins_stop_processing(prv);
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_get_vsp_resource
@@ -2404,7 +2362,6 @@ long vsp_ins_get_vsp_resource(struct vsp_prv_data *prv)
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_enable_clock
  * Description:	Enable VSP/FCP clock supply.
@@ -2428,7 +2385,6 @@ long vsp_ins_enable_clock(struct vsp_prv_data *prv)
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_disable_clock
  * Description:	Disable VSP/FCP clock supply.
@@ -2443,7 +2399,6 @@ long vsp_ins_disable_clock(struct vsp_prv_data *prv)
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_init_vsp_reg
@@ -2517,7 +2472,6 @@ static long vsp_ins_init_fcp_reg(struct vsp_prv_data *prv)
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_init_reg
  * Description:	Initialize hardware register.
@@ -2574,7 +2528,6 @@ long vsp_ins_init_reg(struct vsp_prv_data *prv)
 	return ercd;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_quit_reg
  * Description:	Finalize VSP hardware.
@@ -2596,7 +2549,6 @@ long vsp_ins_quit_reg(struct vsp_prv_data *prv)
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_cb_function
@@ -2646,7 +2598,6 @@ void vsp_ins_cb_function(struct vsp_prv_data *prv, long ercd)
 	}
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_ih
  * Description:	Interrupt handler.
@@ -2681,7 +2632,6 @@ static irqreturn_t vsp_ins_ih(int irq, void *dev)
 	return IRQ_HANDLED;
 }
 
-
 /******************************************************************************
  * Function:		vsp_ins_reg_ih
  * Description:	Registory interrupt handler.
@@ -2714,7 +2664,6 @@ long vsp_ins_reg_ih(struct vsp_prv_data *prv)
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		vsp_ins_unreg_ih

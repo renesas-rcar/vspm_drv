@@ -1256,7 +1256,6 @@ void fdp_ins_stop_processing(struct fdp_obj_t *obj)
 	obj->status = FDP_STAT_READY;
 }
 
-
 /******************************************************************************
  * Function:		fdp_ins_wait_processing
  * Description:	Waiting FDP processing.
@@ -1289,7 +1288,6 @@ void fdp_ins_wait_processing(struct fdp_obj_t *obj)
 	}
 }
 
-
 /******************************************************************************
  * Function:		fdp_ins_software_reset
  * Description:	Software reset of FDP and FCP.
@@ -1300,7 +1298,6 @@ static void fdp_ins_software_reset(struct fdp_obj_t *obj)
 	/* Forced stop the FDP processing */
 	fdp_ins_stop_processing(obj);
 }
-
 
 /******************************************************************************
  * Function:		fdp_int_get_process_result
@@ -1328,7 +1325,6 @@ static void fdp_int_get_process_result(struct fdp_obj_t *obj)
 	for (i = FD1_SNSOR_0; i <= FD1_SNSOR_17; i += 4)
 		*sensor++ = fdp_read_reg(P_FDP, i);
 }
-
 
 /******************************************************************************
  * Function:		fdp_int_hdr
@@ -1492,7 +1488,6 @@ static void fdp_ins_init_ipc_reg(struct fdp_obj_t *obj)
 		FD1_MDET_OFFSET);
 }
 
-
 /******************************************************************************
  * Function:		fdp_ins_get_resource
  * Description:	Get FDP resource.
@@ -1512,7 +1507,6 @@ long fdp_ins_get_resource(struct fdp_obj_t *obj)
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		fdp_ins_init_reg
@@ -1564,7 +1558,6 @@ long fdp_ins_init_reg(struct fdp_obj_t *obj)
 	return 0;
 }
 
-
 /******************************************************************************
  * Function:		fdp_ins_quit_reg
  * Description:	Finalize FDP register
@@ -1586,7 +1579,6 @@ long fdp_ins_quit_reg(struct fdp_obj_t *obj)
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		fdp_ins_ih
@@ -1687,7 +1679,6 @@ long fdp_ins_enable_clock(struct fdp_obj_t *obj)
 
 	return 0;
 }
-
 
 /******************************************************************************
  * Function:		fdp_ins_disable_clock

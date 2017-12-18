@@ -67,7 +67,6 @@
 #include "vspm_lib_public.h"
 #include "vspm_common.h"
 
-
 /******************************************************************************
  * Function:		vspm_inc_sort_queue_initialize
  * Description:	Initialize the queue information.
@@ -80,7 +79,6 @@ long vspm_inc_sort_queue_initialize(struct vspm_queue_info *queue_info)
 
 	return R_VSPM_OK;
 }
-
 
 /******************************************************************************
  * Function:		vspm_inc_sort_queue_entry
@@ -119,7 +117,6 @@ long vspm_inc_sort_queue_entry(
 	return R_VSPM_OK;
 }
 
-
 /******************************************************************************
  * Function:		vspm_inc_sort_queue_refer
  * Description:	Get a job information from queue.
@@ -148,7 +145,6 @@ long vspm_inc_sort_queue_refer(struct vspm_queue_info *queue_info,
 
 	return R_VSPM_OK;
 }
-
 
 /******************************************************************************
  * Function:		vspm_inc_sort_queue_remove
@@ -183,7 +179,6 @@ long vspm_inc_sort_queue_remove(
 	return R_VSPM_OK;
 }
 
-
 /******************************************************************************
  * Function:		vspm_inc_sort_queue_get_count
  * Description:	Get the number of entry.
@@ -193,7 +188,6 @@ unsigned short vspm_inc_sort_queue_get_count(struct vspm_queue_info *queue_info)
 {
 	return queue_info->data_count;
 }
-
 
 /******************************************************************************
  * Function:		vspm_inc_sort_queue_find_item
