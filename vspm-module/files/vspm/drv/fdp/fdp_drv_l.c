@@ -276,6 +276,7 @@ static long fdp_ins_check_pic_param_for_pulldown(
 
 	return 0;
 }
+
 /******************************************************************************
  * Function:		fdp_ins_check_dstbuf_param
  * Description:	Check destination parameter.
