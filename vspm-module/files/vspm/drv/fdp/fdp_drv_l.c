@@ -519,7 +519,7 @@ static long fdp_ins_check_fcp_param(
 
 			obj->ipc_lmem = FD1_IPC_LMEM_PNUM_FCP;
 		} else if (fcp->tlen == FCP_TL_DISABLE) {
-			/* disable TL convertion */
+			/* disable TL conversion */
 			obj->ipc_lmem = FD1_IPC_LMEM_PNUM;
 		} else {
 			return E_FDP_PARA_TLEN;

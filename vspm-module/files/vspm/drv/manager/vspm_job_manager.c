@@ -165,7 +165,7 @@ long vspm_ins_job_cancel(struct vspm_job_info *job_info)
 {
 	/* check status */
 	if (job_info->status != VSPM_JOB_STATUS_ENTRY) {
-		EPRINT("%s Illigal status %ld\n", __func__, job_info->status);
+		EPRINT("%s Illegal status %ld\n", __func__, job_info->status);
 		return R_VSPM_NG;
 	}
 
@@ -188,7 +188,7 @@ long vspm_ins_job_execute_start(
 	struct vspm_job_info *job_info, unsigned long exec_ch)
 {
 	if (job_info->status != VSPM_JOB_STATUS_ENTRY) {
-		EPRINT("%s Illigal status %ld\n", __func__, job_info->status);
+		EPRINT("%s Illegal status %ld\n", __func__, job_info->status);
 		return R_VSPM_NG;
 	}
 
@@ -210,7 +210,7 @@ long vspm_ins_job_execute_complete(
 	struct vspm_job_info *job_info, long result, unsigned long comp_ch)
 {
 	if (job_info->status != VSPM_JOB_STATUS_EXECUTING) {
-		EPRINT("%s Illigal status %ld\n", __func__, job_info->status);
+		EPRINT("%s Illegal status %ld\n", __func__, job_info->status);
 		return R_VSPM_NG;
 	}
 

@@ -210,7 +210,7 @@
 #define E_VSP_PARA_HSI_NOTHSV		(-640)	/* illegal input color space */
 #define E_VSP_PARA_HSI_CONNECT		(-641)	/* illegal connecting module */
 
-#define E_VSP_PARA_HGO_ADR		(-660)	/* illegal addres pointer */
+#define E_VSP_PARA_HGO_ADR		(-660)	/* illegal address pointer */
 #define E_VSP_PARA_HGO_WIDTH	(-661)	/* illegal widht */
 #define E_VSP_PARA_HGO_HEIGHT	(-662)	/* illegal height */
 #define E_VSP_PARA_HGO_XOFFSET	(-663)	/* illegal x_offset */
@@ -222,7 +222,7 @@
 #define E_VSP_PARA_HGO_YSKIP	(-667)	/* illegal skip mode */
 #define E_VSP_PARA_HGO_SMMPT	(-668)	/* illegal sampling module */
 
-#define E_VSP_PARA_HGT_ADR		(-670)	/* illegal addres pointer */
+#define E_VSP_PARA_HGT_ADR		(-670)	/* illegal address pointer */
 #define E_VSP_PARA_HGT_WIDTH	(-671)	/* illegal width */
 #define E_VSP_PARA_HGT_HEIGHT	(-672)	/* illegal height */
 #define E_VSP_PARA_HGT_XOFFSET	(-673)	/* illegal x_offset */

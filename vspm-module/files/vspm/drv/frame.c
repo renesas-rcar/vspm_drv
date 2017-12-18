@@ -159,7 +159,7 @@ static int send_message(
 		return FW_NG;
 	}
 
-	/* Set a send message infomation */
+	/* Set a send message information */
 	snd_msg->func_id = func_id;
 	snd_msg->msg_id = msg_id;
 	init_completion(&snd_msg->reply.comp);
@@ -199,11 +199,11 @@ static int send_message(
 }
 
 /******************************************************************************
- * Function:		recieve_message
+ * Function:		receive_message
  * Description:	wait to receive a message.
  * Returns:		FW_OK/FW_NG
  ******************************************************************************/
-static int recieve_message(
+static int receive_message(
 	struct fw_task_info *task_info, struct fw_msg_info **p_rcv_msg)
 {
 	struct fw_msg_info *rcv_msg;
@@ -354,7 +354,7 @@ int fw_execute(unsigned short tid, struct fw_func_tbl *func_tbl)
 
 	while (1) {
 		/* Wait to receive a message */
-		if (recieve_message(task_info, &rcv_msg))
+		if (receive_message(task_info, &rcv_msg))
 			continue;
 
 		/* Check a message ID */
