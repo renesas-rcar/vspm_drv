@@ -84,7 +84,7 @@ struct fw_task_info {
 	unsigned short tid;
 	struct {
 		struct list_head list;
-		spinlock_t lock;
+		spinlock_t lock;	/* protects the task message list */
 		wait_queue_head_t wait;
 	} msg;
 	struct completion suspend;
@@ -93,7 +93,7 @@ struct fw_task_info {
 /* task control structure */
 struct fw_task_ctl {
 	struct list_head list;
-	spinlock_t lock;
+	spinlock_t lock;	/* protects the task control list */
 };
 
 /* task control table*/
