@@ -1929,6 +1929,18 @@ static void vsp_ins_set_part_parameter(
 
 	/* partition loop */
 	while (width > dst_offset) {
+		/*
+		 * If number of remaining pixels of horizontal is small,
+		 * it change margin size so as not to be the minimum
+		 * horizontal size.
+		 */
+		if ((width - dst_offset) < 32) {
+			if (part_info->margin == 64)
+				part_info->margin <<= 1;
+			else
+				part_info->margin <<= 2;
+		}
+
 		/* replace partition register except HGO, HGT */
 		vsp_ins_replace_part_connection_module(
 			ch_info, st_par, dst_offset, part_info->div_size);
