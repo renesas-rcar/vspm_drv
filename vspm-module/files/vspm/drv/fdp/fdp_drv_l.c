@@ -1025,14 +1025,14 @@ static void fdp_ins_set_ipc_reg(
 		FD1_SENSOR_CTL0_FLD_LVTH |
 		FD1_SENSOR_CTL0_FD_EN,
 		P_FDP,
-		FD1_SNSOR_CTL0);
+		FD1_SENSOR_CTL0);
 
 	/* sensor control register1 */
 	fdp_write_reg(
 		FD1_SENSOR_CTL1_XS |
 		FD1_SENSOR_CTL1_YS,
 		P_FDP,
-		FD1_SNSOR_CTL1);
+		FD1_SENSOR_CTL1);
 
 	/* sensor control register2 */
 	reg_data = ((unsigned int)(seq_par->in_width - 1)) << 16;
@@ -1043,12 +1043,12 @@ static void fdp_ins_set_ipc_reg(
 		/* interlace mode */
 		reg_data |= (unsigned int)(seq_par->in_height * 2 - 1);
 	}
-	fdp_write_reg(reg_data, P_FDP, FD1_SNSOR_CTL2);
+	fdp_write_reg(reg_data, P_FDP, FD1_SENSOR_CTL2);
 
 	/* sensor control register3 */
 	reg_data = ((unsigned int)(seq_par->in_width / 3)) << 16;
 	reg_data |= (unsigned int)(2 * seq_par->in_width / 3);
-	fdp_write_reg(reg_data, P_FDP, FD1_SNSOR_CTL3);
+	fdp_write_reg(reg_data, P_FDP, FD1_SENSOR_CTL3);
 
 	/* line memory pixel number register */
 	fdp_write_reg(obj->ipc_lmem, P_FDP, FD1_IPC_LMEM);
@@ -1320,7 +1320,7 @@ static void fdp_int_get_process_result(struct fdp_obj_t *obj)
 
 	/* read sensor */
 	sensor = &proc_info->status.sensor[0];
-	for (i = FD1_SNSOR_0; i <= FD1_SNSOR_17; i += 4)
+	for (i = FD1_SENSOR_0; i <= FD1_SENSOR_17; i += 4)
 		*sensor++ = fdp_read_reg(P_FDP, i);
 }
 
