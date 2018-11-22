@@ -801,6 +801,10 @@ static void vsp_ins_set_dl_for_hgo(
 	/* smppt register */
 	dlwrite32(&body, VSP_DPR_HGO_SMPPT, hgo_info->val_dpr);
 
+	/* set HGO write buffer */
+	if (prv->rdata.start_reservation == 1)
+		dlwrite32(&body, VSP_HGO_WBUFS, (unsigned int)prv->widx);
+
 	/* reset */
 	if (hgo_info->val_dpr == VSP_DPR_SMPPT_NOT_USE) {
 		dlwrite32(&body, VSP_HGO_REGRST, VSP_HGO_REGRST_RCPART);
@@ -888,6 +892,10 @@ static void vsp_ins_set_dl_for_hgt(
 
 	/* smppt register */
 	dlwrite32(&body, VSP_DPR_HGT_SMPPT, hgt_info->val_dpr);
+
+	/* set HGT write buffer */
+	if (prv->rdata.start_reservation == 1)
+		dlwrite32(&body, VSP_HGT_WBUFS, (unsigned int)prv->widx);
 
 	/* reset */
 	if (hgt_info->val_dpr == VSP_DPR_SMPPT_NOT_USE) {
@@ -2127,24 +2135,6 @@ void vsp_ins_start_processing(struct vsp_prv_data *prv)
 {
 	struct vsp_res_data *rdata = &prv->rdata;
 	struct vsp_ch_info *ch_info = &prv->ch_info[prv->widx];
-
-	if (rdata->start_reservation == 1) {
-		if (ch_info->reserved_module & VSP_HGO_USE) {
-			/* set HGO write buffer */
-			vsp_write_reg(
-				(unsigned int)prv->widx,
-				prv->vsp_reg,
-				VSP_HGO_WBUFS);
-		}
-
-		if (ch_info->reserved_module & VSP_HGT_USE) {
-			/* set HGT write buffer */
-			vsp_write_reg(
-				(unsigned int)prv->widx,
-				prv->vsp_reg,
-				VSP_HGT_WBUFS);
-		}
-	}
 
 	/* set display list header address */
 	vsp_write_reg(
