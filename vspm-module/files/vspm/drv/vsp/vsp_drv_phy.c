@@ -1433,7 +1433,8 @@ static void vsp_ins_replace_part_uds_module(
 	}
 
 	/* check UDS module */
-	if (ch_info->reserved_module & VSP_UDS_USE) {
+	if (ch_info->reserved_module & VSP_UDS_USE &&
+	    ch_info->reserved_module & VSP_SRU_USE) {
 		unsigned int ratio =
 			(unsigned int)uds_par->x_ratio;
 
@@ -1464,6 +1465,145 @@ static void vsp_ins_replace_part_uds_module(
 			uds_info->val_hphase = 0;
 		if (r_temp & 0xfff)
 			uds_info->val_hphase |= (4096 - (r_temp & 0xfff));
+	} else if (ch_info->reserved_module & VSP_UDS_USE) {
+		unsigned int ratio =
+			(unsigned int)uds_par->x_ratio;
+		unsigned short mh, fh, alpha, mha;
+		unsigned short dst_pos0 = *l_pos;
+		unsigned short dst_pos1 = *r_pos - 1;
+		unsigned short sub_src;
+		unsigned short add_src = 0;
+		unsigned short phase_edge = 0;
+		unsigned short phase_residual = 0;
+		unsigned short src_pos0 = 0;
+		unsigned short src_pos1 = 0;
+		unsigned short dst_pos0_pb = 0;
+		struct vsp_dst_t *dst_par = st_par->dst_par;
+		struct vsp_wpf_info *wpf_info = &ch_info->wpf_info;
+		struct vsp_part_info *part_info = &ch_info->part_info;
+		unsigned short width;
+		unsigned short hstp, hedp;
+
+		if (dst_par->rotation <= VSP_ROT_180)
+			width = dst_par->width;
+		else
+			width = dst_par->height;
+
+		/* <procedure1> Calculate temporary src_pos0 position */
+		mh = (ratio & 0xf000) >> 12;
+		fh = (ratio & 0x0fff);
+		if (!mh && !fh) {	/* check error */
+			APRINT("%s: x_ratio is zero!!\n", __func__);
+			return;
+		}
+		alpha = 4096 * mh + fh;
+		if (mh <= 3) {
+			mha = 1;
+			sub_src = 1;
+		} else if (mh <= 7) {
+			mha = 2;
+			sub_src = 2;
+		} else { /* 8 to 15 */
+			mha = 4;
+			sub_src = 2;
+		}
+		if (!mh && uds_par->amd == VSP_AMD)
+			phase_edge = (4096 - fh) / 2;
+
+		if (*l_pos) {
+			/* 2nd partition to last partition */
+			src_pos0 = (((dst_pos0 * alpha - phase_edge * mha)
+				     / (4096 * mha)) - sub_src) * mha;
+		}
+
+		/* <procedure2> Calculate temporary dst_pos0_pb position.
+		 *              (temporal dst_pos0_pb)
+		 */
+		if (*l_pos) {
+			/* 2nd partition to last partition */
+			dst_pos0_pb = (src_pos0 * 4096 + phase_edge * mha)
+				      / alpha;
+		}
+		/* <procedure3> Decide dst_pos0_pb position */
+		if (mha == 2) {
+			if ((dst_pos0_pb % 2) && (alpha % 2)) {
+				/* dst_pos0_pb and alpha is odd */
+				dst_pos0_pb -= 1;
+			}
+		} else if (mha == 4) {
+			if ((dst_pos0_pb % 2) || (alpha % 2)) {
+				/* dst_pos0_pb or(and) alpha is odd */
+				if (!(alpha % 2)) {
+					/* alpha is even (dst_pos0_pb is odd) */
+					if (alpha % 4)
+						dst_pos0_pb -= 1;
+				} else {
+					/* alpha is odd */
+					dst_pos0_pb = dst_pos0_pb / 4 * 4;
+				}
+			}
+		}
+
+		if (*l_pos) {
+			int gap = part_info->margin - 1;
+
+			wpf_info->val_hszclip &= 0xff00ffff;
+			wpf_info->val_hszclip |=
+				((dst_pos0 - dst_pos0_pb + 1 + gap) << 16);
+		}
+
+		/* <procedure4> Calculate src_pos0 position from dst_pos0_pb */
+		if ((alpha * dst_pos0_pb) > (phase_edge * mha))
+			phase_residual =
+				(alpha * dst_pos0_pb - phase_edge * mha)
+				 % (4096 * mha);
+		if (phase_residual)
+			add_src = 1;
+		if (*l_pos) {
+			/* 2nd partition to last partition */
+			src_pos0 = ((dst_pos0_pb * alpha - phase_edge * mha)
+				    / (4096 * mha) + add_src) * mha;
+		}
+		/* <procedure5> Calculate src_pos1 position from dst_pos1 */
+		if (*r_pos != width) {
+			/* 1st partition to 2nd last partition */
+			src_pos1 = (((dst_pos1 * alpha - phase_edge * mha)
+				     / (4096 * mha)) + 2) * mha + (mha / 2);
+		} else {
+			/* last partition */
+			src_pos1 = (*r_pos) * ratio / 4096 - 1;
+		}
+
+		/* <procedure6> Calculate hstp */
+		if (!(*l_pos)) {
+			/* 1st partition */
+			hstp = phase_edge;
+		} else {
+			/* 2nd partition to last partition */
+			if (phase_residual)
+				hstp = 4096 - phase_residual / mha;
+			else
+				hstp = 0;
+		}
+
+		/* <procedure7> Calculate hedp */
+		if (*r_pos != width) {
+			/* 1st partition to 2nd last partition */
+			hedp = 0;
+		} else {
+			/* last partition */
+			hedp = phase_edge;
+		}
+		/* replace clipping size */
+		uds_info->val_clip &= 0x0000FFFF;
+		uds_info->val_clip |= ((dst_pos1 - dst_pos0_pb + 1) << 16);
+
+		l_temp = src_pos0 * 4096;
+		r_temp = (src_pos1 + 1) * 4096;
+
+		/* add horizontal filter phase of control register */
+		uds_info->val_ctrl |= VSP_UDS_CTRL_AMDSLH;
+		uds_info->val_hphase = (hstp << 16) | hedp;
 	} else {
 		l_temp *= 4096;
 		r_temp *= 4096;
