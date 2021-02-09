@@ -1524,7 +1524,7 @@ long fdp_ins_init_reg(struct fdp_obj_t *obj)
 	}
 
 	/* remap an I/O memory of FDP */
-	obj->fdp_reg = ioremap_nocache(res->start, resource_size(res));
+	obj->fdp_reg = ioremap(res->start, resource_size(res));
 	if (!obj->fdp_reg) {
 		EPRINT("%s: failed to ioremap of FDP!!\n", __func__);
 		return E_FDP_DEF_REG;
@@ -1539,7 +1539,7 @@ long fdp_ins_init_reg(struct fdp_obj_t *obj)
 	}
 
 	/* remap and I/O memory of FCP */
-	obj->fcp_reg = ioremap_nocache(res->start, resource_size(res));
+	obj->fcp_reg = ioremap(res->start, resource_size(res));
 	if (!obj->fcp_reg) {
 		EPRINT("%s: failed to ioremap of FCP!!\n", __func__);
 		iounmap(obj->fdp_reg);

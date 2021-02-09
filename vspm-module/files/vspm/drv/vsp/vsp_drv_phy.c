@@ -2633,7 +2633,7 @@ long vsp_ins_init_reg(struct vsp_prv_data *prv)
 	}
 
 	/* remap an I/O memory of VSP */
-	prv->vsp_reg = ioremap_nocache(res->start, resource_size(res));
+	prv->vsp_reg = ioremap(res->start, resource_size(res));
 	if (!prv->vsp_reg) {
 		EPRINT("%s: failed to ioremap of VSP!!\n", __func__);
 		return E_VSP_DEF_REG;
@@ -2648,7 +2648,7 @@ long vsp_ins_init_reg(struct vsp_prv_data *prv)
 	}
 
 	/* remap and I/O memory of FCP */
-	prv->fcp_reg = ioremap_nocache(res->start, resource_size(res));
+	prv->fcp_reg = ioremap(res->start, resource_size(res));
 	if (!prv->fcp_reg) {
 		EPRINT("%s: failed to ioremap of FCP!!\n", __func__);
 		iounmap(prv->vsp_reg);
