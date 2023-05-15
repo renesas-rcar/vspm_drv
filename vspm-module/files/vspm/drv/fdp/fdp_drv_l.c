@@ -57,6 +57,7 @@
 
 #include <linux/platform_device.h>
 #include <linux/of.h>
+#include <linux/of_address.h>
 #include <linux/of_device.h>
 #include <linux/io.h>
 #include <linux/slab.h>
@@ -74,6 +75,13 @@
 #include "fdp_drv_hw.h"
 
 #include "fdp_drv_tbl.h"
+
+#include "mmngr_validate.h"
+
+static bool fdp_phys_addr_is_valid(u64 phys_addr, u64 size)
+{
+	return mmngr_validate_phys_addr(phys_addr, size);
+}
 
 /******************************************************************************
  * Function:		fdp_ins_check_seq_param
@@ -303,14 +311,16 @@ static long fdp_ins_check_dstbuf_param(
 		stride_c >>= 1;
 	case FDP_YUV444_PLANAR:
 		/* check c1 address */
-		if (buf->addr_c1 == 0)
+		if (buf->addr_c1 == 0 ||
+		    !fdp_phys_addr_is_valid(buf->addr_c1, stride_c * seq_par->in_height))
 			return E_FDP_PARA_DST_ADDR_C1;
 	/* semi-planar */
 	case FDP_YUV420:
 	case FDP_YUV420_NV21:
 	case FDP_YUV422_NV16:
 		/* check c0 address */
-		if (buf->addr_c0 == 0)
+		if (buf->addr_c0 == 0 ||
+		    !fdp_phys_addr_is_valid(buf->addr_c0, stride_c * seq_par->in_height))
 			return E_FDP_PARA_DST_ADDR_C0;
 
 		/* check chroma stride */
@@ -322,7 +332,8 @@ static long fdp_ins_check_dstbuf_param(
 	case FDP_YUV422_YUY2:
 	case FDP_YUV422_UYVY:
 		/* check luma address */
-		if (buf->addr == 0)
+		if (buf->addr == 0 ||
+		    !fdp_phys_addr_is_valid(buf->addr, stride * seq_par->in_height))
 			return E_FDP_PARA_DST_ADDR;
 
 		/* check luma stride */
@@ -374,14 +385,16 @@ static long fdp_ins_check_refbuf_param(
 		stride_c >>= 1;
 	case FDP_YUV444_PLANAR:
 		/* check c1 address */
-		if (buf->addr_c1 == 0)
+		if (buf->addr_c1 == 0 ||
+		    !fdp_phys_addr_is_valid(buf->addr_c1, stride_c * seq_par->in_height))
 			return E_FDP_PARA_SRC_ADDR_C1;
 	/* semi-planar */
 	case FDP_YUV420:
 	case FDP_YUV420_NV21:
 	case FDP_YUV422_NV16:
 		/* check c0 address */
-		if (buf->addr_c0 == 0)
+		if (buf->addr_c0 == 0 ||
+		    !fdp_phys_addr_is_valid(buf->addr_c0, stride_c * seq_par->in_height))
 			return E_FDP_PARA_SRC_ADDR_C0;
 
 		/* check chroma stride */
@@ -393,7 +406,8 @@ static long fdp_ins_check_refbuf_param(
 	case FDP_YUV422_YUY2:
 	case FDP_YUV422_UYVY:
 		/* check luma address */
-		if (buf->addr == 0)
+		if (buf->addr == 0 ||
+		    !fdp_phys_addr_is_valid(buf->addr, stride * seq_par->in_height))
 			return E_FDP_PARA_SRC_ADDR;
 
 		/* check luma stride */
@@ -411,6 +425,7 @@ static long fdp_ins_check_refbuf_param(
 	/* get next address */
 	if (ref->next_buf)
 		obj->rpf2_addr_y = ref->next_buf->addr;
+
 
 	return 0;
 }
@@ -439,6 +454,8 @@ static long fdp_ins_check_fcp_param(
 	if (fcp) {
 		/* check FCNL compress parameter */
 		if (fcp->fcnl == FCP_FCNL_ENABLE) {
+			struct fdp_seq_t *seq_par = fproc_par->seq_par;
+
 			/* check destination format */
 			if (fproc_par->out_format != FDP_YUV420_PLANAR &&
 			    fproc_par->out_format != FDP_YUV422_PLANAR &&
@@ -447,13 +464,16 @@ static long fdp_ins_check_fcp_param(
 
 			buf = fproc_par->out_buf;
 			/* check destination address */
-			if (buf->addr & 0xff)
+			if (buf->addr & 0xff ||
+			    !fdp_phys_addr_is_valid(buf->addr, buf->stride * seq_par->in_height))
 				return E_FDP_PARA_DST_ADDR;
 
-			if (buf->addr_c0 & 0xff)
+			if (buf->addr_c0 & 0xff ||
+			    !fdp_phys_addr_is_valid(buf->addr_c0, buf->stride_c * seq_par->in_height))
 				return E_FDP_PARA_DST_ADDR_C0;
 
-			if (buf->addr_c1 & 0xff)
+			if (buf->addr_c1 & 0xff ||
+			    !fdp_phys_addr_is_valid(buf->addr_c1, buf->stride_c * seq_par->in_height))
 				return E_FDP_PARA_DST_ADDR_C1;
 
 			/* check destination strude */
