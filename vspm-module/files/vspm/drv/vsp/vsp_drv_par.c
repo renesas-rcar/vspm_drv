@@ -55,12 +55,17 @@
  * GNU General Public License for more details.
  */ /*************************************************************************/
 
+#include <linux/of.h>
+#include <linux/of_address.h>
+
 #include "vspm_public.h"
 #include "vspm_ip_ctrl.h"
 #include "vspm_main.h"
 
 #include "vsp_drv_public.h"
 #include "vsp_drv_local.h"
+
+#include "mmngr_validate.h"
 
 /* BRU module route table */
 static const unsigned int vsp_tbl_bru_route[VSP_BRU_IN_MAX] = {
@@ -424,6 +429,11 @@ static long vsp_ins_check_master_layer(struct vsp_ch_info *ch_info)
 	return 0;
 }
 
+static bool vspm_phys_addr_is_valid(u64 phys_addr, u64 size)
+{
+	return mmngr_validate_phys_addr(phys_addr, size);
+}
+
 /******************************************************************************
  * Function:		vsp_ins_check_rpf_format
  * Description:	Check format of RPF.
@@ -497,6 +507,11 @@ static long vsp_ins_check_rpf_format(
 
 			rpf_info->val_addr_c0 = 0;
 			rpf_info->val_addr_c1 = 0;
+
+			if (!vspm_phys_addr_is_valid(rpf_info->val_addr_y,
+						     stride * src_par->height))
+				return E_VSP_PARA_IN_ADRY;
+
 			break;
 		/* YUV interleaved */
 		case VSP_IN_YUV420_INTERLEAVED:
@@ -542,6 +557,11 @@ static long vsp_ins_check_rpf_format(
 
 			rpf_info->val_addr_c0 = 0;
 			rpf_info->val_addr_c1 = 0;
+
+			if (!vspm_phys_addr_is_valid(rpf_info->val_addr_y,
+						     stride * src_par->height))
+				return E_VSP_PARA_IN_ADRY;
+
 			break;
 		/* YUV semi planer */
 		case VSP_IN_YUV420_SEMI_PLANAR:
@@ -592,6 +612,15 @@ static long vsp_ins_check_rpf_format(
 
 			rpf_info->val_addr_c0 = src_par->addr_c0 + temp;
 			rpf_info->val_addr_c1 = 0;
+
+			if (!vspm_phys_addr_is_valid(rpf_info->val_addr_y,
+						     stride * src_par->height))
+				return E_VSP_PARA_IN_ADRY;
+
+			if (!vspm_phys_addr_is_valid(rpf_info->val_addr_c0,
+						     stride_c * src_par->height))
+				return E_VSP_PARA_IN_ADRC0;
+
 			break;
 		/* YUV planar */
 		case VSP_IN_YUV420_PLANAR:
@@ -642,6 +671,19 @@ static long vsp_ins_check_rpf_format(
 
 			rpf_info->val_addr_c0 = src_par->addr_c0 + temp;
 			rpf_info->val_addr_c1 = src_par->addr_c1 + temp;
+
+			if (!vspm_phys_addr_is_valid(rpf_info->val_addr_y,
+						     stride * src_par->height))
+				return E_VSP_PARA_IN_ADRY;
+
+			if (!vspm_phys_addr_is_valid(rpf_info->val_addr_c0,
+						     stride_c * src_par->height))
+				return E_VSP_PARA_IN_ADRC0;
+
+			if (!vspm_phys_addr_is_valid(rpf_info->val_addr_c1,
+						     stride_c * src_par->height))
+				return E_VSP_PARA_IN_ADRC1;
+
 			break;
 		default:
 			return E_VSP_PARA_IN_FORMAT;
@@ -952,6 +994,10 @@ static long vsp_ins_check_alpha_blend_param(
 			(unsigned int)(src_par->x_offset / use_alpha_plane);
 		rpf_info->val_astride = (unsigned int)alpha->stride_a;
 
+		if (!vspm_phys_addr_is_valid(rpf_info->val_addr_ai,
+					     rpf_info->val_astride * src_par->height))
+			return E_VSP_PARA_ALPHA_ADR;
+
 		/* update swap value */
 		rpf_info->val_dswap |= ((unsigned int)alpha->swap) << 8;
 	} else {
@@ -1216,6 +1262,11 @@ static long vsp_ins_check_wpf_format(
 
 		wpf_info->val_addr_c0 = 0;
 		wpf_info->val_addr_c1 = 0;
+
+		if (!vspm_phys_addr_is_valid(wpf_info->val_addr_y,
+					     stride * dst_par->height))
+			return E_VSP_PARA_OUT_ADRY;
+
 		break;
 	/* YUV interleaved */
 	case VSP_OUT_YUV420_INTERLEAVED:
@@ -1253,6 +1304,11 @@ static long vsp_ins_check_wpf_format(
 
 		wpf_info->val_addr_c0 = 0;
 		wpf_info->val_addr_c1 = 0;
+
+		if (!vspm_phys_addr_is_valid(wpf_info->val_addr_y,
+					     stride * dst_par->height))
+			return E_VSP_PARA_OUT_ADRY;
+
 		break;
 	/* YUV semi planer */
 	case VSP_OUT_YUV420_SEMI_PLANAR:
@@ -1294,6 +1350,15 @@ static long vsp_ins_check_wpf_format(
 
 		wpf_info->val_addr_c0 = dst_par->addr_c0 + temp;
 		wpf_info->val_addr_c1 = 0;
+
+		if (!vspm_phys_addr_is_valid(wpf_info->val_addr_y,
+					     stride * dst_par->height))
+		    return E_VSP_PARA_OUT_ADRY;
+
+		if (!vspm_phys_addr_is_valid(wpf_info->val_addr_c0,
+					     stride_c * dst_par->height))
+		    return E_VSP_PARA_OUT_ADRC0;
+
 		break;
 	/* YUV planar */
 	case VSP_OUT_YUV420_PLANAR:
@@ -1336,6 +1401,19 @@ static long vsp_ins_check_wpf_format(
 
 		wpf_info->val_addr_c0 = dst_par->addr_c0 + temp;
 		wpf_info->val_addr_c1 = dst_par->addr_c1 + temp;
+
+		if (!vspm_phys_addr_is_valid(wpf_info->val_addr_y,
+					     stride * dst_par->height))
+		    return E_VSP_PARA_OUT_ADRY;
+
+		if (!vspm_phys_addr_is_valid(wpf_info->val_addr_c0,
+					     stride_c * dst_par->height))
+		    return E_VSP_PARA_OUT_ADRC0;
+
+		if (!vspm_phys_addr_is_valid(wpf_info->val_addr_c1,
+					     stride_c * dst_par->height))
+		    return E_VSP_PARA_OUT_ADRC1;
+
 		break;
 	default:
 		return E_VSP_PARA_OUT_FORMAT;
@@ -2025,6 +2103,10 @@ static long vsp_ins_check_lut_param(
 	if (lut->tbl_num < 1 || lut->tbl_num > 256)
 		return E_VSP_PARA_LUT_SIZE;
 
+	/* Check physical memory region access */
+	if (!vspm_phys_addr_is_valid(lut->hard_addr, lut->tbl_num * 4))
+		return E_VSP_PARA_LUT_ADR;
+
 	/* check connect parameter */
 	if (lut_param->connect & ~VSP_LUT_USABLE_DPR)
 		return E_VSP_PARA_LUT_CONNECT;
@@ -2060,6 +2142,10 @@ static long vsp_ins_check_clu_param(
 	/* check display list address */
 	if (clu->hard_addr == 0)
 		return E_VSP_PARA_CLU_ADR;
+
+	/* Check physical memory region access */
+	if (!vspm_phys_addr_is_valid(clu->hard_addr, clu->tbl_num * 4))
+		return E_VSP_PARA_LUT_ADR;
 
 	/* check mode */
 	switch (clu_param->mode) {

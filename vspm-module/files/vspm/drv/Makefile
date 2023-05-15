@@ -13,7 +13,7 @@ U_INCLUDE += -I$(PWD)/../include
 EXTRA_CFLAGS += $(U_INCLUDE)
 
 all:
-	make -C $(KERNELSRC) M=$(PWD) modules
+	make -C $(KERNELSRC) M=$(PWD) modules KBUILD_EXTRA_SYMBOLS=$(MMNGR_SRC)/mmngr_drv/mmngr/mmngr-module/files/mmngr/drv/Module.symvers modules
 clean:
 	make -C $(KERNELSRC) M=$(PWD) clean
 install:
