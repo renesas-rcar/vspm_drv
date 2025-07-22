@@ -62,6 +62,7 @@
 #include <linux/slab.h>
 #include <linux/io.h>
 #include <linux/pm_runtime.h>
+#include <linux/delay.h>
 
 #include "vspm_public.h"
 #include "vspm_ip_ctrl.h"
@@ -71,7 +72,152 @@
 #include "vspm_lib_public.h"
 #include "vsp_drv_public.h"
 
+#define MDLC_BASE 0xc5000000
+#define MDLC_PKCPROT0 (MDLC_BASE + 0x0cf0)
+#define MDLC_PKCPROT1 (MDLC_BASE + 0x0cf4)
+#define MDLC_MPIER0 (MDLC_BASE + 0x0110)
+#define MDLC_MPIMR0 (MDLC_BASE + 0x0120)
+
 static struct vspm_drvdata *p_vspm_drvdata;
+
+static inline void* get_MPDG(int pdid) { return (void*)(MDLC_BASE + 0x0200 + pdid * 4); }
+static inline void* get_MPDGS(int pdid) { return (void*)(MDLC_BASE + 0x0300 + pdid * 4); }
+static inline void* get_MSRES(int clk_reg_no) { return (void*)(MDLC_BASE + 0x0900 + clk_reg_no * 4); }
+static inline void* get_MSRESS(int clk_reg_no) { return (void*)(MDLC_BASE + 0x0960 + clk_reg_no * 4); }
+
+static void write_reg(void* addr, u32 value) {
+    iowrite32(value, addr);
+}
+
+static u32 read_reg(void* addr) {
+    return ioread32(addr);
+}
+
+static void module_power_gating_set(struct vspm_drvdata *pdrv, int pdid, int mode) {
+    void* unlock = ioremap(MDLC_PKCPROT0, 4);
+    void* mpdg = ioremap((unsigned long)get_MPDG(pdid), 4);
+    void* mpdgs = ioremap((unsigned long)get_MPDGS(pdid), 4);
+
+    write_reg(unlock, 0xA5A5A501);
+    u32 current_mode = read_reg(mpdgs);
+    if ((current_mode & 0x3) == mode) {
+        iounmap(unlock);
+        iounmap(mpdg);
+        iounmap(mpdgs);
+        return;
+    }
+
+    while (read_reg(mpdgs) != read_reg(mpdg)) {
+        udelay(1); // 1us delay
+    }
+
+    write_reg(ioremap(MDLC_MPIER0, 4), 0);
+    write_reg(ioremap(MDLC_MPIMR0, 4), 1);
+    write_reg(mpdg, 1);
+
+    while (read_reg(mpdgs) != read_reg(mpdg)) {
+        udelay(1); // 1us delay
+    }
+
+    write_reg(mpdg, mode);
+    write_reg(unlock, 0xA5A5A500);
+
+    while (read_reg(mpdgs) != read_reg(mpdg)) {
+        udelay(1); // 1us delay
+    }
+
+    iounmap(unlock);
+    iounmap(mpdg);
+    iounmap(mpdgs);
+}
+
+static void module_standby_set(struct vspm_drvdata *pdrv, int clk_reg_no, int pos, int mode) {
+    void* unlock = ioremap(MDLC_PKCPROT1, 4);
+    void* msres = ioremap((unsigned long)get_MSRES(clk_reg_no), 4);
+    void* msress = ioremap((unsigned long)get_MSRESS(clk_reg_no), 4);
+    u32 mask = (3 << pos);
+    u32 shift = pos;
+
+    write_reg(unlock, 0xA5A5A501);
+    u32 reg_value = read_reg(msress);
+    if ((reg_value & mask) == (mode << shift)) {
+        iounmap(unlock);
+        iounmap(msres);
+        iounmap(msress);
+        return;
+    }
+
+    while ((read_reg(msress) & mask) != (read_reg(msres) & mask)) {
+        udelay(1); // 1us delay
+    }
+
+    u32 val = read_reg(msres);
+    val = ((val & ~mask) | (mode << shift));
+    write_reg(msres, val);
+    write_reg(unlock, 0xA5A5A500);
+
+    while ((read_reg(msress) & mask) != (read_reg(msres) & mask)) {
+        udelay(1); // 1us delay
+    }
+
+    iounmap(unlock);
+    iounmap(msres);
+    iounmap(msress);
+}
+
+static void module_power_reset(struct vspm_drvdata *pdrv, int mpg_register, int* ms_regs_bits) {
+    module_power_gating_set(pdrv, mpg_register, 0x03);
+
+    int reg = ms_regs_bits[0];
+    int* start_bits = &ms_regs_bits[1];
+    for (int i = 0; start_bits[i] != -1; i++) {
+        module_standby_set(pdrv, reg, start_bits[i], 0x01);
+    }
+}
+
+static void module_power_run(struct vspm_drvdata *pdrv, int mpg_register, int* ms_regs_bits) {
+    int reg = ms_regs_bits[0];
+    int* start_bits = &ms_regs_bits[1];
+    for (int i = 0; start_bits[i] != -1; i++) {
+        module_standby_set(pdrv, reg, start_bits[i], 0x03);
+    }
+}
+
+static int vspm_power_on(struct vspm_drvdata *pdrv) {
+    int mpg_regs = 7;
+
+    int ms_regs_bits_vspb0[] = {15, 18, -1};
+    int ms_regs_bits_vspb1[] = {15, 20, -1};
+    int ms_regs_bits_vspb2[] = {15, 22, -1};
+    int ms_regs_bits_vspb3[] = {15, 24, -1};
+    int ms_regs_bits_vspb4[] = {15, 26, -1};
+    int ms_regs_bits_vspi0[] = {15, 28, -1};
+    int ms_regs_bits_vspi1[] = {15, 30, -1};
+    int ms_regs_bits_vspi2[] = {16, 0, -1};
+    int ms_regs_bits_vspi3[] = {16, 2, -1};
+    int ms_regs_bits_fcpvb0[] = {16, 4, -1};
+    int ms_regs_bits_fcpvb1[] = {16, 6, -1};
+    int ms_regs_bits_fcpvb2[] = {16, 8, -1};
+    int ms_regs_bits_fcpvb3[] = {16, 10, -1};
+    int ms_regs_bits_fcpvb4[] = {16, 12, -1};
+    int ms_regs_bits_fcpvi0[] = {16, 14, -1};
+    int ms_regs_bits_fcpvi1[] = {16, 16, -1};
+    int ms_regs_bits_fcpvi2[] = {16, 18, -1};
+    int ms_regs_bits_fcpvi3[] = {16, 20, -1};
+
+    int* ms_regs_bits[] = {ms_regs_bits_vspb0, ms_regs_bits_vspb1, ms_regs_bits_vspb2, ms_regs_bits_vspb3, ms_regs_bits_vspb4,
+                           ms_regs_bits_vspi0, ms_regs_bits_vspi1, ms_regs_bits_vspi2, ms_regs_bits_vspi3,
+                           ms_regs_bits_fcpvb0, ms_regs_bits_fcpvb1, ms_regs_bits_fcpvb2, ms_regs_bits_fcpvb3, ms_regs_bits_fcpvb4,
+                           ms_regs_bits_fcpvi0, ms_regs_bits_fcpvi1, ms_regs_bits_fcpvi2, ms_regs_bits_fcpvi3};
+
+    for (int i = 0; i < sizeof(ms_regs_bits) / sizeof(ms_regs_bits[0]); i++) {
+        module_power_reset(pdrv, mpg_regs, ms_regs_bits[i]);
+        msleep(10);
+        module_power_run(pdrv, mpg_regs, ms_regs_bits[i]);
+        msleep(10);
+    }
+	return 0;
+}
 
 /******************************************************************************
  * Function:		vspm_init_driver
@@ -582,7 +728,7 @@ static int __init vspm_module_init(void)
 {
 	struct vspm_drvdata *pdrv = NULL;
 	int ercd = 0;
-
+	vspm_power_on(pdrv);
 	/* allocate vspm driver data area */
 	pdrv = kzalloc(sizeof(*pdrv), GFP_KERNEL);
 	if (!pdrv) {
