@@ -400,8 +400,6 @@ int fw_execute(unsigned short tid, struct fw_func_tbl *func_tbl)
 			wait_for_completion(&task_info->suspend);
 	}
 
-	/* Do exit kthread */
-	do_exit(FW_OK);
 	return FW_OK;
 }
 
