@@ -301,10 +301,12 @@ static long fdp_ins_check_dstbuf_param(
 	case FDP_YUV420_PLANAR:
 	case FDP_YUV422_PLANAR:
 		stride_c >>= 1;
+		fallthrough;
 	case FDP_YUV444_PLANAR:
 		/* check c1 address */
 		if (buf->addr_c1 == 0)
 			return E_FDP_PARA_DST_ADDR_C1;
+		fallthrough;
 	/* semi-planar */
 	case FDP_YUV420:
 	case FDP_YUV420_NV21:
@@ -318,6 +320,7 @@ static long fdp_ins_check_dstbuf_param(
 			return E_FDP_PARA_DST_STRIDE_C;
 
 		stride >>= 1;
+		fallthrough;
 	/* interleaved */
 	case FDP_YUV422_YUY2:
 	case FDP_YUV422_UYVY:
@@ -372,10 +375,12 @@ static long fdp_ins_check_refbuf_param(
 	case FDP_YUV420_PLANAR:
 	case FDP_YUV422_PLANAR:
 		stride_c >>= 1;
+		fallthrough;
 	case FDP_YUV444_PLANAR:
 		/* check c1 address */
 		if (buf->addr_c1 == 0)
 			return E_FDP_PARA_SRC_ADDR_C1;
+		fallthrough;
 	/* semi-planar */
 	case FDP_YUV420:
 	case FDP_YUV420_NV21:
@@ -389,6 +394,7 @@ static long fdp_ins_check_refbuf_param(
 			return E_FDP_PARA_SRC_STRIDE_C;
 
 		stride >>= 1;
+		fallthrough;
 	/* interleaved */
 	case FDP_YUV422_YUY2:
 	case FDP_YUV422_UYVY:
