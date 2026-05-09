@@ -96,7 +96,7 @@ struct fdp_obj_t {
 
 	/* platform information */
 	struct platform_device *pdev;
-	struct resource *irq;
+	int irq;
 	void __iomem *fdp_reg;
 	void __iomem *fcp_reg;
 	unsigned int lut_tbl_idx;
