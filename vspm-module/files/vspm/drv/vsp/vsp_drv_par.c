@@ -514,7 +514,7 @@ static long vsp_ins_check_rpf_format(
 
 			x_offset <<= 1;
 			y_offset >>= 1;
-			/* break; */
+			fallthrough;
 		case VSP_IN_YUV422_INTERLEAVED0:
 		case VSP_IN_YUV422_INT0_YUY2:
 		case VSP_IN_YUV422_INT0_YVYU:
@@ -532,7 +532,7 @@ static long vsp_ins_check_rpf_format(
 				return E_VSP_PARA_IN_XOFFSET;
 
 			x_offset_c >>= 1;
-			/* break; */
+			fallthrough;
 		case VSP_IN_YUV444_INTERLEAVED:
 
 			temp = (y_offset * stride) +
@@ -559,7 +559,7 @@ static long vsp_ins_check_rpf_format(
 				return E_VSP_PARA_IN_YOFFSET;
 
 			y_offset_c >>= 1;
-			/* break; */
+			fallthrough;
 		case VSP_IN_YUV422_SEMI_PLANAR:
 		case VSP_IN_YUV422_SEMI_NV61:
 			/* check width */
@@ -575,7 +575,7 @@ static long vsp_ins_check_rpf_format(
 				return E_VSP_PARA_IN_XOFFSET;
 
 			x_offset_c >>= 1;
-			/* break; */
+			fallthrough;
 		case VSP_IN_YUV444_SEMI_PLANAR:
 			/* check Cb address pointer */
 			if (src_par->addr_c0 == 0)
@@ -608,7 +608,7 @@ static long vsp_ins_check_rpf_format(
 				return E_VSP_PARA_IN_YOFFSET;
 
 			y_offset_c >>= 1;
-			/* break; */
+			fallthrough;
 		case VSP_IN_YUV422_PLANAR:
 			/* check width */
 			if (src_par->width & 0x1)
@@ -623,7 +623,7 @@ static long vsp_ins_check_rpf_format(
 				return E_VSP_PARA_IN_XOFFSET;
 
 			x_offset_c >>= 1;
-			/* break; */
+			fallthrough;
 		case VSP_IN_YUV444_PLANAR:
 			/* check CbCr address pointer */
 			if (src_par->addr_c0 == 0)
@@ -708,6 +708,7 @@ static long vsp_ins_check_ckey_unit_param(
 			break;
 		case VSP_CKEY_TRANS_COLOR2:
 			rpf_info->val_ckey_ctrl |= VSP_RPF_CKEY_CTRL_SAPE1;
+			fallthrough;
 		case VSP_CKEY_TRANS_COLOR1:
 			rpf_info->val_ckey_ctrl |= VSP_RPF_CKEY_CTRL_SAPE0;
 			break;
@@ -1229,7 +1230,7 @@ static long vsp_ins_check_wpf_format(
 
 		x_offset <<= 1;
 		y_offset >>= 1;
-		/* break; */
+		fallthrough;
 	case VSP_OUT_YUV422_INTERLEAVED0:
 	case VSP_OUT_YUV422_INT0_YUY2:
 	case VSP_OUT_YUV422_INT0_YVYU:
@@ -1243,7 +1244,7 @@ static long vsp_ins_check_wpf_format(
 			return E_VSP_PARA_OUT_XOFFSET;
 
 		x_offset_c >>= 1;
-		/* break; */
+		fallthrough;
 	case VSP_OUT_YUV444_INTERLEAVED:
 
 		temp = (y_offset * stride) +
@@ -1266,7 +1267,7 @@ static long vsp_ins_check_wpf_format(
 			return E_VSP_PARA_OUT_YOFFSET;
 
 		y_offset_c >>= 1;
-		/* break; */
+		fallthrough;
 	case VSP_OUT_YUV422_SEMI_PLANAR:
 	case VSP_OUT_YUV422_SEMI_NV61:
 		/* check width */
@@ -1278,7 +1279,7 @@ static long vsp_ins_check_wpf_format(
 			return E_VSP_PARA_OUT_XOFFSET;
 
 		x_offset_c >>= 1;
-		/* break; */
+		fallthrough;
 	case VSP_OUT_YUV444_SEMI_PLANAR:
 		/* check Cb address pointer */
 		if (dst_par->addr_c0 == 0)
@@ -1306,7 +1307,7 @@ static long vsp_ins_check_wpf_format(
 			return E_VSP_PARA_OUT_YOFFSET;
 
 		y_offset_c >>= 1;
-		/* break; */
+		fallthrough;
 	case VSP_OUT_YUV422_PLANAR:
 		/* check width */
 		if (dst_par->width & 0x1)
@@ -1317,7 +1318,7 @@ static long vsp_ins_check_wpf_format(
 			return E_VSP_PARA_OUT_XOFFSET;
 
 		x_offset_c >>= 1;
-		/* break; */
+		fallthrough;
 	case VSP_OUT_YUV444_PLANAR:
 		/* check CbCr address pointer */
 		if (dst_par->addr_c0 == 0)
@@ -1477,7 +1478,7 @@ static long vsp_ins_check_wpf_fcnl(
 
 				if (wpf_info->val_addr_c1 & 0xff)
 					return E_VSP_PARA_OUT_ADRC1;
-				/* break; */
+				fallthrough;
 			case VSP_ROT_H_FLIP:
 			case VSP_ROT_180:
 				/* check stride and address */
