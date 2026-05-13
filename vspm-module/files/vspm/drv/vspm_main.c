@@ -342,7 +342,7 @@ static int vspm_vsp_probe(struct platform_device *pdev)
 	return 0;
 }
 
-static int vspm_vsp_remove(struct platform_device *pdev)
+static void vspm_vsp_remove(struct platform_device *pdev)
 {
 	struct vspm_drvdata *pdrv = p_vspm_drvdata;
 	struct device_node *np = pdev->dev.of_node;
@@ -364,7 +364,7 @@ static int vspm_vsp_remove(struct platform_device *pdev)
 	for (i = 0; i < CLKNUM; i++)
 		pdrv->vsp_clks[ch][i] = NULL;
 
-	return 0;
+	return;
 }
 
 static int vspm_fdp_probe(struct platform_device *pdev)
@@ -418,7 +418,7 @@ static int vspm_fdp_probe(struct platform_device *pdev)
 	return 0;
 }
 
-static int vspm_fdp_remove(struct platform_device *pdev)
+static void vspm_fdp_remove(struct platform_device *pdev)
 {
 	struct vspm_drvdata *pdrv = p_vspm_drvdata;
 	struct device_node *np = pdev->dev.of_node;
@@ -440,7 +440,7 @@ static int vspm_fdp_remove(struct platform_device *pdev)
 	for (i = 0; i < CLKNUM; i++)
 		pdrv->fdp_clks[ch][i] = NULL;
 
-	return 0;
+	return;
 }
 
 static int vspm_pm_suspend(struct device *dev)
